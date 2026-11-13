@@ -1,0 +1,1658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Candid Cull</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23D03392'/%3E%3Cstop offset='.55' stop-color='%235A358C'/%3E%3Cstop offset='1' stop-color='%232C59A8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M18 34l10 10 18-22' fill='none' stroke='%23fff' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --ink: #2A2D32; --dark: #434343; --pink: #D03392; --purple: #5A358C; --blue: #2C59A8;
+  --grad: linear-gradient(90deg, #D03392 0%, #5A358C 55%, #2C59A8 100%);
+  --red: #E4002B; --line: #DCDEE2; --tint: #F3F3F6; --tint2: #FAFAFB; --muted: #8A9099;
+  --green: #1E8E5A; --amber: #B7791F;
+  --canvas: #1b1d21; --canvas2: #25282d; --canvas-line: #3a3e45; --canvas-text: #e8e9ec; --canvas-muted: #9aa0a9;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); background: #fff; font-size: 15px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+.screen { min-height: 100vh; }
+
+/* ---------- top bar (home) ---------- */
+.topbar { background: var(--grad); color: #fff; display: flex; align-items: center; gap: 14px; padding: 12px 28px; }
+.topbar img.mark { height: 34px; width: auto; display: block; }
+.topbar .t1 { font-weight: 700; font-size: 17px; line-height: 1.15; }
+.topbar .t2 { font-size: 13px; opacity: .9; }
+.topbar .grow { flex: 1; }
+.pill { border: 0; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 700; padding: 9px 18px; font-size: 14px; }
+.pill.ghost { background: rgba(255,255,255,.16); color: #fff; }
+.pill.ghost:hover { background: rgba(255,255,255,.28); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #7be0a8; display: inline-block; margin-right: 7px; }
+.dot.off { background: #ffd28a; }
+.seg { display: inline-flex; background: rgba(255,255,255,.16); border-radius: 999px; padding: 3px; }
+.seg button { border: 0; background: transparent; color: #fff; border-radius: 999px; padding: 6px 14px; font-weight: 700; font-size: 13px; }
+.seg button.on { background: #fff; color: var(--ink); }
+
+/* ---------- home ---------- */
+.home-main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 60px; }
+h1 { font-size: 34px; letter-spacing: -0.02em; margin: 0 0 10px; line-height: 1.1; }
+.rule { width: 150px; height: 5px; border-radius: 3px; background: var(--grad); margin-bottom: 14px; }
+.lede { color: #555a62; margin: 0 0 22px; max-width: 720px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+.box { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 18px; background: #fff; }
+.bar { background: #fff; color: var(--ink); font-weight: 700; font-size: 12px; letter-spacing: .09em; text-transform: uppercase; padding: 12px 16px 0; border-top: 4px solid transparent; border-image: var(--grad) 1; }      /* white card, gradient strip across the top */
+.bar.red { background: var(--red); color: #fff; border-image: none; border-top: 0; padding: 9px 16px; }
+.box .body { padding: 14px 16px 16px; }
+.note { font-size: 13px; color: var(--muted); }
+.note.pink, .pink { color: var(--pink); font-weight: 700; }
+.path { color: var(--pink); font-weight: 700; text-decoration: underline; }
+.alert { border: 2px solid var(--red); border-radius: 8px; margin-bottom: 18px; overflow: hidden; }
+.alert .body { padding: 12px 16px; }
+
+.field { display: block; width: 100%; border: 1.5px solid var(--ink); border-radius: 6px; background: #fff; padding: 10px 12px; font-size: 16px; }
+.field:focus { outline: 3px solid rgba(208, 51, 146, .25); border-color: var(--pink); }
+label.lab { display: block; font-weight: 700; font-size: 13px; margin: 12px 0 5px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn { border: 1.5px solid var(--ink); background: #fff; border-radius: 999px; padding: 9px 18px; font-weight: 700; font-size: 14px; }
+.btn:hover { background: var(--tint); }
+.btn.primary { border: 0; background: var(--grad); color: #fff; padding: 11px 22px; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.big { font-size: 17px; padding: 15px 30px; }
+.btn.small { padding: 5px 12px; font-size: 12.5px; }
+.btn.danger { border-color: var(--red); color: var(--red); }
+.btn:disabled { opacity: .4; cursor: not-allowed; filter: none; }
+.linkish { border: 0; background: none; padding: 0; color: var(--purple); font-weight: 700; text-decoration: underline; font-size: 13.5px; }
+
+.daylab { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 12px 0 4px; }
+.daylab:first-child { margin-top: 0; }
+.evlist { max-height: 330px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; }
+.ev { display: flex; width: 100%; text-align: left; gap: 12px; align-items: baseline; border: 0; border-bottom: 1px solid var(--line); background: #fff; padding: 9px 12px; }
+.ev:nth-child(even) { background: var(--tint2); }
+.ev:last-child { border-bottom: 0; }
+.ev:hover { background: var(--tint); }
+.ev.on { background: #fbe9f4; box-shadow: inset 4px 0 0 var(--pink); }
+.ev .s { font-weight: 700; }
+.ev .e { color: #555a62; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ev .m { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.ev.pushed { opacity: .55; }
+.chosen { border: 1.5px solid var(--pink); border-radius: 6px; padding: 10px 12px; display: flex; align-items: center; gap: 12px; }
+.chosen .grow { flex: 1; min-width: 0; }
+.tseg { display: inline-flex; border: 1.5px solid var(--purple); border-radius: 999px; overflow: hidden; }
+.tseg button { border: 0; background: #fff; padding: 8px 16px; font-weight: 700; font-size: 13.5px; }
+.tseg button.on { background: var(--grad); color: #fff; }
+
+.item { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.item:last-child { border-bottom: 0; padding-bottom: 0; }
+.item:first-child { padding-top: 0; }
+.item .grow { flex: 1; min-width: 0; }
+.item .n { font-weight: 700; font-size: 13.5px; overflow-wrap: anywhere; }
+.item .d { font-size: 12.5px; color: var(--muted); }
+.tag { display: inline-block; font-size: 11.5px; font-weight: 700; border-radius: 999px; padding: 2px 9px; background: var(--tint); color: #555a62; white-space: nowrap; }
+.tag.ok { background: #e3f4ec; color: var(--green); }
+.tag.bad { background: #fde5ea; color: var(--red); }
+.tag.wait { background: #fff3dc; color: var(--amber); }
+
+/* ---------- cull screen ---------- */
+#cull { background: var(--canvas); color: var(--canvas-text); height: 100vh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
+#cull.light { --canvas: #f1f1f4; --canvas2: #fff; --canvas-line: #dcdee2; --canvas-text: #2A2D32; --canvas-muted: #6b717a; }
+.cbar { background: #2A2D32; color: #fff; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 3px solid transparent; border-image: var(--grad) 1; flex: none; }
+.cbar img.mark { height: 26px; }
+.cbar .who { min-width: 0; max-width: 24vw; }
+.cbar .who .a { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cbar .who .b { font-size: 12px; color: #b9bdc5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meter { flex: 1; min-width: 180px; }
+.meter .txt { font-size: 13px; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; }
+.meter .txt b { font-size: 15px; }
+.meter .track { position: relative; height: 9px; border-radius: 5px; background: #4a4e56; overflow: hidden; }
+.meter .zone { position: absolute; top: 0; bottom: 0; background: rgba(123, 224, 168, .35); }
+.meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: #ffd28a; transition: width .15s; }
+.meter.good .fill { background: #5fd398; }
+.chip { border: 1px solid #5a5f68; background: transparent; color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+button.chip:hover { background: #3a3e45; }
+.chip.warn { border-color: #ffd28a; color: #ffd28a; }
+.chip.plain { border-color: transparent; color: #cfd2d8; padding: 5px 4px; }
+.cbar .btn.primary { padding: 8px 18px; }
+
+.stage { flex: 1; min-height: 0; position: relative; }
+.single { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 10px; }
+.single img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; cursor: zoom-in; box-shadow: 0 4px 28px rgba(0,0,0,.35); }
+.single.tossed img { opacity: .32; }
+.badges { position: absolute; left: 16px; top: 14px; display: flex; gap: 8px; align-items: center; pointer-events: none; z-index: 3; }
+.badge { background: rgba(20, 21, 24, .78); color: #fff; border-radius: 6px; padding: 5px 10px; font-size: 12.5px; font-weight: 700; }
+.badge.toss { background: var(--red); font-size: 14px; letter-spacing: .06em; }
+.badge.soft { background: #ffd28a; color: #3b2b05; }
+.badge.best { background: var(--pink); }
+.loading { position: absolute; right: 16px; top: 14px; font-size: 12.5px; color: var(--canvas-muted); z-index: 3; }
+.empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--canvas-muted); }
+
+.zoomv { position: absolute; inset: 0; overflow: hidden; cursor: grab; }
+.zoomv.drag { cursor: grabbing; }
+.zoomv img { position: absolute; max-width: none; image-rendering: auto; -webkit-user-drag: none; }
+.zoomv.tossed img { opacity: .45; }
+
+.burst { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 8px 12px 6px; }
+.burst .head { display: flex; align-items: center; gap: 12px; font-size: 13.5px; padding: 2px 4px 8px; flex: none; }
+.burst .head b { font-size: 15px; }
+.burst .head .hint { color: var(--canvas-muted); flex: 1; }
+.tiles { flex: 1; min-height: 0; display: grid; gap: 8px; }
+.tile { position: relative; background: var(--canvas2); border: 3px solid transparent; border-radius: 8px; overflow: hidden; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 0; min-width: 0; }
+.tile img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.tile.keep { border-color: var(--pink); }
+.tile.toss img { opacity: .5; }
+.tile.focus { outline: 3px solid #fff; outline-offset: 1px; }
+#cull.light .tile.focus { outline-color: var(--ink); }
+.tile .num { position: absolute; left: 8px; top: 8px; background: rgba(20,21,24,.78); color: #fff; width: 26px; height: 26px; border-radius: 50%; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.tile .st { position: absolute; right: 8px; top: 8px; display: flex; gap: 6px; }
+.tile .lbl { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,21,24,.7); color: #fff; text-align: center; }
+.tile.keep .lbl { background: var(--pink); }
+
+.strip { flex: none; height: 86px; background: var(--canvas2); border-top: 1px solid var(--canvas-line); display: flex; align-items: center; justify-content: center; gap: 4px; padding: 0 10px; overflow: hidden; }
+.th { position: relative; width: 84px; height: 66px; border: 2px solid transparent; border-radius: 5px; background: #111; padding: 0; overflow: hidden; flex: none; display: flex; align-items: center; justify-content: center; }
+.th img { max-width: 100%; max-height: 100%; display: block; }
+.th img.r6 { transform: rotate(90deg); } .th img.r8 { transform: rotate(-90deg); } .th img.r3 { transform: rotate(180deg); }
+.th.cur { border-color: #fff; }
+#cull.light .th.cur { border-color: var(--ink); }
+.th.toss img { opacity: .25; }
+.th.toss::after { content: "\00d7"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #ff5b78; font-size: 44px; font-weight: 700; line-height: 1; }
+.th.inb { box-shadow: inset 0 4px 0 var(--pink); }
+.th.inb.done { box-shadow: inset 0 4px 0 #6b717a; }
+.th .sd { position: absolute; right: 3px; bottom: 3px; width: 9px; height: 9px; border-radius: 50%; background: #ffd28a; border: 1px solid #3b2b05; }
+.sbar { flex: none; display: flex; justify-content: space-between; gap: 16px; padding: 4px 14px 6px; font-size: 12px; color: var(--canvas-muted); background: var(--canvas2); }
+.sbar .prog { flex: 1; text-align: center; }
+kbd { display: inline-block; border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font: inherit; font-size: .92em; font-weight: 700; opacity: .9; }
+
+/* ---------- overlays ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(20, 21, 24, .62); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.sheet { background: #fff; color: var(--ink); border-radius: 10px; width: min(920px, 100%); max-height: 100%; overflow: auto; box-shadow: 0 18px 60px rgba(0,0,0,.4); }
+.sheet.narrow { width: min(520px, 100%); }
+.sheet .bar { position: sticky; top: 0; }
+.sheet .body { padding: 18px 20px 20px; }
+.sheet h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -0.01em; }
+.sheet .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; position: sticky; bottom: 0; background: #fff; padding: 10px 0 2px; }      /* buttons stay in reach on a short screen */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+table.keys { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.keys th { background: #fff; color: var(--ink); border-bottom: 2px solid var(--purple); text-align: left; padding: 6px 10px; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; }
+table.keys td { padding: 6px 10px; border-bottom: 1px solid var(--line); }
+table.keys tr:nth-child(even) td { background: var(--tint2); }
+table.keys td:first-child { white-space: nowrap; font-weight: 700; width: 1%; }
+ul.plain { margin: 6px 0 12px; padding-left: 20px; font-size: 13.5px; }
+ul.plain li { margin: 3px 0; }
+h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 4px; }
+.progress { height: 12px; border-radius: 6px; background: var(--tint); overflow: hidden; margin: 12px 0 6px; }
+.progress > div { height: 100%; width: 0; background: var(--grad); transition: width .2s; }
+
+#grid { position: fixed; inset: 0; background: #fff; color: var(--ink); z-index: 40; display: flex; flex-direction: column; user-select: none; }
+#grid .gbar { display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+#grid .gbar h2 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+#grid .gbar .grow { flex: 1; }
+#grid .gnote { padding: 8px 20px; font-size: 13px; background: var(--tint2); border-bottom: 1px solid var(--line); display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+#grid .gwrap { flex: 1; overflow: auto; padding: 14px 20px 30px; }
+.gtiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.gt { position: relative; aspect-ratio: 3 / 2; background: var(--tint); border: 3px solid transparent; border-radius: 6px; overflow: hidden; padding: 0; display: flex; align-items: center; justify-content: center; }
+.gt img { max-width: 100%; max-height: 100%; display: block; }
+.gt.toss img { opacity: .25; }
+.gt.toss { border-color: var(--red); }
+.gt.toss::after { content: "TOSSED"; position: absolute; left: 6px; top: 6px; background: var(--red); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; border-radius: 4px; padding: 2px 6px; }
+.gt .sd { position: absolute; right: 6px; top: 6px; background: #ffd28a; color: #3b2b05; font-size: 10.5px; font-weight: 700; border-radius: 4px; padding: 2px 6px; }
+.gt:hover { border-color: var(--ink); }
+
+#toast { position: fixed; left: 50%; top: 66px; transform: translateX(-50%); background: rgba(20,21,24,.92); color: #fff; border-radius: 999px; padding: 9px 20px; font-size: 13.5px; font-weight: 700; z-index: 80; pointer-events: none; opacity: 0; transition: opacity .18s; max-width: 80vw; text-align: center; }
+#toast.on { opacity: 1; }
+
+.done-wrap { max-width: 760px; margin: 0 auto; padding: 44px 28px; }
+.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+.steps li { counter-increment: s; position: relative; padding: 12px 0 12px 46px; border-bottom: 1px solid var(--line); font-size: 16px; }
+.steps li:last-child { border-bottom: 0; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 10px; width: 30px; height: 30px; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+/* ---------- smaller studio screens (1366 x 768 and the like) ---------- */
+@media (max-width: 1500px) {
+  .cbar { gap: 9px; padding: 8px 10px; }
+  .cbar .who { max-width: 17vw; }
+  .chip { padding: 5px 9px; font-size: 12px; }
+  .cbar .btn.primary { padding: 8px 13px; }
+  .meter { min-width: 150px; }
+}
+@media (max-height: 800px) {
+  .topbar { padding: 7px 28px; }
+  .home-main { padding-top: 14px; }
+  .home-main h1 { font-size: 26px; margin-bottom: 6px; }
+  .home-main .rule { margin-bottom: 8px; height: 4px; }
+  .home-main .lede { display: none; }
+  .home-main .box { margin-bottom: 10px; }
+  .home-main .box .body { padding: 10px 14px 12px; }
+  .evlist { max-height: 168px; }
+  .btn.big { padding: 11px 26px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script id="worker-src" type="text/plain">
+/* Preview worker. Runs off the main page so the culling screen never freezes.
+ * For each photo it: decodes the full JPEG once, makes a screen-size preview and a small thumbnail,
+ * and measures how sharp the photo is. Nothing leaves the computer. */
+self.onmessage = async function (e) {
+  var m = e.data;
+  try {
+    var bmp = await createImageBitmap(m.file);          // turns the photo the right way up (EXIF orientation)
+    var W = bmp.width, H = bmp.height;
+    var preview = await scaled(bmp, W, H, m.maxEdge, 0.86);
+    var thumb = await scaled(bmp, W, H, m.thumbEdge, 0.78);
+    var sharp = sharpness(bmp, W, H);
+    bmp.close();
+    self.postMessage({ id: m.id, ok: true, preview: preview, thumb: thumb, w: W, h: H, sharp: sharp });
+  } catch (err) {
+    self.postMessage({ id: m.id, ok: false, error: String((err && err.message) || err) });
+  }
+};
+
+async function scaled(bmp, W, H, edge, quality) {
+  var s = Math.min(1, edge / Math.max(W, H));
+  var w = Math.max(1, Math.round(W * s)), h = Math.max(1, Math.round(H * s));
+  var c = new OffscreenCanvas(w, h), ctx = c.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bmp, 0, 0, w, h);
+  return await c.convertToBlob({ type: 'image/jpeg', quality: quality });
+}
+
+/* Sharpness score.
+ * The photo is cut into a grid of tiles and each tile gets an "edge energy" number (variance of the Laplacian).
+ * A candid is allowed to have a blurry background, so only the sharpest tiles count. The flattest tiles tell us
+ * how much of the energy is just sensor noise (night games at high ISO), and that part is taken back out.
+ * Higher = sharper. The number only means something next to other photos from the same card. */
+function sharpness(bmp, W, H) {
+  var s = Math.min(1, 3500 / Math.max(W, H));
+  var w = Math.max(8, Math.round(W * s)), h = Math.max(8, Math.round(H * s));
+  var c = new OffscreenCanvas(w, h), ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(bmp, 0, 0, w, h);
+  var px = ctx.getImageData(0, 0, w, h).data;
+  var g = new Uint8Array(w * h);
+  for (var i = 0, j = 1; i < g.length; i++, j += 4) g[i] = px[j];      // green channel is close enough to brightness
+  px = null;
+  var TX = 16, TY = Math.max(4, Math.round(16 * h / w));
+  var tw = Math.floor((w - 2) / TX), th = Math.floor((h - 2) / TY);
+  if (tw < 4 || th < 4) return 0;
+  var vars = [];
+  for (var ty = 0; ty < TY; ty++) {
+    for (var tx = 0; tx < TX; tx++) {
+      var x0 = 1 + tx * tw, y0 = 1 + ty * th, sum = 0, sq = 0;
+      for (var y = y0; y < y0 + th; y++) {
+        var r = y * w;
+        for (var x = x0; x < x0 + tw; x++) {
+          var k = r + x, lap = 4 * g[k] - g[k - 1] - g[k + 1] - g[k - w] - g[k + w];
+          sum += lap; sq += lap * lap;
+        }
+      }
+      var n = tw * th, mean = sum / n;
+      vars.push(sq / n - mean * mean);
+    }
+  }
+  vars.sort(function (a, b) { return a - b; });
+  var noise = vars[Math.floor(vars.length * 0.10)];
+  var topN = Math.max(3, Math.round(vars.length * 0.05)), top = 0;
+  for (var t = vars.length - topN; t < vars.length; t++) top += vars[t];
+  top /= topN;
+  return Math.max(0, Math.round((top - 1.5 * noise) * 10) / 10);
+}
+
+</script>
+<script>
+'use strict';
+/* Candid Cull. One page, runs in Chrome, nothing to install.
+ * Photos are read straight off the SD card and never leave the computer. The card is never changed.
+ * "Delete" only marks a photo as tossed. Done copies the keepers into the Culled folder for Capture.
+ *
+ * Map of this file:
+ *   1. Settings + small helpers        5. Preview workers + sharpness      9. Finish: copy keepers
+ *   2. Storage (IndexedDB)             6. Culling screen                  10. Culled folder + cleanup
+ *   3. Event Leads link                7. Bursts, keep/toss, undo         11. Keyboard
+ *   4. Home screen + reading the card  8. Zoom, keepers grid              12. Start up
+ */
+
+/* ============================== 1. Settings + small helpers ============================== */
+var APP_VERSION = '1.1.0';
+var LOGO_WHITE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAADJCAYAAACdU4jkAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjBmZjNjMzEwLTM5N2QtNDg5NC1iODVkLTgwMGZlMGVkNzVhNQAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNoGI5law7GZ4adn5nosS+jqAAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ZDBlODg3YjctZWYxMS00Yzc0LWJkNDItOGIzMjE2Yzk2NDIzbHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaPuDP7I/xm03OQsus/3iC88AAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIP6+I8xDnaAkqPjjWNmJlrffbAYvUX1ghsuSZWkcF7+RpGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2jxqDvaJeNVA/2UWWpNv99VAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFggvF5IiYv9i7QvqWEP0olU6Nko+9TYiuRWQZR6N8eLJm9kbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTowZmYzYzMxMC0zOTdkLTQ4OTQtYjg1ZC04MDBmZTBlZDc1YTUvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpkYWU0MjhkMy1iZTNmLTQ4MjUtODk4OS1hYTY5OGNlOWYzMTRyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg/r4jzEOdoCSo+ONY2YmWt99sBi9RfWCGy5JlaRwXv5GiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIITkwxG2wtvONsiPUi9jihM2UzusFbqDzCEKLYmbABF6omN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIBq9ZEsER0xZme/j6y97HIPbB1Ge4TZb57c7S1IcKEBDdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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';
+
+// Everything here can be changed for every computer at once on the "Culling App Settings" tab of the Event Leads sheet.
+var DEFAULTS = {
+  normalTarget: 250,        // final image count for a normal candid
+  closeEnoughPct: 10,       // the bar is green within this percent of the normal target
+  homecomingLow: 300,       // Homecoming football game range
+  homecomingHigh: 350,
+  burstGapSec: 1.5,         // shots this close together are shown as one burst
+  burstNudge: 3,            // keeping more than this from one burst asks "you sure?"
+  softSensitivity: 'Medium',// Off, Low, Medium, High
+  daysBack: 3,              // how many days of events show on the pick list
+  logCullTimes: true,       // pilot: log how long each cull took
+  autoClean: true           // delete Culled folders once the job is pushed
+};
+var SOFT_FACTOR = { off: 0, low: 0.18, medium: 0.3, high: 0.45 };
+var PREVIEW_EDGE = 1800, THUMB_EDGE = 320;
+
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function startOfToday() { var d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+function niceDay(s) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); if (!m) return s || '';
+  var d = new Date(+m[1], +m[2] - 1, +m[3]), t = new Date(); t.setHours(0, 0, 0, 0);
+  var diff = Math.round((t - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'numeric', day: 'numeric' });
+}
+function lsGet(k, fallback) { try { var v = localStorage.getItem(k); return v == null ? fallback : JSON.parse(v); } catch (e) { return fallback; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+var toastTimer = 0;
+function toast(msg, ms) {
+  var t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('on'); }, ms || 2600);
+}
+
+// Pop-up sheet. Resolves with the picked action's value, or null on Esc.
+var openSheet = null;
+function sheet(o) {
+  return new Promise(function (resolve) {
+    var el = document.createElement('div'); el.className = 'overlay';
+    el.innerHTML = '<div class="sheet ' + (o.wide ? '' : 'narrow') + '" role="dialog">' +
+      (o.bar ? '<div class="bar' + (o.red ? ' red' : '') + '">' + esc(o.bar) + '</div>' : '') +
+      '<div class="body">' + (o.title ? '<h2>' + esc(o.title) + '</h2>' : '') + (o.html || '') +
+      '<div class="actions">' + (o.actions || [{ label: 'OK', primary: true, value: true }]).map(function (a, i) {
+        return '<button class="btn' + (a.primary ? ' primary' : '') + (a.danger ? ' danger' : '') + '" data-i="' + i + '">' + esc(a.label) + '</button>';
+      }).join('') + '</div></div></div>';
+    document.body.appendChild(el);
+    var acts = o.actions || [{ label: 'OK', primary: true, value: true }];
+    function close(v) { if (openSheet && openSheet.el === el) openSheet = null; el.remove(); resolve(v); }
+    function pick(i) {
+      var a = acts[i]; if (!a) return;
+      if (a.fn) { Promise.resolve(a.fn(el)).then(function (v) { if (v !== false) close(v); }); } else close(a.value);
+    }
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('.actions button'); if (b) { pick(+b.dataset.i); return; }
+      if (e.target === el && !o.sticky) close(null);
+    });
+    openSheet = { el: el, close: close, enter: function () { var i = acts.findIndex(function (a) { return a.primary; }); if (i >= 0) pick(i); }, sticky: !!o.sticky };
+    if (o.onOpen) o.onOpen(el, close);
+    var f = el.querySelector('input, .actions .primary'); if (f) f.focus();
+  });
+}
+function progressSheet(title, sub) {
+  var el = document.createElement('div'); el.className = 'overlay';
+  el.innerHTML = '<div class="sheet narrow"><div class="body"><h2>' + esc(title) + '</h2><div class="note" id="psSub">' + esc(sub || '') + '</div><div class="progress"><div></div></div><div class="note" id="psTxt"></div></div></div>';
+  document.body.appendChild(el);
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();      // so Enter / Space can't press a button hiding behind it
+  openSheet = { el: el, close: function () {}, enter: function () {}, sticky: true };
+  return {
+    set: function (frac, txt) { el.querySelector('.progress > div').style.width = Math.round(Math.max(0, Math.min(1, frac)) * 100) + '%'; if (txt != null) el.querySelector('#psTxt').textContent = txt; },
+    close: function () { if (openSheet && openSheet.el === el) openSheet = null; el.remove(); }
+  };
+}
+
+/* ============================== 2. Storage (IndexedDB) ============================== */
+var db = (function () {
+  var p;
+  function open() {
+    return p || (p = new Promise(function (res, rej) {
+      var r = indexedDB.open('cady-cull', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('kv'); r.result.createObjectStore('sessions'); };
+      r.onsuccess = function () { res(r.result); }; r.onerror = function () { rej(r.error); };
+    }));
+  }
+  function tx(store, mode, fn) {
+    return open().then(function (d) {
+      return new Promise(function (res, rej) {
+        var t = d.transaction(store, mode), rq = fn(t.objectStore(store));
+        t.oncomplete = function () { res(rq && rq.result); }; t.onerror = function () { rej(t.error); }; t.onabort = function () { rej(t.error); };
+      });
+    });
+  }
+  return {
+    get: function (s, k) { return tx(s, 'readonly', function (o) { return o.get(k); }); },
+    set: function (s, k, v) { return tx(s, 'readwrite', function (o) { return o.put(v, k); }); },
+    del: function (s, k) { return tx(s, 'readwrite', function (o) { return o.delete(k); }); },
+    all: function (s) { return tx(s, 'readonly', function (o) { return o.getAll(); }); }
+  };
+})();
+
+/* ============================== 3. Event Leads link ============================== */
+var S = {
+  conn: null,                 // { u: web app link, k: connect code } for the Event Leads sheet
+  studio: 'Horsham',
+  cfg: Object.assign({}, DEFAULTS),
+  events: [], eventsState: 'idle', eventsErr: '',
+  culled: null, culledState: 'none', folders: [], cleaned: [],
+  draft: { event: null, manual: false, name: '', homecoming: false },
+  sessions: [],
+  screen: 'home'
+};
+var ses = null;               // the cull that's open right now
+
+function readConnectCode(code) {
+  var m = /CULL1\.([A-Za-z0-9_-]+)/.exec(String(code || '')); if (!m) return null;
+  try {
+    var j = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, '+').replace(/_/g, '/')))));
+    if (j && /^https:\/\/script\.google\.com\//.test(j.u) && j.k) return { u: j.u, k: String(j.k) };
+  } catch (e) {}
+  return null;
+}
+function api(action, params) {
+  if (!S.conn) return Promise.reject(new Error('This computer is not linked to the Event Leads sheet yet.'));
+  var u = new URL(S.conn.u);
+  u.searchParams.set('cull', '1'); u.searchParams.set('k', S.conn.k); u.searchParams.set('action', action);
+  Object.keys(params || {}).forEach(function (k) { u.searchParams.set(k, params[k]); });
+  var ctl = new AbortController(), timer = setTimeout(function () { ctl.abort(); }, 25000);
+  return fetch(u.toString(), { signal: ctl.signal, redirect: 'follow' })
+    .then(function (r) { return r.json().catch(function () { throw new Error('the sheet sent back something odd, try again in a minute'); }); })
+    .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'The sheet did not answer.'); return j; })
+    .catch(function (e) { throw new Error(e.name === 'AbortError' ? 'The sheet took too long to answer.' : (e.message || String(e))); })
+    .finally(function () { clearTimeout(timer); });
+}
+function applySettings(remote) {
+  var c = Object.assign({}, DEFAULTS);
+  Object.keys(remote || {}).forEach(function (k) {
+    if (!(k in DEFAULTS)) return;
+    var d = DEFAULTS[k], v = remote[k];
+    if (typeof d === 'number') { v = Number(v); if (isFinite(v) && v >= 0) c[k] = v; }
+    else if (typeof d === 'boolean') c[k] = v === true || /^(on|yes|true|1)$/i.test(String(v).trim());
+    else if (v != null && String(v).trim()) c[k] = String(v).trim();
+  });
+  S.cfg = c;
+}
+function loadEvents() {
+  if (!S.conn) { S.eventsState = 'none'; renderEvents(); return Promise.resolve(); }
+  S.eventsState = S.events.length ? 'ok' : 'loading'; renderEvents();
+  return api('events').then(function (j) {
+    S.events = j.events || []; S.eventsState = 'ok'; S.eventsErr = '';
+    applySettings(j.settings); lsSet('cull.cache', { events: S.events, settings: j.settings || {}, at: Date.now() });
+  }).catch(function (e) { S.eventsState = S.events.length ? 'ok' : 'error'; S.eventsErr = e.message; })
+    .then(function () { renderEvents(); renderTopbar(); });
+}
+
+/* ============================== 4. Home screen + reading the card ============================== */
+function renderHome() {
+  S.screen = 'home'; $('#toast').classList.remove('on');
+  $('#app').innerHTML =
+    '<section id="home" class="screen"><header class="topbar" id="topbar"></header><main class="home-main">' +
+    '<h1>Cull your candids</h1><div class="rule"></div>' +
+    '<p class="lede">Pick your event, pop in your SD card and go. Nothing gets deleted off the card. When you\'re done, your keepers are copied into the Culled folder for Capture.</p>' +
+    '<div id="alerts"></div><div class="cols"><div>' +
+    '<div class="box"><div class="bar">1 &middot; Pick your event</div><div class="body" id="evArea"></div></div>' +
+    '<div class="box"><div class="bar">2 &middot; Your name</div><div class="body"><input class="field" id="nameIn" placeholder="First and last name" autocomplete="off" spellcheck="false" maxlength="60"></div></div>' +
+    '<div class="box"><div class="bar">3 &middot; Open your SD card</div><div class="body" id="openArea"></div></div>' +
+    '</div><div>' +
+    '<div class="box" id="resumeBox" hidden><div class="bar">Pick up where you left off</div><div class="body" id="resumeArea"></div></div>' +
+    '<div class="box"><div class="bar">Culled folder on this computer</div><div class="body" id="culledArea"></div></div>' +
+    '</div></div></main></section>';
+  $('#nameIn').value = S.draft.name;
+  $('#nameIn').addEventListener('input', function (e) { S.draft.name = e.target.value; renderOpen(); });
+  renderTopbar(); renderEvents(); renderOpen(); renderResume(); renderCulled();
+}
+function renderTopbar() {
+  var el = $('#topbar'); if (!el) return;
+  el.innerHTML = '<img class="mark" src="' + LOGO_WHITE + '" alt="CADY"><div><div class="t1">Candid Cull</div><div class="t2">' +
+    esc(new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })) + '</div></div><div class="grow"></div>' +
+    '<div class="seg">' + ['Horsham', 'Exton'].map(function (s) { return '<button data-act="studio" data-v="' + s + '" class="' + (S.studio === s ? 'on' : '') + '">' + s + '</button>'; }).join('') + '</div>' +
+    '<button class="pill ghost" data-act="settings"><span class="dot' + (S.conn && S.eventsState !== 'error' ? '' : ' off') + '"></span>' + (S.conn ? (S.eventsState === 'error' ? 'Sheet not answering' : 'Linked to Event Leads') : 'Not linked yet') + '</button>' +
+    '<button class="pill ghost" data-act="help">Keys + guide</button>';
+}
+function isHomecoming(name) { return /homecoming/i.test(name || '') && /(football|game)/i.test(name || ''); }
+function targetFor(homecoming) {
+  var c = S.cfg;
+  if (homecoming) return { lo: c.homecomingLow, hi: c.homecomingHigh, label: c.homecomingLow + '-' + c.homecomingHigh, homecoming: true };
+  var pct = c.closeEnoughPct / 100;
+  return { lo: Math.round(c.normalTarget * (1 - pct)), hi: Math.round(c.normalTarget * (1 + pct)), label: String(c.normalTarget), homecoming: false };
+}
+function renderEvents() {
+  var el = $('#evArea'); if (!el) return;
+  var d = S.draft, h = '';
+  if (d.event) {
+    h = '<div class="chosen"><div class="grow"><div><b>' + esc(d.event.school) + '</b> &middot; ' + esc(d.event.event) + '</div><div class="note">' + esc(niceDay(d.event.date)) +
+      (d.event.control ? ' &middot; Control # ' + esc(d.event.control) : '') + '</div></div><button class="btn small" data-act="evChange">Change</button></div>' +
+      '<label class="lab">Image count for this one</label><div class="tseg"><button data-act="hc" data-v="0" class="' + (d.homecoming ? '' : 'on') + '">Normal candid (' + S.cfg.normalTarget + ')</button>' +
+      '<button data-act="hc" data-v="1" class="' + (d.homecoming ? 'on' : '') + '">Homecoming game (' + S.cfg.homecomingLow + '-' + S.cfg.homecomingHigh + ')</button></div>';
+  } else if (d.manual || !S.conn) {
+    h = (S.conn ? '' : '<p class="note" style="margin-top:0">This computer isn\'t linked to the Event Leads sheet yet, so type your event in. <button class="linkish" data-act="settings">Link it</button></p>') +
+      '<label class="lab" style="margin-top:0">School</label><input class="field" id="mSchool" maxlength="60" autocomplete="off">' +
+      '<label class="lab">Event</label><input class="field" id="mEvent" maxlength="80" autocomplete="off" placeholder="Varsity Football Game">' +
+      '<div class="row"><div style="flex:1"><label class="lab">Event date</label><input class="field" id="mDate" type="date" value="' + ymd(new Date()) + '"></div>' +
+      '<div style="flex:1"><label class="lab">Control # (on your control sheet)</label><input class="field" id="mControl" maxlength="20" autocomplete="off"></div></div>' +
+      '<div class="row" style="margin-top:14px"><button class="btn primary" data-act="manualUse">Use this event</button>' + (S.conn ? '<button class="linkish" data-act="manualOff">Back to the list</button>' : '') + '</div>';
+  } else if (S.eventsState === 'loading') {
+    h = '<p class="note" style="margin-top:0">Getting today\'s events from the Event Leads sheet...</p><button class="linkish" data-act="manualOn">Type my event in instead</button>';
+  } else if (S.eventsState === 'error') {
+    h = '<p class="note pink" style="margin-top:0">Couldn\'t reach the Event Leads sheet (' + esc(S.eventsErr) + ').</p><div class="row"><button class="btn" data-act="evReload">Try again</button><button class="linkish" data-act="manualOn">Type my event in</button></div>';
+  } else {
+    var list = S.events.filter(function (e) { return !e.territory || e.territory === S.studio; });
+    var days = [], by = {};
+    list.forEach(function (e) { if (!by[e.date]) { by[e.date] = []; days.push(e.date); } by[e.date].push(e); });
+    days.sort().reverse();
+    if (!list.length) h = '<p class="note" style="margin-top:0">No candid events on the sheet for ' + esc(S.studio) + ' in the last ' + plural(S.cfg.daysBack, 'day') + '.</p>';
+    else h = '<div class="evlist">' + days.map(function (day) {
+      return '<div class="daylab" style="padding:8px 12px 0">' + esc(niceDay(day)) + '</div>' + by[day].map(function (e) {
+        return '<button class="ev' + (e.pushed ? ' pushed' : '') + '" data-act="evPick" data-id="' + esc(e.id) + '"><span class="s">' + esc(e.school) + '</span><span class="e">' + esc(e.event) + '</span><span class="m">' +
+          (e.pushed ? 'already pushed' : esc(e.start || '')) + '</span></button>';
+      }).join('');
+    }).join('') + '</div>';
+    h += '<div class="row" style="margin-top:10px"><button class="linkish" data-act="manualOn">My event isn\'t on the list</button><span class="grow" style="flex:1"></span><button class="linkish" data-act="evReload">Refresh</button></div>';
+  }
+  el.innerHTML = h;
+}
+async function pickEvent(ev) {
+  if (!ev) return;
+  if (ev.pushed) {
+    var ok = await sheet({ bar: 'Double check', red: true, title: 'That job is already marked pushed',
+      html: '<p><b>' + esc(ev.school) + '</b> &middot; ' + esc(ev.event) + ' (' + esc(niceDay(ev.date)) + ') shows as pushed on the Event Leads sheet, so its photos should already be in.</p><p>Is this really the one you shot?</p>',
+      actions: [{ label: 'Yes, use it', value: true }, { label: 'Pick a different one', primary: true, value: false }] });
+    if (!ok) return;
+  }
+  S.draft.event = { school: ev.school, event: ev.event, date: ev.date, control: ev.control, wasPushed: !!ev.pushed }; S.draft.homecoming = isHomecoming(ev.event);
+  renderEvents(); renderOpen(); var ni = $('#nameIn'); if (ni && !ni.value) ni.focus();
+}
+function renderOpen() {
+  var el = $('#openArea'); if (!el) return;
+  var need = [];
+  if (!S.draft.event) need.push('pick your event');
+  if (!/[A-Za-z\u00C0-\u024F].*[A-Za-z\u00C0-\u024F].*[A-Za-z\u00C0-\u024F]/.test(S.draft.name)) need.push('type your first and last name');
+  if (S.culledState !== 'ok') need.push('connect the Culled folder (on the right)');
+  var ok = !need.length;
+  el.innerHTML = '<div class="row"><button class="btn primary big" data-act="openCard"' + (ok ? '' : ' disabled') + '>Open SD card</button>' +
+    (ok ? '<div class="note" style="flex:1;min-width:220px">In the window that pops up, click your SD card, click the <b>DCIM</b> folder, then <b>Select Folder</b>.</div>'
+      : '<div class="note pink" style="flex:1;min-width:220px">First: ' + esc(need.join(', ')) + '.</div>') + '</div>' +
+    (ok ? '<div style="margin-top:12px"><button class="linkish" data-act="twoCards">I have a second card tonight</button></div>' : '');
+}
+function renderResume() {
+  var box = $('#resumeBox'); if (!box) return;
+  box.hidden = !S.sessions.length;
+  $('#resumeArea').innerHTML = S.sessions.map(function (r) {
+    return '<div class="item"><div class="grow"><div class="n">' + esc(r.event.school) + ' &middot; ' + esc(r.event.event) + '</div><div class="d">' + esc(r.photographer) + ' &middot; ' +
+      plural(r.total, 'photo') + ', ' + r.tossed + ' tossed so far &middot; ' + esc(new Date(r.updatedAt).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' })) + '</div></div>' +
+      '<button class="btn small" data-act="resume" data-id="' + esc(r.id) + '">Continue</button><button class="btn small danger" data-act="discard" data-id="' + esc(r.id) + '">Discard</button></div>';
+  }).join('');
+}
+function loadSessions() {
+  return db.all('sessions').then(function (a) { S.sessions = (a || []).sort(function (x, y) { return y.updatedAt - x.updatedAt; }); S.sessionsLoaded = true; renderResume(); }).catch(function () {});
+}
+
+function pickDir(id, mode, startIn) {
+  if (!window.showDirectoryPicker) {
+    return sheet({ bar: 'Wrong browser', title: 'Open this page in Google Chrome', html: '<p>This tool needs Chrome (or Edge) on a computer to read the SD card.</p>' }).then(function () { return null; });
+  }
+  var opt = { id: id, mode: mode || 'read' }; if (startIn) opt.startIn = startIn;
+  return window.showDirectoryPicker(opt).catch(function (e) {
+    if (e && e.name === 'AbortError') return null;
+    return sheet({ bar: 'Could not open that folder', title: 'Try a folder inside it', html: '<p>Chrome won\'t open that spot (' + esc((e && e.message) || e) + ').</p><p>For the SD card, pick the <b>DCIM</b> folder on the card.</p>' }).then(function () { return null; });
+  });
+}
+function listJpegs(dir, path, out) {
+  out = out || []; path = path || '';
+  return (async function () {
+    for await (var entry of dir.entries()) {
+      var name = entry[0], h = entry[1];
+      if (h.kind === 'directory') {
+        if (name.charAt(0) === '.' || /^(System Volume Information|\$RECYCLE\.BIN|PRIVATE|AVF_INFO|MP_ROOT|MISC)$/i.test(name)) continue;
+        await listJpegs(h, path + name + '/', out);
+      } else if (/\.jpe?g$/i.test(name) && name.slice(0, 2) !== '._') out.push({ name: name, rel: path + name, handle: h });
+      else if (/\.(arw|dng|cr2|cr3|nef|raf|rw2)$/i.test(name)) out.raw = (out.raw || 0) + 1;
+    }
+    return out;
+  })();
+}
+
+// Reads the small EXIF block at the front of a JPEG: when it was shot, which way up, and the tiny built-in thumbnail.
+function parseExif(buf) {
+  var v = new DataView(buf), out = {};
+  if (v.byteLength < 12 || v.getUint16(0) !== 0xFFD8) return out;
+  var p = 2;
+  while (p + 4 <= v.byteLength) {
+    if (v.getUint8(p) !== 0xFF) break;
+    var marker = v.getUint8(p + 1), len = v.getUint16(p + 2);
+    if (marker === 0xE1 && p + 10 <= v.byteLength && v.getUint32(p + 4) === 0x45786966 && v.getUint16(p + 8) === 0) { try { readTiff(v, p + 10, out); } catch (e) {} break; }
+    if (marker === 0xDA || len < 2) break;
+    p += 2 + len;
+  }
+  return out;
+}
+function readTiff(v, base, out) {
+  var le = v.getUint16(base) === 0x4949;
+  function u16(o) { return v.getUint16(o, le); }
+  function u32(o) { return v.getUint32(o, le); }
+  function ascii(o, n) { var s = ''; for (var i = 0; i < n && o + i < v.byteLength; i++) { var c = v.getUint8(o + i); if (!c) break; s += String.fromCharCode(c); } return s; }
+  function str(count, vo) { return ascii(count > 4 ? base + u32(vo) : vo, count); }
+  function num(type, vo) { return type === 3 ? u16(vo) : u32(vo); }
+  function ifd(off, cb) {
+    var at = base + off; if (!off || at + 2 > v.byteLength) return 0;
+    var n = u16(at);
+    for (var i = 0; i < n; i++) { var e = at + 2 + i * 12; if (e + 12 > v.byteLength) return 0; cb(u16(e), u16(e + 2), u32(e + 4), e + 8); }
+    var nx = at + 2 + n * 12; return nx + 4 <= v.byteLength ? u32(nx) : 0;
+  }
+  var exifOff = 0;
+  var next = ifd(u32(base + 4), function (tag, type, count, vo) {
+    if (tag === 0x0112) out.orient = num(type, vo); else if (tag === 0x8769) exifOff = u32(vo); else if (tag === 0x0132) out.dt0 = str(count, vo);
+  });
+  ifd(exifOff, function (tag, type, count, vo) {
+    if (tag === 0x9003) out.dt = str(count, vo); else if (tag === 0x9291) out.sub = str(count, vo);
+    else if (tag === 0xA002) out.w = num(type, vo); else if (tag === 0xA003) out.h = num(type, vo);
+  });
+  var to = 0, tl = 0;
+  ifd(next, function (tag, type, count, vo) { if (tag === 0x0201) to = u32(vo); else if (tag === 0x0202) tl = u32(vo); });
+  if (to && tl) { out.thumbAt = base + to; out.thumbLen = tl; }
+}
+function exifTime(x) {
+  var m = /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(x.dt || x.dt0 || ''); if (!m) return null;
+  var t = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime();
+  if (x.sub && /^\d+$/.test(x.sub.trim())) t += Math.round(parseFloat('0.' + x.sub.trim()) * 1000);
+  return t;
+}
+async function readHead(ph) {
+  var f = await ph.handle.getFile();
+  if (!f.size) throw new Error('empty file');
+  ph.size = f.size; ph.modified = f.lastModified;
+  var buf = await f.slice(0, 131072).arrayBuffer(), x = parseExif(buf);
+  ph.time = exifTime(x); ph.orient = x.orient || 1;
+  var turned = ph.orient >= 5 && ph.orient <= 8;
+  if (x.w && x.h) { ph.w = turned ? x.h : x.w; ph.h = turned ? x.w : x.h; }
+  if (x.thumbLen && x.thumbLen < 200000) {
+    var tb = x.thumbAt + x.thumbLen <= buf.byteLength ? buf.slice(x.thumbAt, x.thumbAt + x.thumbLen) : await f.slice(x.thumbAt, x.thumbAt + x.thumbLen).arrayBuffer();
+    if (new DataView(tb).getUint16(0) === 0xFFD8) { ph.thumbUrl = URL.createObjectURL(new Blob([tb], { type: 'image/jpeg' })); ph.thumbRot = ph.orient; }
+  }
+}
+// A photo is known by its name, size and the moment it was shot, so it is the same photo whether they open DCIM, the card itself or 100MSDCF.
+function photoKey(ph) { return ph.src + ':' + ph.name + '|' + ph.size + '|' + (ph.time == null ? 'm' + ph.modified : ph.time); }
+function hashKeys(keys) { var h = 2166136261; keys.forEach(function (k) { for (var i = 0; i < k.length; i++) { h ^= k.charCodeAt(i); h = Math.imul(h, 16777619); } }); return (h >>> 0).toString(36) + ':' + keys.length; }
+
+/* Starts (or continues) a cull. sources = [{ kind: 'card' | 'saved', handle, label, saved }] */
+async function beginSession(sources, rec) {
+  var ps = progressSheet('Reading the card', 'Finding your photos...');
+  try {
+    var photos = [], raws = 0;
+    for (var si = 0; si < sources.length; si++) {
+      var found = await listJpegs(sources[si].handle); raws += found.raw || 0;
+      found.forEach(function (f) { f.src = si; photos.push(f); });
+    }
+    if (!photos.length) {
+      ps.close();
+      await sheet({ bar: 'No photos found', title: 'That folder has no JPEG photos', html: raws ? '<p>It has ' + plural(raws, 'RAW file') + ' but no JPEGs, so the camera was set to RAW only. Grab your shift manager.</p>'
+        : '<p>Pick the <b>DCIM</b> folder on the SD card. If the card really is empty, grab your shift manager.</p>' });
+      return false;
+    }
+    var done = 0, bad = 0, idx = 0;
+    await Promise.all(new Array(6).fill(0).map(async function () {
+      while (idx < photos.length) {
+        var ph = photos[idx++];
+        try { await readHead(ph); } catch (e) { ph.size = ph.size || 0; ph.unreadable = true; bad++; }
+        done++; if (done % 10 === 0 || done === photos.length) ps.set(done / photos.length, done + ' of ' + photos.length + ' photos');
+      }
+    }));
+    photos = photos.filter(function (p) { return !p.unreadable; });
+    if (bad) {             // never drop photos quietly: stop, say how many, and let them try the card again
+      ps.close();
+      var one = bad === 1, how = await sheet({ bar: 'Double check', red: true, sticky: true, title: plural(bad, 'photo') + ' on the card could not be read',
+        html: '<p>' + (photos.length ? 'The other ' + photos.length + ' read fine. ' : '') + 'Push the card in all the way and try again.</p>' + (photos.length ? '<p>If you go on without ' + (one ? 'it' : 'them') + ', ' + (one ? 'that photo' : 'those photos') + ' won\'t be in your cull.</p>' : ''),
+        actions: (photos.length ? [{ label: 'Go on without ' + (one ? 'it' : 'them'), value: 'go' }] : [{ label: 'Cancel', value: false }]).concat([{ label: 'Try again', primary: true, value: 'retry' }]) });
+      if (how === 'retry') return beginSession(sources, rec);
+      if (how !== 'go') return false;
+      ps = progressSheet('Reading the card', 'Almost there...');
+    }
+    photos.forEach(function (p) { p.key = photoKey(p); });
+    photos.sort(function (a, b) {
+      var ta = a.time == null ? a.modified : a.time, tb = b.time == null ? b.modified : b.time;
+      return ta - tb || (a.rel < b.rel ? -1 : a.rel > b.rel ? 1 : 0);
+    });
+    var sig = hashKeys(photos.map(function (p) { return p.key; }).sort());
+    if (!rec) {            // opened a card they already started instead of hitting Continue: don't quietly begin a second cull of it
+      var prev = S.sessions.find(function (r) { return r.sig === sig; });
+      if (prev) {
+        ps.close();
+        var pick = await sheet({ bar: 'Already started', sticky: true, title: 'You already started culling this card',
+          html: '<p><b>' + esc(prev.event.school) + '</b> &middot; ' + esc(prev.photographer) + ', ' + plural(prev.tossed || 0, 'photo') + ' tossed so far.</p>',
+          actions: [{ label: 'Start over', value: 'fresh' }, { label: 'Keep going with it', primary: true, value: 'same' }] });
+        if (pick === 'same') rec = prev; else await forgetSession(prev);
+        ps = progressSheet('Reading the card', 'Almost there...');
+      }
+    }
+    if (rec && rec.sig !== sig) {
+      // Picks are saved per photo, so a card that is mostly the same (a few files added, or unreadable last time) can carry on safely.
+      var known = Object.create(null), nKnown = 0, hit = 0;
+      Object.keys(rec.scores || {}).concat(Object.keys(rec.decisions || {})).forEach(function (k) { if (!known[k]) { known[k] = 1; nKnown++; } });
+      photos.forEach(function (p) { if (known[p.key]) hit++; });
+      var near = nKnown >= 5 && hit >= nKnown * 0.6;
+      ps.close();
+      var go = await sheet(near ? { bar: 'Double check', title: 'This card changed a little since last time',
+        html: '<p>' + photos.length + ' photos now, ' + rec.total + ' last time (' + esc(rec.event.school) + ', ' + esc(rec.photographer) + '). Your keep and toss picks still line up with the right photos.</p>',
+        actions: [{ label: 'Cancel', value: false }, { label: 'Keep going', primary: true, value: 'use' }] }
+        : { bar: 'Different card?', title: 'This doesn\'t look like the same card', html: '<p>The photos on this card don\'t match the cull you were working on (' + esc(rec.event.school) + ', ' + esc(rec.photographer) + ').</p>',
+          actions: [{ label: 'Cancel', value: false }, { label: 'Try another folder', primary: true, value: 'again' }] });
+      if (go !== 'use') return go === 'again' ? 'again' : false;
+      ps = progressSheet('Reading the card', 'Almost there...');
+    }
+    var d = S.draft;
+    ses = {
+      id: rec ? rec.id : Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      event: rec ? rec.event : d.event, photographer: rec ? rec.photographer : d.name.trim().replace(/\s+/g, ' '),
+      target: rec ? rec.target : targetFor(d.homecoming), studio: rec ? rec.studio : S.studio,
+      createdAt: rec ? rec.createdAt : Date.now(), activeMs: rec ? rec.activeMs || 0 : 0, lastTick: 0,
+      photos: photos, bursts: [], cursor: 0, undo: [], sources: sources, sig: sig, destFolder: rec ? rec.destFolder : null,
+      scored: 0, pending: null, zoom: { on: false, cx: 0.5, cy: 0.5 }, stageKey: '', fullUrl: null, fullFor: -1, fails: 0, cardLost: false
+    };
+    photos.forEach(function (p, i) { p.i = i; p.state = 'keep'; p.burst = -1; p.pv = 0; p.sharp = null; });
+    buildBursts();
+    if (rec) {
+      var toss = rec.decisions || {}, rv = {}; (rec.reviewed || []).forEach(function (k) { rv[k] = 1; });
+      photos.forEach(function (p) { if (toss[p.key]) p.state = 'toss'; if (rec.scores && rec.scores[p.key] != null) p.sharp = rec.scores[p.key]; });
+      ses.bursts.forEach(function (b) { if (rv[photos[b.start].key]) b.reviewed = true; });
+      var fl = rec.flips || {}; photos.forEach(function (p) { if (p.burst >= 0 && Object.prototype.hasOwnProperty.call(fl, p.key)) { var b = ses.bursts[p.burst]; (b.user || (b.user = {}))[p.i] = !!fl[p.key]; } });
+      var at = photos.findIndex(function (p) { return p.key === rec.cursorKey; }); if (at >= 0) ses.cursor = at;
+    }
+    ps.close();
+    S.draft = { event: null, manual: false, name: '', homecoming: false };
+    saveNow();
+    renderCull();
+    Pool.start();
+    return true;
+  } catch (e) {
+    ps.close();
+    await sheet({ bar: 'Could not read the card', title: 'Something went wrong reading the card', html: '<p>' + esc(e.message || e) + '</p><p>Take the card out, put it back in and try again.</p>' });
+    return false;
+  }
+}
+function buildBursts() {
+  var gap = S.cfg.burstGapSec * 1000, ph = ses.photos, cur = null;
+  ses.bursts = [];
+  for (var i = 1; i < ph.length; i++) {
+    var a = ph[i - 1], b = ph[i];
+    if (gap > 0 && a.time != null && b.time != null && b.time - a.time <= gap) {
+      if (!cur) { cur = { id: ses.bursts.length, start: i - 1, end: i, reviewed: false }; ses.bursts.push(cur); a.burst = cur.id; }
+      cur.end = i; b.burst = cur.id;
+    } else cur = null;
+  }
+}
+// Opening 100MSDCF instead of DCIM would quietly leave out 101MSDCF. Say so.
+async function pickCard() {
+  for (;;) {
+    var dir = await pickDir('cull-card', 'read'); if (!dir) return null;
+    if (!/^\d{3}[A-Za-z0-9_]{5}$/.test(dir.name)) return dir;
+    var a = await sheet({ bar: 'Double check', title: 'You opened "' + dir.name + '"', html: '<p>That is one folder inside <b>DCIM</b>. If the card has more than one of them, the photos in the others won\'t load.</p><p>Go up one level and pick <b>DCIM</b> to get every photo.</p>',
+      actions: [{ label: 'Use this folder', value: 'use' }, { label: 'Pick DCIM', primary: true, value: 'again' }] });
+    if (a === 'use') return dir; if (a !== 'again') return null;
+  }
+}
+async function openCard() {
+  var dir = await pickCard(); if (!dir) return;
+  await beginSession([{ kind: 'card', handle: dir, label: dir.name }]);
+}
+// Rare night with two cards: card 1 is copied onto the computer so it can come out of the reader, then card 2 is read directly.
+async function twoCards() {
+  var ok = await sheet({ bar: 'Two cards', title: 'Start with card 1', html: '<p>Put <b>card 1</b> in the reader. It gets saved onto this computer for a few minutes so you can swap in card 2. That copy is wiped when you finish.</p>',
+    actions: [{ label: 'Cancel', value: false }, { label: 'Open card 1', primary: true, value: true }] });
+  if (!ok) return;
+  var dir = await pickCard(); if (!dir) return;
+  var ps = progressSheet('Saving card 1 to this computer', 'Leave the card in until this finishes.');
+  var savedName = 'card1-' + Date.now().toString(36), saved;
+  try {
+    var files = await listJpegs(dir);
+    if (!files.length) { ps.close(); await sheet({ bar: 'No photos found', title: 'Card 1 has no JPEG photos', html: '<p>Pick the <b>DCIM</b> folder on the card.</p>' }); return; }
+    var root = await navigator.storage.getDirectory(); saved = await root.getDirectoryHandle(savedName, { create: true });
+    for (var i = 0; i < files.length; i++) {
+      var name = pad(i) + '_' + files[i].name;
+      await copyFile(files[i].handle, saved, name);
+      ps.set((i + 1) / files.length, (i + 1) + ' of ' + files.length + ' photos');
+    }
+  } catch (e) {
+    ps.close();
+    try { (await navigator.storage.getDirectory()).removeEntry(savedName, { recursive: true }); } catch (x) {}
+    await sheet({ bar: 'Could not save card 1', title: 'Card 1 did not copy', html: '<p>' + esc(e.message || e) + '</p><p>This computer may be low on space. Grab your shift manager.</p>' });
+    return;
+  }
+  ps.close();
+  for (;;) {
+    var go = await sheet({ bar: 'Two cards', title: 'Now swap in card 2', html: '<p>Card 1 is saved. Take it out, put <b>card 2</b> in, then open it.</p>', sticky: true,
+      actions: [{ label: 'Skip card 2', value: 'skip' }, { label: 'Open card 2', primary: true, value: 'open' }] });
+    var sources = [{ kind: 'saved', handle: saved, label: 'Card 1', saved: savedName }];
+    if (go === 'open') { var d2 = await pickCard(); if (!d2) continue; sources.push({ kind: 'card', handle: d2, label: d2.name }); }
+    var started = await beginSession(sources);
+    if (started !== true || !ses || !ses.sources.some(function (x) { return x.saved === savedName; })) { try { (await navigator.storage.getDirectory()).removeEntry(savedName, { recursive: true }); } catch (x) {} }
+    return;
+  }
+}
+// A saved copy of a card 1 that no open cull points at any more (tab closed at the wrong moment): clear it, it can be many GB.
+async function sweepSavedCards() {
+  if (!S.sessionsLoaded) return;
+  try {
+    var root = await navigator.storage.getDirectory(), used = Object.create(null), gone = [];
+    S.sessions.forEach(function (r) { (r.sources || []).forEach(function (x) { if (x.saved) used[x.saved] = 1; }); });
+    for await (var en of root.entries()) if (en[1].kind === 'directory' && /^card1-/.test(en[0]) && !used[en[0]]) gone.push(en[0]);
+    for (var i = 0; i < gone.length; i++) { try { await root.removeEntry(gone[i], { recursive: true }); } catch (x) {} }
+  } catch (e) {}
+}
+async function resumeSession(id) {
+  var rec = S.sessions.find(function (r) { return r.id === id; }); if (!rec) return;
+  for (;;) {
+    var sources = [];
+    for (var i = 0; i < rec.sources.length; i++) {
+      var s = rec.sources[i], h = null;
+      if (s.kind === 'saved') {
+        try { h = await (await navigator.storage.getDirectory()).getDirectoryHandle(s.saved); } catch (e) {}
+      } else {
+        try { if (s.handle && (await s.handle.requestPermission({ mode: 'read' })) === 'granted') { await s.handle.keys().next(); h = s.handle; } } catch (e) { h = null; }
+        if (!h) {
+          var ok = await sheet({ bar: 'Need your card', title: 'Put your SD card back in', html: '<p>Pop the card for <b>' + esc(rec.event.school) + '</b> back in, then open its <b>DCIM</b> folder.</p>',
+            actions: [{ label: 'Cancel', value: false }, { label: 'Open SD card', primary: true, value: true }] });
+          if (!ok) return;
+          h = await pickCard(); if (!h) return;
+        }
+      }
+      if (!h) { await sheet({ bar: 'Missing photos', title: 'The saved copy of card 1 is gone', html: '<p>Discard this one and start over with both cards.</p>' }); return; }
+      sources.push({ kind: s.kind, handle: h, label: s.label, saved: s.saved });
+    }
+    var r = await beginSession(sources, rec);
+    if (r !== 'again') return;
+    rec = Object.assign({}, rec, { sources: rec.sources.map(function (s) { return s.kind === 'card' ? { kind: 'card', label: s.label } : s; }) });
+  }
+}
+async function discardSession(id) {
+  var rec = S.sessions.find(function (r) { return r.id === id; }); if (!rec) return;
+  var ok = await sheet({ bar: 'Discard', title: 'Throw away this cull?', html: '<p>' + esc(rec.event.school) + ' &middot; ' + esc(rec.photographer) + '. The photos on the card are not touched. Only the keep / toss picks are forgotten.</p>',
+    actions: [{ label: 'Keep it', value: false }, { label: 'Discard', danger: true, primary: true, value: true }] });
+  if (!ok) return;
+  await forgetSession(rec);
+  loadSessions();
+}
+async function forgetSession(rec) {
+  try { await db.del('sessions', rec.id); } catch (e) {}
+  var root = null;
+  for (var i = 0; i < (rec.sources || []).length; i++) {
+    if (rec.sources[i].saved) { try { root = root || await navigator.storage.getDirectory(); await root.removeEntry(rec.sources[i].saved, { recursive: true }); } catch (e) {} }
+  }
+}
+
+/* ---- saving the open cull so a restart or a walk-away loses nothing ---- */
+var saveTimer = 0;
+function sessionRecord() {
+  var toss = {}, scores = {}, flips = {}, n = 0;
+  ses.photos.forEach(function (p) { if (p.state === 'toss') { toss[p.key] = 1; n++; } if (p.sharp != null) scores[p.key] = p.sharp; });
+  ses.bursts.forEach(function (b) { if (!b.reviewed && b.user) Object.keys(b.user).forEach(function (i) { flips[ses.photos[i].key] = b.user[i]; }); });      // half-sorted bursts
+  return {
+    id: ses.id, event: ses.event, photographer: ses.photographer, target: ses.target, studio: ses.studio, createdAt: ses.createdAt, updatedAt: Date.now(),
+    activeMs: ses.activeMs, total: ses.photos.length, tossed: n, sig: ses.sig, cursorKey: ses.photos[ses.cursor].key, decisions: toss, scores: scores,
+    reviewed: ses.bursts.filter(function (b) { return b.reviewed; }).map(function (b) { return ses.photos[b.start].key; }), flips: flips,
+    sources: ses.sources.map(function (s) { return { kind: s.kind, label: s.label, saved: s.saved, handle: s.kind === 'card' ? s.handle : undefined }; }), destFolder: ses.destFolder
+  };
+}
+function saveNow() { clearTimeout(saveTimer); saveTimer = 0; if (!ses) return Promise.resolve(); return db.set('sessions', ses.id, sessionRecord()).catch(function () {}); }
+function saveSoon() { if (!saveTimer) saveTimer = setTimeout(saveNow, 400); }      // within 0.4 s of a change, even while keys keep coming
+function tick() {            // counts time actually spent culling (gaps over a minute don't count)
+  if (!ses) return; var now = Date.now();
+  if (ses.lastTick) ses.activeMs += Math.min(now - ses.lastTick, 60000);
+  ses.lastTick = now;
+}
+function closeSession() {
+  Pool.stop();
+  if (ses) {
+    ses.photos.forEach(function (p) { if (p.thumbUrl) URL.revokeObjectURL(p.thumbUrl); if (p.previewUrl) URL.revokeObjectURL(p.previewUrl); if (p.smallUrl) URL.revokeObjectURL(p.smallUrl); });
+    if (ses.fullUrl) URL.revokeObjectURL(ses.fullUrl);
+  }
+  ses = null; var g = $('#grid'); if (g) g.remove();
+}
+async function exitCull() {
+  await saveNow(); closeSession(); renderHome(); loadSessions(); refreshCulled();
+}
+
+/* ============================== 5. Preview workers + sharpness ============================== */
+var Pool = {
+  workers: [], idle: [], url: null,
+  start: function () {
+    this.stop();
+    this.url = URL.createObjectURL(new Blob([$('#worker-src').textContent], { type: 'text/javascript' }));
+    var n = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
+    if (navigator.deviceMemory && navigator.deviceMemory <= 4) n = Math.min(n, 2);      // each worker holds one full-size photo in memory
+    for (var i = 0; i < n; i++) {
+      var w = new Worker(this.url); w.onmessage = this.done.bind(this, w); w.onerror = this.done.bind(this, w, { data: { ok: false, id: -1, error: 'worker crashed' } });
+      this.workers.push(w); this.idle.push(w);
+    }
+    this.pump();
+  },
+  stop: function () { this.workers.forEach(function (w) { w.terminate(); }); this.workers = []; this.idle = []; if (this.url) { URL.revokeObjectURL(this.url); this.url = null; } },
+  next: function () {          // the not-yet-done photo closest to where the photographer is looking
+    var ph = ses.photos, c = ses.cursor, n = ph.length;
+    for (var d = 0; d < n; d++) {
+      var a = c + d, b = c - d;
+      if (a < n && ph[a].pv === 0) return ph[a];
+      if (d && b >= 0 && ph[b].pv === 0) return ph[b];
+    }
+    return null;
+  },
+  pump: function () {
+    if (!ses || ses.cardLost) return;
+    var self = this;
+    while (this.idle.length) {
+      var p = this.next(); if (!p) break;
+      var w = this.idle.pop(); p.pv = 1; w.job = p.i;
+      (function (w, p) {
+        p.handle.getFile().then(function (f) { w.postMessage({ id: p.i, file: f, maxEdge: PREVIEW_EDGE, thumbEdge: THUMB_EDGE }); })
+          .catch(function (e) { self.done(w, { data: { id: p.i, ok: false, io: true, error: String(e) } }); });
+      })(w, p);
+    }
+  },
+  done: function (w, e) {
+    if (this.workers.indexOf(w) < 0) return;
+    this.idle.push(w);
+    if (!ses) return;
+    var m = e.data, p = ses.photos[m.id >= 0 ? m.id : w.job]; if (!p || p.pv !== 1) { this.pump(); return; }
+    if (m.ok) {
+      p.pv = 2; p.previewUrl = URL.createObjectURL(m.preview); p.smallUrl = URL.createObjectURL(m.thumb);
+      p.w = m.w; p.h = m.h; p.sharp = m.sharp; ses.fails = 0;
+    } else {
+      p.pv = 3;
+      // One photo that won't open is just a bad file. Only when the file can't even be read off the card, four times running, is the card gone.
+      var mine = ses;
+      (m.io ? Promise.resolve(false) : p.handle.getFile().then(function (f) { return f.slice(0, 16).arrayBuffer(); }).then(function () { return true; }, function () { return false; })).then(function (readable) {
+        if (ses !== mine) return;
+        if (readable) {                // the file is there but won't open: try once more (could be a memory hiccup), then call it damaged
+          if (!p.tried) { p.tried = 1; p.pv = 0; Pool.pump(); } else { p.broken = true; if (S.screen === 'cull') renderAll(); }
+          return;
+        }
+        ses.fails++;
+        if (ses.fails >= 4 && !ses.cardLost) { ses.cardLost = true; ses.photos.forEach(function (q) { if (q.pv === 3 || q.pv === 1) q.pv = 0; }); if (S.screen === 'cull') renderAll(); }
+      });
+    }
+    ses.scored++; ses.cutAt = -1;
+    onPhotoReady(p);
+    this.pump();
+  }
+};
+function softCut() {
+  if (ses.cutAt === ses.scored) return ses.cut;
+  var f = SOFT_FACTOR[String(S.cfg.softSensitivity).toLowerCase()];
+  var arr = ses.photos.filter(function (p) { return p.sharp != null; }).map(function (p) { return p.sharp; }).sort(function (a, b) { return a - b; });
+  ses.cutAt = ses.scored;
+  ses.cut = (!f || arr.length < Math.min(20, ses.photos.length)) ? null : arr[Math.floor(arr.length / 2)] * f;
+  return ses.cut;
+}
+function isSoft(p) { var c = softCut(); return c != null && p.sharp != null && p.sharp < c; }
+function thumbHtml(p) {
+  if (p.smallUrl) return '<img src="' + p.smallUrl + '" alt="" draggable="false">';
+  if (p.thumbUrl) return '<img src="' + p.thumbUrl + '" class="r' + (p.thumbRot || 1) + '" alt="" draggable="false">';
+  return '';
+}
+var readyTimer = 0;
+function onPhotoReady(p) {
+  if (S.screen !== 'cull') return;
+  proposeIfReady();
+  var showing = p.i === ses.cursor || (ses.photos[ses.cursor].burst >= 0 && p.burst === ses.photos[ses.cursor].burst);
+  if (showing && !ses.zoom.on) { ses.stageKey = ''; renderStage(); }
+  if (showing) { clearTimeout(readyTimer); readyTimer = 0; }
+  if (!readyTimer) readyTimer = setTimeout(function () { readyTimer = 0; if (ses && S.screen === 'cull') { renderStrip(); renderBar(); } }, showing ? 0 : 350);
+}
+
+/* ============================== 6. Culling screen ============================== */
+function renderCull() {
+  S.screen = 'cull';
+  $('#app').innerHTML =
+    '<section id="cull" class="screen' + (lsGet('cull.light', false) ? ' light' : '') + '"><div class="cbar"><img class="mark" src="' + LOGO_WHITE + '" alt="CADY">' +
+    '<div class="who"><div class="a">' + esc(ses.event.school) + ' &middot; ' + esc(ses.event.event) + '</div><div class="b">' + esc(ses.photographer) + '</div></div>' +
+    '<div class="meter" id="meter"></div><span class="chip plain" id="vh"></span>' +
+    '<button class="chip" id="softChip" data-act="nextSoft" hidden></button><button class="chip" id="burstChip" data-act="nextBurst" hidden></button>' +
+    '<button class="chip" data-act="help">? Keys</button><button class="chip" data-act="exit">Save + exit</button>' +
+    '<button class="btn primary" data-act="grid">Review + finish</button></div>' +
+    '<div class="stage" id="stage"></div><div class="strip" id="strip"></div>' +
+    '<div class="sbar"><span id="pos"></span><span class="prog" id="prog"></span><span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> move &nbsp; <kbd>Delete</kbd> toss &nbsp; <kbd>K</kbd> keep &nbsp; <kbd>Z</kbd> zoom &nbsp; <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo &nbsp; <kbd>?</kbd> all keys</span></div></section>';
+  ses.stageKey = '';
+  ensurePending(); renderAll();
+}
+function renderAll() { renderStage(); renderStrip(); renderBar(); }
+function counts() {
+  var keep = 0, v = 0, hz = 0, soft = 0;
+  ses.photos.forEach(function (p) { if (p.state !== 'keep') return; keep++; if (p.w && p.h) { if (p.h > p.w) v++; else hz++; } if (isSoft(p)) soft++; });
+  var left = ses.bursts.filter(function (b) { return !b.reviewed; }).length;
+  return { keep: keep, total: ses.photos.length, v: v, h: hz, soft: soft, burstsLeft: left };
+}
+function meterHtml(c) {
+  var t = ses.target, max = Math.max(c.total, t.hi * 1.15), state = c.keep > t.hi ? 'over' : c.keep < t.lo ? 'under' : 'good';
+  var mid = t.homecoming ? null : S.cfg.normalTarget;
+  var msg = state === 'good' ? 'Right in range for ' + t.label
+    : state === 'over' ? (c.keep - (mid || t.hi)) + ' over the ' + t.label + ' target'
+      : ((mid || t.lo) - c.keep) + ' under the ' + t.label + ' target';
+  return { cls: 'meter' + (state === 'good' ? ' good' : ''), html: '<div class="txt"><span>Keeping <b>' + c.keep + '</b> of ' + c.total + '</span><span>' + msg + '</span></div>' +
+    '<div class="track"><div class="zone" style="left:' + (t.lo / max * 100) + '%;width:' + ((t.hi - t.lo) / max * 100) + '%"></div><div class="fill" style="width:' + (c.keep / max * 100) + '%"></div></div>', msg: msg, state: state };
+}
+function renderBar() {
+  var c = counts(), m = meterHtml(c), el = $('#meter'); if (!el) return;
+  el.className = m.cls; el.innerHTML = m.html;
+  $('#vh').textContent = 'Vertical ' + c.v + ' · Horizontal ' + c.h;
+  var sc = $('#softChip'); sc.hidden = !c.soft; sc.textContent = 'Soft? ' + c.soft; sc.className = 'chip warn';
+  var bc = $('#burstChip'); bc.hidden = !c.burstsLeft; bc.textContent = 'Bursts left ' + c.burstsLeft;
+  var p = ses.photos[ses.cursor];
+  $('#pos').textContent = (ses.cursor + 1) + ' of ' + ses.photos.length + ' · ' + p.name;
+  var ready = ses.photos.filter(function (q) { return q.pv >= 2; }).length;
+  $('#prog').innerHTML = ses.cardLost ? '<span style="color:#ff8fa3;font-weight:700">Can\'t read the card. Is it still plugged in?</span> <button class="chip" data-act="retryCard">Try again</button>'
+    : ready < ses.photos.length ? 'Getting photos ready: ' + ready + ' of ' + ses.photos.length + ' (you can start now)' : '';
+}
+function badgesHtml(p, extra) {
+  var t = p.time != null ? new Date(p.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }) : '';
+  return '<div class="badges">' + (p.state === 'toss' ? '<span class="badge toss">TOSSED</span>' : '') + (p.broken ? '<span class="badge toss">DAMAGED FILE</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '') +
+    (t ? '<span class="badge">' + esc(t) + '</span>' : '') + (extra || '') + '</div>';
+}
+function renderStage() {
+  var st = $('#stage'); if (!st) return;
+  var p = ses.photos[ses.cursor];
+  if (ses.zoom.on) { renderZoom(st, p); return; }
+  if (p.burst >= 0) { renderBurst(st, ses.bursts[p.burst]); return; }
+  ses.stageKey = 'single';
+  st.innerHTML = '<div class="single' + (p.state === 'toss' ? ' tossed' : '') + '"><img id="mainImg" src="' + (p.previewUrl || p.smallUrl || p.thumbUrl || '') + '" class="' + (!p.previewUrl && !p.smallUrl && p.thumbUrl ? 'r' + (p.thumbRot || 1) : '') +
+    '" style="' + (p.previewUrl ? '' : 'width:min(100%,900px);image-rendering:auto;filter:blur(1px)') + '" alt="" draggable="false"></div>' + badgesHtml(p) +
+    (p.previewUrl ? '' : '<div class="loading">' + (p.pv === 3 ? 'This photo could not be opened' : 'Loading the big version...') + '</div>');
+  preload();
+}
+function preload() {
+  [1, 2, -1].forEach(function (d) { var q = ses.photos[ses.cursor + d]; if (q && q.previewUrl && !q.warm) { q.warm = true; var im = new Image(); im.src = q.previewUrl; } });
+}
+function renderStrip() {
+  var el = $('#strip'); if (!el) return;
+  var n = ses.photos.length, room = Math.max(5, Math.floor((el.clientWidth - 20) / 88)), half = Math.floor(room / 2);
+  var a = Math.max(0, Math.min(ses.cursor - half, n - room)), b = Math.min(n, a + room), h = '';
+  for (var i = a; i < b; i++) {
+    var p = ses.photos[i], bu = p.burst >= 0 ? ses.bursts[p.burst] : null;
+    h += '<button class="th' + (i === ses.cursor ? ' cur' : '') + (p.state === 'toss' ? ' toss' : '') + (bu ? ' inb' + (bu.reviewed ? ' done' : '') : '') + '" data-act="jump" data-i="' + i + '" tabindex="-1">' + thumbHtml(p) + (isSoft(p) ? '<span class="sd"></span>' : '') + '</button>';
+  }
+  el.innerHTML = h;
+}
+
+/* ============================== 7. Bursts, keep/toss, undo ============================== */
+function burstMembers(b) { return ses.photos.slice(b.start, b.end + 1); }
+function ensurePending() {
+  var p = ses.photos[ses.cursor];
+  if (p.burst < 0 || ses.bursts[p.burst].reviewed) { ses.pending = null; return; }
+  if (ses.pending && ses.pending.id === p.burst) return;
+  var b = ses.bursts[p.burst]; b.user = b.user || {};      // user = shots they flipped by hand in this burst; it lives on the burst, so it survives leaving and coming back
+  ses.pending = { id: p.burst, keep: {}, user: b.user, touched: Object.keys(b.user).length > 0, ready: false };
+  proposeIfReady();
+}
+// Once every shot in the burst has a sharpness score, pre-pick the sharpest one.
+// What the photographer already decided always stands: a shot they tossed (here, in the grid, or zoomed in) is never
+// brought back by the pre-pick, and if they already picked one by hand, that is the pick.
+function proposeIfReady() {
+  var pd = ses && ses.pending; if (!pd || pd.ready) return;
+  var mem = burstMembers(ses.bursts[pd.id]);
+  if (!mem.every(function (p) { return p.pv >= 2 || p.sharp != null; })) return;
+  var picked = mem.filter(function (p) { return pd.user[p.i] === true; });
+  var open = mem.filter(function (p) { return p.i in pd.user ? pd.user[p.i] : p.state === 'keep'; });
+  pd.keep = {};
+  if (picked.length) picked.forEach(function (p) { pd.keep[p.i] = true; });
+  else if (open.length) { var best = open[0]; open.forEach(function (p) { if ((p.sharp == null ? -1 : p.sharp) > (best.sharp == null ? -1 : best.sharp)) best = p; }); pd.keep[best.i] = true; }
+  pd.ready = true;
+}
+// Is this shot a keeper in the burst that's being sorted? Before the sharpest one is known, it is whatever it was (plus their own flips).
+function pendKeep(pd, p) { return pd.ready ? !!pd.keep[p.i] : (p.i in pd.user ? pd.user[p.i] : p.state === 'keep'); }
+function bestOf(b) { var mem = burstMembers(b), best = null; mem.forEach(function (p) { if (p.sharp != null && (!best || p.sharp > best.sharp)) best = p; }); return mem.every(function (p) { return p.sharp != null || p.pv === 3; }) ? best : null; }
+function isKept(p) { var pd = ses.pending; return pd && pd.id === p.burst ? pendKeep(pd, p) : p.state === 'keep'; }
+function renderBurst(st, b) {
+  var mem = burstMembers(b), pd = ses.pending && ses.pending.id === b.id ? ses.pending : null, key = 'burst:' + b.id + ':' + mem.map(function (p) { return p.pv; }).join('');
+  var nk = mem.filter(isKept).length, nt = mem.length - nk, best = bestOf(b);
+  if (ses.stageKey !== key) {
+    ses.stageKey = key;
+    var W = st.clientWidth - 24, H = st.clientHeight - 54, cols = 1, bestSize = 0, ar = mem[0].w && mem[0].h ? mem[0].w / mem[0].h : 1.5;
+    for (var c = 1; c <= mem.length; c++) { var r = Math.ceil(mem.length / c), size = Math.min(W / c, (H / r) * ar); if (size > bestSize) { bestSize = size; cols = c; } }
+    st.innerHTML = '<div class="burst"><div class="head"><b>Burst &middot; ' + mem.length + ' shots</b><span class="hint" id="bHint"></span><button class="btn primary" id="bGo" data-act="burstApply"></button></div>' +
+      '<div class="tiles" style="grid-template-columns:repeat(' + cols + ',1fr);grid-template-rows:repeat(' + Math.ceil(mem.length / cols) + ',1fr)">' + mem.map(function (p, n) {
+        return '<button class="tile" data-act="tile" data-i="' + p.i + '" tabindex="-1"><img src="' + (p.previewUrl || p.smallUrl || p.thumbUrl || '') + '" class="' + (!p.previewUrl && !p.smallUrl && p.thumbUrl ? 'r' + (p.thumbRot || 1) : '') + '" alt="" draggable="false">' +
+          (n < 9 ? '<span class="num">' + (n + 1) + '</span>' : '') + '<span class="st"></span><span class="lbl"></span></button>';
+      }).join('') + '</div></div>';
+  }
+  $$('.tile', st).forEach(function (el) {
+    var p = ses.photos[+el.dataset.i], k = isKept(p);
+    el.className = 'tile ' + (k ? 'keep' : 'toss') + (p.i === ses.cursor ? ' focus' : '');
+    el.querySelector('.lbl').textContent = k ? 'Keep' : 'Toss';
+    el.querySelector('.st').innerHTML = (best && best.i === p.i ? '<span class="badge best">Sharpest</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '');
+  });
+  var hint = $('#bHint'), go = $('#bGo');
+  if (pd) {
+    hint.innerHTML = pd.ready || pd.touched ? 'Pink ones stay. Click a shot or press its number to flip it. <kbd>Z</kbd> zooms in.' : 'Finding the sharpest one...';
+    go.hidden = false; go.innerHTML = 'Keep ' + nk + ', toss ' + nt + ' &nbsp;<kbd>Enter</kbd>';
+  } else { hint.textContent = 'Already sorted. Click a shot to flip it.'; go.hidden = true; }
+}
+// One keep/toss change (or a whole burst at once). Every change goes on the undo list.
+function commit(changes, burstId) {
+  changes = changes.filter(function (c) { return ses.photos[c.i].state !== c.to; }).map(function (c) { return { i: c.i, from: ses.photos[c.i].state, to: c.to }; });
+  if (!changes.length && burstId == null) return;
+  changes.forEach(function (c) { ses.photos[c.i].state = c.to; });
+  ses.undo.push({ changes: changes, cursor: ses.cursor, burst: burstId == null ? -1 : burstId });
+  if (ses.undo.length > 500) ses.undo.shift();
+  saveSoon();
+}
+function undo() {
+  var a = ses.undo.pop(); if (!a) { toast('Nothing to undo'); return; }
+  a.changes.forEach(function (c) { ses.photos[c.i].state = c.from; });
+  if (a.burst >= 0) ses.bursts[a.burst].reviewed = false;
+  ses.cursor = a.cursor; ses.pending = null; ses.stageKey = '';
+  ensurePending(); saveSoon();
+  if ($('#grid')) renderGrid(); else renderAll();
+  toast('Undone');
+}
+function setKeep(p, keep) {
+  var pd = ses.pending, inPending = pd && pd.id === p.burst;
+  if (inPending) {
+    // first flip after the pre-pick is showing: what's on screen becomes their pick for every shot, so it comes back the same later
+    if (pd.ready && !pd.touched) burstMembers(ses.bursts[pd.id]).forEach(function (q) { pd.user[q.i] = !!pd.keep[q.i]; });
+    pd.user[p.i] = keep; if (keep) pd.keep[p.i] = true; else delete pd.keep[p.i]; pd.touched = true;
+  }
+  // zoomed in, a toss is a real toss right away (they might arrow out of the burst without sorting it)
+  if (!inPending || ses.zoom.on) commit([{ i: p.i, to: keep ? 'keep' : 'toss' }]);
+}
+function setCursor(i) {
+  ses.cursor = Math.max(0, Math.min(ses.photos.length - 1, i));
+  ensurePending(); renderAll(); Pool.pump(); saveSoon();
+}
+function go(d) {
+  var cur = ses.photos[ses.cursor], pd = ses.pending, n = ses.photos.length;
+  if (!ses.zoom.on && pd && pd.id === cur.burst) {
+    var b = ses.bursts[cur.burst];
+    // Arrowing past the end of a burst they changed applies their picks. One they only looked at is left alone
+    // (still every shot a keeper, still counted in "Bursts left"), so holding the arrow key to browse never tosses anything.
+    if (d > 0 && ses.cursor === b.end) {
+      if (pd.touched) { applyPending(); return; }
+      if (!ses.toldSkip && ses.cursor + 1 < n) { ses.toldSkip = true; toast('Burst left as is. Enter keeps the pink one and tosses the rest.', 3600); }
+    }
+  }
+  var t = ses.cursor + d;
+  if (t < 0) { toast('That\'s the first photo'); ensurePending(); return; }
+  if (t >= n) { toast('That\'s the last one. Hit Review + finish to look over your keepers.', 3600); return; }
+  setCursor(t);
+}
+async function applyPending() {
+  var pd = ses.pending; if (!pd) return;
+  if (!pd.ready && !pd.touched) { toast('Still checking which one is sharpest, one sec'); return; }
+  var b = ses.bursts[pd.id], mem = burstMembers(b), nk = mem.filter(function (p) { return pendKeep(pd, p); }).length;
+  if (nk > S.cfg.burstNudge) {
+    var ok = await sheet({ bar: 'You sure?', title: 'Keeping ' + nk + ' from one burst', html: '<p>The guide says pick the best 2-3 from a burst. Keep all ' + nk + ' anyway?</p>',
+      actions: [{ label: 'Go back', value: false }, { label: 'Keep all ' + nk, primary: true, value: true }] });
+    if (!ok || ses.pending !== pd) return;
+  }
+  commit(mem.map(function (p) { return { i: p.i, to: pendKeep(pd, p) ? 'keep' : 'toss' }; }), b.id);
+  b.reviewed = true; ses.pending = null; ses.stageKey = '';
+  toast('Burst: kept ' + nk + ', tossed ' + (mem.length - nk) + '. Ctrl+Z to undo.');
+  if (b.end + 1 < ses.photos.length) setCursor(b.end + 1);
+  else { renderAll(); toast('That was the last one. Hit Review + finish to look over your keepers.', 3600); }
+}
+function tossCurrent() {
+  var p = ses.photos[ses.cursor], inBurstView = !ses.zoom.on && p.burst >= 0;
+  setKeep(p, false);
+  if (inBurstView) { var b = ses.bursts[p.burst]; if (ses.cursor < b.end) ses.cursor++; else if (ses.pending) toast('Press Enter when this burst looks right.'); renderAll(); return; }
+  if (ses.cursor + 1 < ses.photos.length) setCursor(ses.cursor + 1); else { renderAll(); toast('That\'s the last one. Hit Review + finish to look over your keepers.', 3600); }
+}
+function keepCurrent() { setKeep(ses.photos[ses.cursor], true); renderAll(); }
+function toggleTile(i) { var p = ses.photos[i]; ses.cursor = i; setKeep(p, !isKept(p)); renderAll(); }
+function nextSoft() {
+  var n = ses.photos.length;
+  for (var d = 1; d <= n; d++) { var p = ses.photos[(ses.cursor + d) % n]; if (p.state === 'keep' && isSoft(p)) { if ($('#grid')) $('#grid').remove(); ses.zoom.on = false; setCursor(p.i); return; } }
+  toast('No soft ones left');
+}
+function nextBurst() {
+  var list = ses.bursts.filter(function (b) { return !b.reviewed; }); if (!list.length) { toast('Every burst is sorted'); return; }
+  var b = list.find(function (x) { return x.start > ses.cursor; }) || list[0];
+  if ($('#grid')) $('#grid').remove(); ses.zoom.on = false; setCursor(b.start);
+}
+
+/* ============================== 8. Zoom, keepers grid ============================== */
+function renderZoom(st, p) {
+  ses.stageKey = 'zoom';
+  st.innerHTML = '<div class="zoomv' + (p.state === 'keep' ? '' : ' tossed') + '" id="zoomv"><img id="zimg" alt="" draggable="false"></div>' + badgesHtml(p, '<span class="badge">100%</span>') + '<div class="loading" id="zload">Loading full size...</div>';
+  var img = $('#zimg'), same = ses.fullFor === p.i && ses.fullUrl;
+  img.src = same ? ses.fullUrl : (p.previewUrl || p.smallUrl || p.thumbUrl || '');
+  if (same) $('#zload').remove();
+  layoutZoom();
+  if (!same) loadFull(p);
+  var zv = $('#zoomv'), drag = null;
+  zv.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, cx: ses.zoom.cx, cy: ses.zoom.cy, moved: 0 }; zv.setPointerCapture(e.pointerId); zv.classList.add('drag'); });
+  zv.addEventListener('pointermove', function (e) {
+    if (!drag) return; var d = zoomDims(p), dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag.moved = Math.max(drag.moved, Math.abs(dx) + Math.abs(dy));
+    ses.zoom.cx = drag.cx - dx / d.w; ses.zoom.cy = drag.cy - dy / d.h; layoutZoom();
+  });
+  zv.addEventListener('pointerup', function () { var m = drag && drag.moved; drag = null; zv.classList.remove('drag'); if (m != null && m < 5) toggleZoom(); });
+}
+function zoomDims(p) { var dpr = window.devicePixelRatio || 1; return { w: (p.w || 6000) / dpr, h: (p.h || 4000) / dpr }; }
+function layoutZoom() {
+  var img = $('#zimg'), st = $('#stage'); if (!img) return;
+  var p = ses.photos[ses.cursor], d = zoomDims(p), vw = st.clientWidth, vh = st.clientHeight, z = ses.zoom;
+  var left = d.w <= vw ? (vw - d.w) / 2 : Math.max(vw - d.w, Math.min(0, vw / 2 - z.cx * d.w));
+  var top = d.h <= vh ? (vh - d.h) / 2 : Math.max(vh - d.h, Math.min(0, vh / 2 - z.cy * d.h));
+  if (d.w > vw) z.cx = (vw / 2 - left) / d.w; if (d.h > vh) z.cy = (vh / 2 - top) / d.h;
+  img.style.width = d.w + 'px'; img.style.height = d.h + 'px'; img.style.left = left + 'px'; img.style.top = top + 'px';
+}
+var fullTimer = 0;
+function loadFull(p) {
+  clearTimeout(fullTimer);
+  fullTimer = setTimeout(function () { if (ses && ses.photos[ses.cursor] === p && ses.zoom.on) loadFullNow(p); }, 140);      // flipping fast through a burst loads only the one they stop on
+}
+function loadFullNow(p) {
+  p.handle.getFile().then(function (f) {
+    var url = URL.createObjectURL(f), im = new Image(); im.src = url;
+    return im.decode().then(function () {
+      if (!ses || ses.photos[ses.cursor] !== p || !ses.zoom.on) { URL.revokeObjectURL(url); return; }
+      if (ses.fullUrl) URL.revokeObjectURL(ses.fullUrl);
+      ses.fullUrl = url; ses.fullFor = p.i; p.w = im.naturalWidth; p.h = im.naturalHeight;
+      var img = $('#zimg'); if (img) { img.src = url; layoutZoom(); } var l = $('#zload'); if (l) l.remove();
+    });
+  }).catch(function () { var l = $('#zload'); if (l) l.textContent = 'Could not load full size (is the card still in?)'; });
+}
+function toggleZoom(at) {
+  ses.zoom.on = !ses.zoom.on;
+  if (ses.zoom.on && at) { ses.zoom.cx = at.x; ses.zoom.cy = at.y; }
+  if (!ses.zoom.on) ensurePending();
+  ses.stageKey = ''; renderAll();
+}
+
+var gridFilter = 'keep';
+var gridOpenedAt = 0;
+function openGrid() {
+  if ($('#grid')) return;
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  gridOpenedAt = Date.now(); gridFilter = 'keep'; ses.zoom.on = false; var g = document.createElement('div'); g.id = 'grid'; document.body.appendChild(g); renderGrid();
+}
+function closeGrid() { var g = $('#grid'); if (g) g.remove(); ses.stageKey = ''; ensurePending(); renderAll(); }
+function renderGrid() {
+  var g = $('#grid'); if (!g) return;
+  var c = counts(), m = meterHtml(c);
+  var list = ses.photos.filter(function (p) { return gridFilter === 'all' || (gridFilter === 'keep' && p.state === 'keep') || (gridFilter === 'toss' && p.state === 'toss') || (gridFilter === 'soft' && isSoft(p)); });
+  var scroll = $('.gwrap', g) ? $('.gwrap', g).scrollTop : 0;
+  g.innerHTML = '<div class="gbar"><h2>Look over your keepers</h2><div class="tseg">' + [['keep', 'Keepers'], ['toss', 'Tossed'], ['soft', 'Soft?'], ['all', 'All']].map(function (f) {
+    return '<button data-act="gfilter" data-v="' + f[0] + '" class="' + (gridFilter === f[0] ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div><div class="grow"></div>' +
+    '<button class="btn" data-act="gridClose">Back to culling</button><button class="btn primary" data-act="finish">Done: copy ' + plural(c.keep, 'keeper') + '</button></div>' +
+    '<div class="gnote"><span id="gCount"></span>' + (c.burstsLeft ? '<span class="pink">' + plural(c.burstsLeft, 'burst') + ' not sorted yet <button class="linkish" data-act="nextBurst">Go to the next one</button></span>' : '') +
+    '<span class="note">Click a photo to toss it or bring it back. Double-click to open it big.</span></div>' +
+    '<div class="gwrap"><div class="gtiles">' + list.map(function (p) {
+      return '<button class="gt' + (p.state === 'toss' ? ' toss' : '') + '" data-act="gtile" data-i="' + p.i + '" tabindex="-1">' + thumbHtml(p).replace('<img ', '<img loading="lazy" ') + (isSoft(p) ? '<span class="sd">Soft?</span>' : '') + '</button>';
+    }).join('') + (list.length ? '' : '<p class="note">Nothing here.</p>') + '</div></div>';
+  $('.gwrap', g).scrollTop = scroll;
+  gridCount();
+}
+function gridCount() {
+  var c = counts(), m = meterHtml(c), el = $('#gCount'); if (!el) return;
+  el.innerHTML = '<b>' + plural(c.keep, 'keeper') + '</b> &middot; ' + esc(m.msg) + ' &middot; Vertical ' + c.v + ', Horizontal ' + c.h;
+  var b = $('#grid [data-act="finish"]'); if (b) b.textContent = 'Done: copy ' + plural(c.keep, 'keeper');
+}
+
+/* ============================== 9. Finish: copy keepers ============================== */
+function cleanName(s) { return String(s || '').replace(/[\\/:*?"<>|\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').replace(/[. ]+$/, '').trim(); }
+function folderName() {
+  var e = ses.event, name = cleanName(e.date + ' ' + cleanName(e.school).slice(0, 40) + ' - ' + cleanName(e.event).slice(0, 50) + ' - ' + cleanName(ses.photographer).slice(0, 30));
+  return e.control ? name + ' (' + cleanName(e.control).replace(/[()]/g, '') + ')' : name;
+}
+async function copyFile(srcHandle, destDir, name) {
+  var file = await srcHandle.getFile();
+  try { var have = await (await destDir.getFileHandle(name)).getFile(); if (have.size === file.size && file.size > 0) return file.size; } catch (e) {}
+  var fh = await destDir.getFileHandle(name, { create: true }), w = await fh.createWritable();
+  try { await file.stream().pipeTo(w); } catch (e) { try { await w.abort(); } catch (x) {} throw e; }
+  var check = await fh.getFile();
+  if (check.size !== file.size) throw new Error(name + ' did not copy all the way');
+  return file.size;
+}
+async function hasPerm(handle, mode, ask) {
+  try {
+    var o = { mode: mode };
+    if ((await handle.queryPermission(o)) === 'granted') return true;
+    return ask ? (await handle.requestPermission(o)) === 'granted' : false;
+  } catch (e) { return false; }
+}
+var finishing = false;
+async function finish() {          // one copy at a time, however many times Done / Enter gets hit
+  if (finishing) return; finishing = true;
+  try { await finishRun(); } finally { finishing = false; }
+}
+async function finishRun() {
+  var c = counts();
+  if (!c.keep) { await sheet({ bar: 'No keepers', title: 'Everything is tossed', html: '<p>There\'s nothing to copy. Bring some photos back first.</p>' }); return; }
+  if (c.burstsLeft) {
+    var a = await sheet({ bar: 'Double check', red: true, title: plural(c.burstsLeft, 'burst') + ' not sorted yet', html: '<p>Every shot in ' + (c.burstsLeft === 1 ? 'that burst' : 'those bursts') + ' is still a keeper. The guide says pick the best 2-3.</p>',
+      actions: [{ label: 'Copy anyway', value: 'go' }, { label: 'Go sort them', primary: true, value: 'sort' }] });
+    if (a === 'sort') { nextBurst(); return; }
+    if (a !== 'go') return;
+  }
+  var broken = ses.photos.filter(function (p) { return p.state === 'keep' && p.broken; });
+  if (broken.length) {             // a file that won't open is no good in Capture either: ask before it rides along as a keeper
+    var one = broken.length === 1;
+    var bk = await sheet({ bar: 'Double check', red: true, sticky: true, title: plural(broken.length, 'keeper') + ' won\'t open',
+      html: '<p>' + (one ? 'This file looks' : 'These files look') + ' damaged on the card: ' + broken.slice(0, 6).map(function (p) { return esc(p.name); }).join(', ') + (broken.length > 6 ? ' and ' + (broken.length - 6) + ' more' : '') + '.</p><p>A damaged photo won\'t work in Capture. The usual move is to leave ' + (one ? 'it' : 'them') + ' out and tell your shift manager.</p>',
+      actions: [{ label: 'Copy ' + (one ? 'it' : 'them') + ' anyway', value: 'copy' }, { label: 'Leave ' + (one ? 'it' : 'them') + ' out', primary: true, value: 'out' }] });
+    if (bk === 'out') { commit(broken.map(function (p) { return { i: p.i, to: 'toss' }; })); if ($('#grid')) renderGrid(); if (!counts().keep) return; }
+  }
+  if (!S.culled || !(await hasPerm(S.culled, 'readwrite', true))) {
+    await sheet({ bar: 'Culled folder', title: 'The Culled folder isn\'t connected', html: '<p>Hit <b>Save + exit</b>, connect the Culled folder on the home screen, then continue this cull. Your picks are saved.</p>' });
+    return;
+  }
+  var keepers = ses.photos.filter(function (p) { return p.state === 'keep'; });
+  var total = keepers.reduce(function (s, p) { return s + (p.size || 0); }, 0);
+  var ps = progressSheet('Copying your keepers', 'Leave the SD card in until this finishes.');
+  var failed = [], firstErr = null, dest, name;
+  try {
+    name = ses.destFolder || folderName();
+    if (!ses.destFolder) {             // a folder with this name from an earlier cull? don't mix them
+      for (var n = 2; n < 20; n++) { try { await S.culled.getDirectoryHandle(name); name = folderName() + ' (' + n + ')'; } catch (e) { break; } }
+    }
+    dest = await S.culled.getDirectoryHandle(name, { create: true });
+    ses.destFolder = name; await saveNow();
+    var used = {}, bytes = 0, doneN = 0, idx = 0;
+    // Same file name twice (two card folders, or two cards)? The later one always gets a tag on its name, keeper or not,
+    // so a photo's name in the Culled folder never changes between one Done and the next.
+    ses.photos.forEach(function (p) { var nm = p.name, k = nm.toLowerCase(); if (used[k]) { var dot = nm.lastIndexOf('.'); nm = nm.slice(0, dot) + '_' + (p.src + 1) + '-' + p.i + nm.slice(dot); } used[nm.toLowerCase()] = 1; p.outName = nm; });
+    await Promise.all([0, 1].map(async function () {
+      while (idx < keepers.length) {
+        var p = keepers[idx++];
+        try { bytes += await copyFile(p.handle, dest, p.outName); }
+        catch (e1) { try { bytes += await copyFile(p.handle, dest, p.outName); } catch (e2) { failed.push(p); firstErr = firstErr || e2; } }
+        doneN++; ps.set(total ? bytes / total : doneN / keepers.length, doneN + ' of ' + keepers.length + ' photos');
+      }
+    }));
+  } catch (e) { ps.close(); await sheet({ bar: 'Copy stopped', red: true, title: 'The keepers did not copy', html: '<p>' + esc(e.message || e) + '</p><p>Check the SD card is in and try Done again. Your picks are saved.</p>' }); return; }
+  ps.close();
+  if (failed.length) {
+    var errText = firstErr ? String(firstErr.name || '') + ' ' + String(firstErr.message || firstErr) : '';
+    var full = /quota|space|disk/i.test(errText), few = failed.length <= 5 && failed.length < keepers.length;
+    var names = failed.slice(0, 6).map(function (p) { return esc(p.name); }).join(', ') + (failed.length > 6 ? ' and ' + (failed.length - 6) + ' more' : '');
+    var what = await sheet({ bar: 'Copy stopped', red: true, sticky: true, title: plural(failed.length, 'photo') + ' did not copy',
+      html: '<p>' + (full ? 'This computer looks like it is <b>out of space</b>. Grab your shift manager to clear room, then hit Done again.' : 'Check the SD card is still in, then hit Done again. It picks up where it stopped.') + '</p>' +
+        '<p class="note">' + names + (errText.trim() ? '<br>What the computer said: ' + esc(errText.trim()) : '') + '</p>',
+      actions: (few ? [{ label: 'Finish without ' + (failed.length === 1 ? 'it' : 'them'), value: 'skip' }] : []).concat([{ label: 'OK', primary: true, value: false }]) });
+    if (what !== 'skip') return;
+  }
+  // The folder holds exactly this cull's keepers: anything left from an earlier try (a photo tossed since, a half-written file) comes out.
+  var okSet = Object.create(null); keepers.forEach(function (p) { if (failed.indexOf(p) < 0) okSet[p.outName.toLowerCase()] = 1; });
+  try {
+    var stale = []; for await (var en of dest.entries()) if (en[1].kind === 'file' && !okSet[en[0].toLowerCase()]) stale.push(en[0]);
+    for (var si = 0; si < stale.length; si++) { try { await dest.removeEntry(stale[si]); } catch (x) {} }
+  } catch (e) {}
+  tick();
+  var result = { folder: name, kept: keepers.length - failed.length, skipped: failed.length, loaded: ses.photos.length, activeMin: Math.round(ses.activeMs / 6000) / 10, totalMin: Math.round((Date.now() - ses.createdAt) / 6000) / 10, event: ses.event, photographer: ses.photographer };
+  if (S.conn && S.cfg.logCullTimes) {
+    api('log', { d: JSON.stringify({ studio: ses.studio, photographer: ses.photographer, school: ses.event.school, event: ses.event.event, control: ses.event.control || '', date: ses.event.date,
+      loaded: result.loaded, kept: result.kept, bursts: ses.bursts.length, activeMin: result.activeMin, totalMin: result.totalMin, version: APP_VERSION }) }).catch(function () {});
+  }
+  if (ses.event.wasPushed) { var hold = lsGet('cull.hold', []); if (hold.indexOf(name) < 0) hold.push(name); lsSet('cull.hold', hold.slice(-200)); }
+  await forgetSession(sessionRecord());
+  closeSession();
+  renderDone(result);
+}
+function renderDone(r) {
+  S.screen = 'done';
+  $('#app').innerHTML = '<section class="screen"><header class="topbar"><img class="mark" src="' + LOGO_WHITE + '" alt="CADY"><div><div class="t1">Candid Cull</div><div class="t2">' + esc(r.event.school) + ' &middot; ' + esc(r.photographer) + '</div></div></header>' +
+    '<div class="done-wrap"><h1>🎉 ' + plural(r.kept, 'keeper') + ' ready for Capture</h1><div class="rule"></div>' +
+    '<p class="lede">You went from ' + plural(r.loaded, 'photo') + ' to ' + r.kept + ' in about ' + Math.max(1, Math.round(r.activeMin)) + (Math.round(r.activeMin) > 1 ? ' minutes' : ' minute') + '.</p>' +
+    (r.skipped ? '<p class="lede pink"><b>' + plural(r.skipped, 'photo') + ' could not be copied and ' + (r.skipped === 1 ? 'was' : 'were') + ' left out.</b> Tell your shift manager.</p>' : '') +
+    '<div class="box"><div class="bar">What\'s next</div><div class="body"><ol class="steps">' +
+    '<li>Open <b>Capture</b> and upload from the desktop folder <span class="path">Culled</span> &gt; <span class="path">' + esc(r.folder) + '</span></li>' +
+    '<li>Take your SD card out and put it in the <b>SD card bin</b>.</li>' +
+    '<li>That\'s it. ' + (r.event.wasPushed ? 'This job was already marked pushed, so this folder will <b>not</b> clear itself. Delete it from the home screen once it\'s uploaded.' : 'The Culled folder clears itself after the job is pushed.') + '</li></ol></div></div>' +
+    '<button class="btn primary big" data-act="home">Back to the start</button></div></section>';
+}
+
+/* ============================== 10. Culled folder + cleanup ============================== */
+async function connectCulled() {
+  var dir = await pickDir('cull-culled', 'readwrite', 'desktop'); if (!dir) return;
+  if (!/cull/i.test(dir.name)) {
+    var ok = await sheet({ bar: 'Double check', red: true, title: 'That folder is named "' + dir.name + '"', html: '<p>This should be the folder named <b>Culled</b> on the desktop. Old pushed folders inside it get deleted automatically, so don\'t pick a folder with other stuff in it.</p>',
+      actions: [{ label: 'Pick again', primary: true, value: false }, { label: 'Use it anyway', danger: true, value: true }] });
+    if (!ok) return;
+  }
+  S.culled = dir; await db.set('kv', 'culled', dir).catch(function () {});
+  await refreshCulled();
+}
+async function reconnectCulled() { if (S.culled && await hasPerm(S.culled, 'readwrite', true)) await refreshCulled(); else if (!S.culled) await connectCulled(); }
+function controlOf(folder) { var m = /\(([A-Za-z0-9-]{5,})\)(?: \(\d+\))?$/.exec(folder); return m ? m[1] : ''; }
+async function refreshCulled() {
+  if (!S.culled) { S.culledState = 'none'; renderCulled(); renderOpen(); return; }
+  if (!(await hasPerm(S.culled, 'readwrite', false))) { S.culledState = 'ask'; renderCulled(); renderOpen(); return; }
+  var folders = [];
+  try {
+    for await (var entry of S.culled.entries()) {
+      if (entry[1].kind !== 'directory') continue;
+      var f = { name: entry[0], handle: entry[1], control: controlOf(entry[0]), count: 0, newest: 0, pushed: null, mine: false };
+      for await (var e2 of entry[1].entries()) {         // newest = the most recent file in it, so a copy that ran past midnight counts as today
+        if (e2[1].kind !== 'file') continue; f.count++;
+        try { f.newest = Math.max(f.newest, (await e2[1].getFile()).lastModified); } catch (x) {}
+      }
+      folders.push(f);
+    }
+  } catch (e) { S.culledState = 'ask'; renderCulled(); renderOpen(); return; }
+  S.culledState = 'ok'; S.folders = folders.sort(function (a, b) { return b.newest - a.newest; });
+  renderCulled(); renderOpen();
+  var ids = folders.map(function (f) { return f.control; }).filter(Boolean);
+  if (!S.conn || !ids.length) return;
+  try {
+    var j = await api('status', { ids: ids.join(',') }), today = startOfToday(), open = {}; S.sessions.forEach(function (r) { if (r.destFolder) open[r.destFolder] = 1; });
+    // The sheet says, fresh every time, whether clean-up is on. A computer that was linked by opening a link just now never cleans on that visit.
+    var jobs = j.jobs || {}; S.cleanOn = j.autoClean === true;
+    for (var i = 0; i < folders.length; i++) {
+      var fo = folders[i], key = fo.control.toUpperCase();
+      if (!fo.control || !Object.prototype.hasOwnProperty.call(jobs, key) || !Array.isArray(jobs[key])) continue;
+      var day = fo.name.slice(0, 10), rows = jobs[key].filter(function (r) { return r && r.date === day; });
+      if (!rows.length) continue;                      // that Control # is on the sheet, but not on this folder's day: not this job
+      fo.pushed = rows.every(function (r) { return r.pushed === true; });
+      fo.mine = rows.some(function (r) { return fo.name.indexOf(cleanName(day + ' ' + cleanName(r.school).slice(0, 40) + ' -') + ' ') === 0; })
+        && lsGet('cull.hold', []).indexOf(fo.name) < 0;       // culled when the job already showed pushed: these keepers were not part of that push
+      // The rule: this folder's Control #, day AND school all match a job on the leads sheet, every row of that job is pushed
+      // (col I), and the newest keeper in the folder was copied before today. Anything less and a person deletes it, not the page.
+      if (fo.pushed && fo.mine && S.cleanOn && !S.linkedByUrl && fo.newest > 0 && fo.newest < today && !open[fo.name]) {
+        try { await S.culled.removeEntry(fo.name, { recursive: true }); fo.gone = true; S.cleaned.push(fo.name); } catch (e) {}
+      }
+    }
+    S.folders = folders.filter(function (f) { return !f.gone; });
+  } catch (e) { S.folders.forEach(function (f) { f.statusErr = true; }); }
+  renderCulled();
+}
+function renderCulled() {
+  var el = $('#culledArea'); if (!el) return;
+  var h = '';
+  if (S.culledState === 'none') {
+    h = '<p style="margin-top:0"><b>One time on this computer:</b></p><ol class="plain" style="padding-left:20px;margin:0 0 12px"><li>Right-click the desktop, New, Folder. Name it <span class="path">Culled</span>.</li><li>Click the button below and pick that folder.</li><li>When Chrome asks to save changes, say yes.</li></ol><button class="btn primary" data-act="culledConnect">Connect the Culled folder</button>';
+  } else if (S.culledState === 'ask') {
+    h = '<p style="margin-top:0">Chrome needs a quick OK to use the Culled folder again. If it offers <b>Allow on every visit</b>, pick that and it stops asking.</p><button class="btn primary" data-act="culledReconnect">Reconnect the Culled folder</button> <button class="linkish" data-act="culledConnect" style="margin-left:8px">Pick a different folder</button>';
+  } else {
+    var today = startOfToday();
+    h = '<div class="row" style="margin-bottom:10px"><span class="tag ok">Connected</span><span class="note" style="flex:1">Desktop &gt; ' + esc(S.culled.name) + '</span><button class="linkish" data-act="culledRefresh">Check again</button></div>';
+    if (S.cleaned.length) h += '<p class="note" style="margin:0 0 10px">Cleared ' + plural(S.cleaned.length, 'pushed folder') + ' just now.</p>';
+    h += S.folders.length ? S.folders.map(function (f) {
+      var old = f.newest && f.newest < today, tag;
+      if (f.pushed === true) tag = '<span class="tag ok">' + (!f.mine ? 'Pushed, delete it yourself' : S.cleanOn ? 'Pushed, clears tomorrow' : 'Pushed') + '</span>';
+      else if (f.pushed === false) tag = old ? '<span class="tag bad">Not pushed yet</span>' : '<span class="tag wait">Waiting on push</span>';
+      else tag = f.control && S.conn && !f.statusErr ? '<span class="tag">Not found on the sheet</span>' : '<span class="tag">' + (f.control ? 'Can\'t check right now' : 'Not tied to an event') + '</span>';
+      return '<div class="item"><div class="grow"><div class="n">' + esc(f.name) + '</div><div class="d">' + plural(f.count, 'photo') + (f.newest ? ' &middot; culled ' + esc(niceDay(ymd(new Date(f.newest))).toLowerCase()) : '') + '</div></div>' + tag +
+        '<button class="btn small danger" data-act="culledDelete" data-name="' + esc(f.name) + '">Delete</button></div>';
+    }).join('') : '<p class="note" style="margin:0">Nothing in it right now.</p>';
+  }
+  el.innerHTML = h;
+  var al = $('#alerts'); if (!al) return;
+  var late = S.culledState === 'ok' ? S.folders.filter(function (f) { return f.pushed === false && f.newest && f.newest < startOfToday(); }) : [];
+  al.innerHTML = late.length ? '<div class="alert"><div class="bar red">&#9888; Ask your shift manager</div><div class="body">' + 'These keepers are from before today and the job isn\'t marked pushed on the Event Leads sheet: <b>' +
+    late.map(function (f) { return esc(f.name); }).join('</b>, <b>') + '</b>. They may still need to go into Capture.</div></div>' : '';
+}
+async function deleteCulled(name) {
+  var ok = await sheet({ bar: 'Double check', red: true, title: 'Delete this Culled folder?', html: '<p><b>' + esc(name) + '</b></p><p>Only do this if these photos are already uploaded to Capture. This can\'t be undone.</p>',
+    actions: [{ label: 'Cancel', primary: true, value: false }, { label: 'Delete the folder', danger: true, value: true }] });
+  if (!ok) return;
+  try { await S.culled.removeEntry(name, { recursive: true }); } catch (e) { toast('Could not delete it: ' + (e.message || e)); }
+  refreshCulled();
+}
+
+/* ---- settings + help sheets ---- */
+function settingsSheet() {
+  var c = S.cfg;
+  sheet({ wide: true, bar: 'Settings for this computer', title: S.conn ? 'Linked to the Event Leads sheet' : 'Link this computer to the Event Leads sheet',
+    html: (S.conn ? '<p class="note">Events, the pushed check and the settings below all come from the sheet. To change a setting for every computer, edit the <b>Culling App Settings</b> tab on the Event Leads sheet.</p>'
+      : '<p>In the Event Leads sheet: <b>Event Leads</b> menu, <b>Culling app</b>, <b>Get the connect code</b>. Paste it here.</p>') +
+      '<label class="lab">Connect code</label><input class="field" id="ccIn" placeholder="CULL1...." autocomplete="off" spellcheck="false">' +
+      '<div class="note pink" id="ccErr" style="margin-top:6px"></div>' +
+      '<h3>Current settings</h3><table class="keys"><tr><th>Setting</th><th>Value</th></tr>' +
+      [['Normal candid target', c.normalTarget + ' (green within ' + c.closeEnoughPct + '%)'], ['Homecoming game target', c.homecomingLow + '-' + c.homecomingHigh], ['Shots count as a burst within', c.burstGapSec + ' seconds'],
+        ['"You sure?" when keeping more than', c.burstNudge + ' from a burst'], ['Soft photo flags', c.softSensitivity], ['Days of events on the list', c.daysBack], ['Log cull times (pilot)', c.logCullTimes ? 'On' : 'Off'], ['Clear pushed Culled folders', c.autoClean ? 'On' : 'Off']]
+        .map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('') + '</table>' +
+      '<p class="note" style="margin-bottom:0">Candid Cull ' + APP_VERSION + '</p>',
+    actions: (S.conn ? [{ label: 'Unlink this computer', danger: true, fn: function () { S.conn = null; lsSet('cull.conn', null); S.events = []; lsSet('cull.cache', null); applySettings({}); return true; } }] : []).concat([
+      { label: 'Close', value: null },
+      { label: 'Save connect code', primary: true, fn: function (el) {
+        var v = el.querySelector('#ccIn').value.trim(); if (!v) return true;
+        var conn = readConnectCode(v); if (!conn) { el.querySelector('#ccErr').textContent = 'That doesn\'t look like a connect code. Copy the whole thing, starting with CULL1.'; return false; }
+        S.conn = conn; lsSet('cull.conn', conn); return true;
+      } }])
+  }).then(function () { if (S.screen === 'home') { renderTopbar(); loadEvents().then(refreshCulled); } });
+}
+function helpSheet() {
+  var k = function (rows) { return '<table class="keys"><tr><th>Key</th><th>What it does</th></tr>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table>'; };
+  sheet({ wide: true, bar: 'Keys + culling guide', html: '<div class="two"><div>' +
+    k([['<kbd>&rarr;</kbd> <kbd>&larr;</kbd>', 'Next / previous photo'], ['<kbd>Delete</kbd>', 'Toss this photo and go to the next one. <kbd>Backspace</kbd> or <kbd>X</kbd> work too.'], ['<kbd>K</kbd>', 'Keep it (bring a tossed photo back)'], ['<kbd>Z</kbd> or click', 'Zoom to 100% and back. Drag to move around.'],
+      ['<kbd>Ctrl</kbd>+<kbd>Z</kbd>', 'Undo'], ['<kbd>G</kbd>', 'Grid of your keepers, then Done'], ['<kbd>S</kbd>', 'Jump to the next soft-looking photo'], ['<kbd>B</kbd>', 'Jump to the next burst'], ['<kbd>Home</kbd> <kbd>End</kbd>', 'First / last photo'], ['<kbd>Esc</kbd>', 'Back out of zoom or the grid'], ['<kbd>L</kbd>', 'Light or dark background'], ['<kbd>?</kbd>', 'This page']]) +
+    '<h3>In a burst</h3>' + k([['<kbd>1</kbd>-<kbd>9</kbd> or click', 'Flip that shot between keep and toss'], ['<kbd>Space</kbd>', 'Flip the outlined shot'], ['<kbd>Enter</kbd>', 'Keep the pink ones, toss the rest, move on'], ['<kbd>Z</kbd>', 'Zoom the outlined shot. Arrows flip through the burst at the same spot.']]) +
+    '<p class="note">Nothing is ever deleted off the SD card. Tossed photos just don\'t get copied.</p></div><div>' +
+    '<h3 style="margin-top:0">Required final image counts</h3><ul class="plain"><li>All candid events except Homecoming games: <b>' + S.cfg.normalTarget + '</b></li><li>Homecoming Football Game: <b>' + S.cfg.homecomingLow + '-' + S.cfg.homecomingHigh + '</b></li></ul>' +
+    '<p class="note" style="color:#555a62">The total number isn\'t as critical as the quality of the images. Don\'t leave in lesser quality photos just to reach a magic number. Our goal is to tell the story of the event!</p>' +
+    '<h3>Photos that need to be deleted</h3><ul class="plain"><li>Blurry and soft images</li><li>Excessive duplicates. Ex: burst photos of action. Pick the best 2-3.</li><li>Back of the head photos</li><li>Photos of the opposing team</li><li>Any images of the team you are covering in a position or play in which they are visibly losing</li><li>Images with inappropriate hand gestures or clothing. Look closely at any group or crowd photos.</li><li>Awkward cropping: photos that are cropped at ankles, wrists, etc.</li></ul>' +
+    '<h3>Image list</h3><ul class="plain"><li>Variety of vertical and horizontal photos</li><li>Variety of full body, tighter headshots, wide photos of the action</li><li>Warm-up images (only a small portion)</li><li>Athlete introductions and color guard</li><li>Game action</li><li>Athletes on the bench / dugout</li><li>Halftime ceremonies and/or performances</li><li>Coaches / cheerleaders / band</li><li>Fans / student body / parents / mascots</li><li>Scoreboard at the end of the game</li></ul>' +
+    '</div></div>', actions: [{ label: 'Got it', primary: true, value: true }] });
+}
+
+/* ============================== 11. Clicks + keyboard ============================== */
+var lastTileClick = { i: -1, t: 0 };
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-act]');
+  if (!b) {
+    if (S.screen === 'cull' && ses && e.target.id === 'mainImg') { var r = e.target.getBoundingClientRect(); tick(); toggleZoom({ x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height }); }
+    return;
+  }
+  if (b.disabled) return;
+  // a button hiding behind a pop-up or behind the keepers grid can't be pressed (a stray Enter or Space lands on whatever had focus)
+  if (openSheet && !openSheet.el.contains(b)) return;
+  var gridEl = $('#grid'); if (gridEl && S.screen === 'cull' && !gridEl.contains(b)) return;
+  var act = b.dataset.act; tick();
+  switch (act) {
+    case 'studio': S.studio = b.dataset.v; lsSet('cull.studio', S.studio); S.draft.event = null; renderTopbar(); renderEvents(); renderOpen(); break;
+    case 'settings': settingsSheet(); break;
+    case 'help': helpSheet(); break;
+    case 'evPick': if (Date.now() - (S.homeAt || 0) > 600) pickEvent(S.events.find(function (x) { return x.id === b.dataset.id; })); break;      // (a double-click on "Back to the start" lands on a row: ignore it)
+    case 'evChange': S.draft.event = null; renderEvents(); renderOpen(); break;
+    case 'evReload': loadEvents(); break;
+    case 'manualOn': S.draft.manual = true; renderEvents(); break;
+    case 'manualOff': S.draft.manual = false; renderEvents(); break;
+    case 'manualUse':
+      var sc = $('#mSchool').value.trim(), en = $('#mEvent').value.trim(), dt = $('#mDate').value || ymd(new Date());
+      if (!sc || !en) { toast('Type the school and the event first'); break; }
+      S.draft.event = { school: sc, event: en, date: dt, control: $('#mControl').value.trim().toUpperCase(), manual: true }; S.draft.homecoming = isHomecoming(en); renderEvents(); renderOpen(); break;
+    case 'hc': S.draft.homecoming = b.dataset.v === '1'; renderEvents(); break;
+    case 'openCard': openCard(); break;
+    case 'twoCards': twoCards(); break;
+    case 'resume': resumeSession(b.dataset.id); break;
+    case 'discard': discardSession(b.dataset.id); break;
+    case 'culledConnect': connectCulled(); break;
+    case 'culledReconnect': reconnectCulled(); break;
+    case 'culledRefresh': S.cleaned = []; refreshCulled(); break;
+    case 'culledDelete': deleteCulled(b.dataset.name); break;
+    case 'home': S.homeAt = Date.now(); renderHome(); loadSessions(); loadEvents(); refreshCulled(); break;
+    // culling screen
+    case 'jump': ses.zoom.on = false; setCursor(+b.dataset.i); break;
+    case 'tile': toggleTile(+b.dataset.i); break;
+    case 'burstApply': applyPending(); break;
+    case 'nextSoft': nextSoft(); break;
+    case 'nextBurst': nextBurst(); break;
+    case 'grid': openGrid(); break;
+    case 'gridClose': closeGrid(); break;
+    case 'gfilter': gridFilter = b.dataset.v; renderGrid(); break;
+    case 'gtile':
+      var gi = +b.dataset.i, gp = ses.photos[gi], now = Date.now();
+      if (lastTileClick.i === gi && now - lastTileClick.t < 350) {      // double-click: put it back how it was and open it big
+        commit([{ i: gi, to: gp.state === 'keep' ? 'toss' : 'keep' }]); ses.undo.pop(); ses.undo.pop(); ses.cursor = gi; ses.zoom.on = false; closeGrid(); Pool.pump(); lastTileClick.i = -1; break;
+      }
+      lastTileClick = { i: gi, t: now };
+      commit([{ i: gi, to: gp.state === 'keep' ? 'toss' : 'keep' }]); b.classList.toggle('toss', gp.state === 'toss'); gridCount(); break;
+    case 'finish': if (Date.now() - gridOpenedAt > 600) finish(); break;      // a double-click on Review + finish lands here: ignore it
+    case 'exit': exitCull(); break;
+    case 'retryCard': ses.cardLost = false; ses.fails = 0; renderBar(); Pool.pump(); break;
+  }
+});
+document.addEventListener('keydown', function (e) {
+  if (openSheet) {
+    if (e.key === 'Escape' && !openSheet.sticky) { e.preventDefault(); openSheet.close(null); }
+    else if (e.key === 'Enter' && (e.target.tagName !== 'BUTTON' || !openSheet.el.contains(e.target))) { e.preventDefault(); openSheet.enter(); }
+    else if (e.key === ' ' && !openSheet.el.contains(e.target)) e.preventDefault();
+    return;
+  }
+  if (!ses || (S.screen !== 'cull')) { if (e.key === '?' && !/INPUT|TEXTAREA/.test(e.target.tagName)) helpSheet(); return; }
+  if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  tick();
+  var key = e.key, ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && (key === 'z' || key === 'Z')) { e.preventDefault(); undo(); return; }
+  if (ctrl || e.altKey) return;
+  if ($('#grid')) {
+    if ((key === 'Enter' || key === ' ') && !$('#grid').contains(e.target)) e.preventDefault();
+    if (key === 'Escape' || key === 'g' || key === 'G') { e.preventDefault(); closeGrid(); }
+    else if (key === '?') helpSheet();
+    return;
+  }
+  var p = ses.photos[ses.cursor], inBurst = !ses.zoom.on && p.burst >= 0;
+  switch (key) {
+    case 'ArrowRight': e.preventDefault(); go(1); break;
+    case 'ArrowLeft': e.preventDefault(); go(-1); break;
+    case 'ArrowDown': case 'ArrowUp':
+      if (inBurst) { e.preventDefault(); var cols = getComputedStyle($('.tiles')).gridTemplateColumns.split(' ').length, b = ses.bursts[p.burst], t = ses.cursor + (key === 'ArrowDown' ? cols : -cols); if (t >= b.start && t <= b.end) { ses.cursor = t; renderAll(); } }
+      break;
+    case 'Delete': case 'Backspace': case 'x': case 'X': e.preventDefault(); tossCurrent(); break;
+    case 'k': case 'K': keepCurrent(); break;
+    case ' ': e.preventDefault(); if (inBurst) toggleTile(ses.cursor); else if (p.state === 'toss') keepCurrent(); break;
+    case 'Enter': e.preventDefault(); if (e.repeat) break; if (inBurst && ses.pending) applyPending(); else go(1); break;      // a held-down Enter never runs through bursts
+    case 'z': case 'Z': toggleZoom(); break;
+    case 'Escape': if (ses.zoom.on) toggleZoom(); break;
+    case 'g': case 'G': openGrid(); break;
+    case 's': case 'S': nextSoft(); break;
+    case 'b': case 'B': nextBurst(); break;
+    case 'l': case 'L': var c = $('#cull'); c.classList.toggle('light'); lsSet('cull.light', c.classList.contains('light')); break;
+    case 'Home': e.preventDefault(); ses.zoom.on = false; setCursor(0); break;
+    case 'End': e.preventDefault(); ses.zoom.on = false; setCursor(ses.photos.length - 1); break;
+    case '?': helpSheet(); break;
+    default:
+      if (inBurst && /^[1-9]$/.test(key)) { var bb = ses.bursts[p.burst], ti = bb.start + (+key - 1); if (ti <= bb.end) toggleTile(ti); }
+  }
+});
+window.addEventListener('resize', function () { if (ses && S.screen === 'cull') { ses.stageKey = ''; renderAll(); } });
+window.addEventListener('pagehide', function () { if (ses) { tick(); saveNow(); } });
+document.addEventListener('visibilitychange', function () { if (document.hidden && ses) saveNow(); });
+
+/* ============================== 12. Start up ============================== */
+(async function boot() {
+  S.studio = lsGet('cull.studio', 'Horsham');
+  S.conn = lsGet('cull.conn', null);
+  var m = /[#&]connect=([^&]+)/.exec(location.hash);        // setup link: .../#connect=CULL1.xxxx
+  var switchTo = null;
+  if (m) {
+    var c = null; try { c = readConnectCode(decodeURIComponent(m[1])); } catch (e) {}
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    if (c && S.conn && S.conn.u !== c.u) switchTo = c;            // already linked to a different sheet: ask first (below), never switch quietly
+    else if (c) { if (!S.conn || S.conn.k !== c.k) S.linkedByUrl = true; S.conn = c; lsSet('cull.conn', c); }
+  }
+  var cache = lsGet('cull.cache', null);
+  if (cache && S.conn) { S.events = cache.events || []; applySettings(cache.settings); }
+  try { S.culled = (await db.get('kv', 'culled')) || null; } catch (e) {}
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+  renderHome();
+  loadSessions().then(sweepSavedCards);
+  if (switchTo) {
+    var sw = await sheet({ bar: 'Double check', red: true, sticky: true, title: 'Switch this computer to a different sheet?',
+      html: '<p>This computer is already linked to the Event Leads sheet. The link that was just opened points somewhere else.</p><p>Only switch if your manager gave you this link.</p>',
+      actions: [{ label: 'Switch', danger: true, value: true }, { label: 'Keep the current one', primary: true, value: false }] });
+    if (sw) { S.conn = switchTo; lsSet('cull.conn', switchTo); S.linkedByUrl = true; S.events = []; lsSet('cull.cache', null); applySettings({}); renderTopbar(); }
+  }
+  loadEvents();
+  refreshCulled();
+})();
+
+</script>
+</body>
+</html>
