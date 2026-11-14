@@ -144,8 +144,49 @@ button.chip:hover { background: #3a3e45; }
 .ctx .binfo b { font-size: 15px; }
 .ctx .bl { background: var(--pink); color: #fff; font-weight: 700; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; border-radius: 4px; padding: 3px 8px; }
 .ctx .btn.primary { padding: 8px 16px; font-size: 13.5px; flex: none; }
+.ctx .ab { flex: none; }
 .star { color: #ffd28a; font-weight: 700; }
 #cull.light .star, .sheet .star { color: var(--pink); }
+/* a cropped photo, shown the way it will come out */
+.cwrap { position: relative; overflow: hidden; box-shadow: 0 4px 28px rgba(0,0,0,.35); flex: none; }
+.cwrap img { position: absolute; max-width: none; max-height: none; box-shadow: none; }
+.single.tossed .cwrap img { opacity: .32; }
+/* a tossed shot inside a burst stays at full brightness (it has to be compared with the kept one), with a red frame instead */
+.single.tossed.inb img, .single.tossed.inb .cwrap img { opacity: 1; }
+.single.tossed.inb > img { outline: 4px solid var(--red, #e5484d); outline-offset: -4px; }
+/* a burst of two, side by side */
+.pair { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 12px 8px; }
+.pp { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 0; background: var(--canvas2); border: 3px solid transparent; border-radius: 10px; overflow: hidden; color: var(--canvas-text); }
+.pp .pim { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 6px; overflow: hidden; }
+.pp .pim img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.pp .pim img.r6 { transform: rotate(90deg); } .pp .pim img.r8 { transform: rotate(-90deg); } .pp .pim img.r3 { transform: rotate(180deg); }
+.pp.keep { border-color: #5fd398; }
+.pp.focus { outline: 3px solid #fff; outline-offset: 1px; }
+#cull.light .pp.focus { outline-color: var(--ink); }
+.pp .num { position: absolute; left: 10px; top: 10px; width: 28px; height: 28px; border-radius: 50%; background: rgba(20,21,24,.8); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.pp .st { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; }
+.pp .lbl { flex: none; padding: 9px 12px; font-size: 14px; font-weight: 700; background: #3a3e45; color: #e8e9ec; text-align: center; }
+.pp.keep .lbl { background: var(--green); color: #fff; }
+.pp.toss:hover .lbl { background: #4a4e56; }
+/* crop mode */
+.cropv { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.cbox { position: relative; overflow: hidden; flex: none; touch-action: none; cursor: default; }
+.cbox img { width: 100%; height: 100%; display: block; pointer-events: none; }
+.crect { position: absolute; box-shadow: 0 0 0 4000px rgba(10, 11, 13, .68); outline: 2px solid #fff; cursor: move;
+  background: linear-gradient(to right, transparent 33.2%, rgba(255,255,255,.45) 33.2%, rgba(255,255,255,.45) 33.5%, transparent 33.5%, transparent 66.5%, rgba(255,255,255,.45) 66.5%, rgba(255,255,255,.45) 66.8%, transparent 66.8%),
+              linear-gradient(to bottom, transparent 33.2%, rgba(255,255,255,.45) 33.2%, rgba(255,255,255,.45) 33.5%, transparent 33.5%, transparent 66.5%, rgba(255,255,255,.45) 66.5%, rgba(255,255,255,.45) 66.8%, transparent 66.8%); }
+.crect i { position: absolute; width: 34px; height: 34px; border: 0 solid #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,.7)); }      /* corner grips sit inside the box, so they are still there when the box touches the photo's edge */
+.crect i[data-h="nw"] { left: 0; top: 0; border-left-width: 6px; border-top-width: 6px; cursor: nwse-resize; }
+.crect i[data-h="se"] { right: 0; bottom: 0; border-right-width: 6px; border-bottom-width: 6px; cursor: nwse-resize; }
+.crect i[data-h="ne"] { right: 0; top: 0; border-right-width: 6px; border-top-width: 6px; cursor: nesw-resize; }
+.crect i[data-h="sw"] { left: 0; bottom: 0; border-left-width: 6px; border-bottom-width: 6px; cursor: nesw-resize; }
+.crect .csize { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); background: rgba(20,21,24,.82); color: #fff; font-size: 12px; font-weight: 700; border-radius: 5px; padding: 3px 9px; white-space: nowrap; pointer-events: none; }
+#cull.cropping .strip, #cull.cropping .abar { opacity: .3; pointer-events: none; }
+.tseg.dark { border-color: #6b717a; }
+.tseg.dark button { background: transparent; color: var(--canvas-text); padding: 6px 14px; font-size: 13px; }
+.tseg.dark button.on { background: var(--grad); color: #fff; }
+.cb { position: absolute; left: 3px; bottom: 3px; background: var(--pink); color: #fff; font-size: 9.5px; font-weight: 700; letter-spacing: .05em; border-radius: 3px; padding: 1px 4px; }
+.gt .cb { left: 6px; bottom: 6px; font-size: 10.5px; padding: 2px 6px; }
 .single img.r6 { transform: rotate(90deg); } .single img.r8 { transform: rotate(-90deg); } .single img.r3 { transform: rotate(180deg); }
 
 .strip { flex: none; height: 86px; background: var(--canvas2); border-top: 1px solid var(--canvas-line); display: flex; align-items: center; justify-content: center; gap: 4px; padding: 0 10px; overflow: hidden; }
@@ -355,7 +396,7 @@ function sharpness(bmp, W, H) {
  */
 
 /* ============================== 1. Settings + small helpers ============================== */
-var APP_VERSION = '1.2.0';
+var APP_VERSION = '1.3.0';
 var LOGO_WHITE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAADJCAYAAACdU4jkAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjBmZjNjMzEwLTM5N2QtNDg5NC1iODVkLTgwMGZlMGVkNzVhNQAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNoGI5law7GZ4adn5nosS+jqAAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ZDBlODg3YjctZWYxMS00Yzc0LWJkNDItOGIzMjE2Yzk2NDIzbHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaPuDP7I/xm03OQsus/3iC88AAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIP6+I8xDnaAkqPjjWNmJlrffbAYvUX1ghsuSZWkcF7+RpGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2jxqDvaJeNVA/2UWWpNv99VAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFggvF5IiYv9i7QvqWEP0olU6Nko+9TYiuRWQZR6N8eLJm9kbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTowZmYzYzMxMC0zOTdkLTQ4OTQtYjg1ZC04MDBmZTBlZDc1YTUvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpkYWU0MjhkMy1iZTNmLTQ4MjUtODk4OS1hYTY5OGNlOWYzMTRyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg/r4jzEOdoCSo+ONY2YmWt99sBi9RfWCGy5JlaRwXv5GiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIITkwxG2wtvONsiPUi9jihM2UzusFbqDzCEKLYmbABF6omN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIBq9ZEsER0xZme/j6y97HIPbB1Ge4TZb57c7S1IcKEBDdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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';
 
 // Everything here can be changed for every computer at once on the "Culling App Settings" tab of the Event Leads sheet.
@@ -364,14 +405,19 @@ var DEFAULTS = {
   closeEnoughPct: 10,       // the bar is green within this percent of the normal target
   homecomingLow: 300,       // Homecoming football game range
   homecomingHigh: 350,
-  burstGapSec: 1.5,         // shots this close together are shown as one burst
-  burstNudge: 3,            // keeping more than this from one burst asks "you sure?"
+  burstGapSec: 1.5,         // shots this close together can be one burst...
+  burstMatch: 'Normal',     // ...when they also look alike. Off (time only), Loose, Normal, Strict
+  burstNudge: 3,            // keeping more than this from one burst asks "you sure?" at Done
+  cropOn: true,             // the crop tool
+  cropMinPct: 50,           // a crop can't be smaller than this percent of the photo's long side
+  fullScreen: true,         // go full screen when culling starts
   softSensitivity: 'Medium',// Off, Low, Medium, High
   daysBack: 3,              // how many days of events show on the pick list
   logCullTimes: true,       // pilot: log how long each cull took
   autoClean: true           // delete Culled folders once the job is pushed
 };
 var SOFT_FACTOR = { off: 0, low: 0.18, medium: 0.3, high: 0.45 };
+var MATCH_CUT = { off: null, loose: 0.7, normal: 0.8, strict: 0.9 };      // how alike two shots must look (1 = identical) to be one burst
 var PREVIEW_EDGE = 1800, THUMB_EDGE = 320;
 
 var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -538,7 +584,7 @@ function renderHome() {
 function renderTopbar() {
   var el = $('#topbar'); if (!el) return;
   el.innerHTML = '<img class="mark" src="' + LOGO_WHITE + '" alt="CADY"><div><div class="t1">Candid Cull</div><div class="t2">' +
-    esc(new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })) + '</div></div><div class="grow"></div>' +
+    esc(new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })) + ' &middot; version ' + APP_VERSION + '</div></div><div class="grow"></div>' +
     '<div class="seg">' + ['Horsham', 'Exton'].map(function (s) { return '<button data-act="studio" data-v="' + s + '" class="' + (S.studio === s ? 'on' : '') + '">' + s + '</button>'; }).join('') + '</div>' +
     '<button class="pill ghost" data-act="settings"><span class="dot' + (S.conn && S.eventsState !== 'error' ? '' : ' off') + '"></span>' + (S.conn ? (S.eventsState === 'error' ? 'Sheet not answering' : 'Linked to Event Leads') : 'Not linked yet') + '</button>' +
     '<button class="pill ghost" data-act="help">Keys + guide</button>';
@@ -717,7 +763,7 @@ async function readHead(ph) {
   if (x.pvLen && x.pvAt + x.pvLen <= f.size) { ph.pvAt = x.pvAt; ph.pvLen = x.pvLen; }
   if (x.thumbLen && x.thumbLen < 200000) {
     var tb = x.thumbAt + x.thumbLen <= buf.byteLength ? buf.slice(x.thumbAt, x.thumbAt + x.thumbLen) : await f.slice(x.thumbAt, x.thumbAt + x.thumbLen).arrayBuffer();
-    if (new DataView(tb).getUint16(0) === 0xFFD8) { ph.thumbUrl = URL.createObjectURL(new Blob([tb], { type: 'image/jpeg' })); ph.thumbRot = ph.orient; }
+    if (new DataView(tb).getUint16(0) === 0xFFD8) { ph.thumbBlob = new Blob([tb], { type: 'image/jpeg' }); ph.thumbUrl = URL.createObjectURL(ph.thumbBlob); ph.thumbRot = ph.orient; }
   }
 }
 // A photo is known by its name, size and the moment it was shot, so it is the same photo whether they open DCIM, the card itself or 100MSDCF.
@@ -796,13 +842,15 @@ async function beginSession(sources, rec) {
       target: rec ? rec.target : targetFor(d.homecoming), studio: rec ? rec.studio : S.studio,
       createdAt: rec ? rec.createdAt : Date.now(), activeMs: rec ? rec.activeMs || 0 : 0, lastTick: 0,
       photos: photos, bursts: [], cursor: 0, undo: [], sources: sources, sig: sig, destFolder: rec ? rec.destFolder : null,
-      scored: 0, zoom: { on: false, cx: 0.5, cy: 0.5 }, stageKey: '', fullUrl: null, fullFor: -1, fails: 0, cardLost: false
+      scored: 0, cropping: null, zoom: { on: false, cx: 0.5, cy: 0.5 }, stageKey: '', fullUrl: null, fullFor: -1, fails: 0, cardLost: false
     };
     photos.forEach(function (p, i) { p.i = i; p.state = 'keep'; p.burst = -1; p.pv = 0; p.sharp = null; });
-    buildBursts();
+    await buildBursts();
     if (rec) {
-      var toss = rec.decisions || {};
-      photos.forEach(function (p) { if (toss[p.key]) p.state = 'toss'; if (rec.scores && rec.scores[p.key] != null) p.sharp = rec.scores[p.key]; });
+      var toss = rec.decisions || {}, crops = rec.crops || {}, bd = rec.bursts || {};
+      photos.forEach(function (p) { if (toss[p.key]) p.state = 'toss'; if (rec.scores && rec.scores[p.key] != null) p.sharp = rec.scores[p.key]; var c = crops[p.key]; if (c && c.length >= 4) p.crop = { x: c[0], y: c[1], w: c[2], h: c[3], t: !!c[4] }; });
+      ses.bursts.forEach(function (b) { var f = bd[photos[b.start].key] | 0; b.auto = !!(f & 1); b.seen = !!(f & 2); b.extra = !!(f & 4); });
+      ses.bursts.forEach(autoPick);                // a burst that was still being measured last time
       var at = photos.findIndex(function (p) { return p.key === rec.cursorKey; }); if (at >= 0) ses.cursor = at;
     }
     ps.close();
@@ -818,12 +866,43 @@ async function beginSession(sources, rec) {
     return false;
   }
 }
-function buildBursts() {
-  var gap = S.cfg.burstGapSec * 1000, ph = ses.photos, cur = null;
+// What a photo looks like, boiled down to 96 numbers (a 12 x 8 brightness map made from the camera's own thumbnail).
+// Two shots of the same moment give nearly the same map; a different scene a second later does not.
+var lookCanvas = null;
+async function lookOf(ph) {
+  if (ph.look !== undefined) return ph.look;
+  ph.look = null;
+  if (!ph.thumbBlob) return null;
+  try {
+    var bmp = await createImageBitmap(ph.thumbBlob);
+    lookCanvas = lookCanvas || new OffscreenCanvas(48, 32);
+    var ctx = lookCanvas.getContext('2d', { willReadFrequently: true }); ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(bmp, 0, bmp.height * 0.06, bmp.width, bmp.height * 0.88, 0, 0, 48, 32); bmp.close();      // the middle 88%: thumbnails carry black bars top and bottom
+    var d = ctx.getImageData(0, 0, 48, 32).data, out = new Float32Array(96), sum = 0, sq = 0;
+    for (var y = 0; y < 32; y++) for (var x = 0; x < 48; x++) { var k = (y * 48 + x) * 4; out[(y >> 2) * 12 + (x >> 2)] += 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]; }
+    for (var i = 0; i < 96; i++) sum += out[i];
+    var mean = sum / 96; for (i = 0; i < 96; i++) { out[i] -= mean; sq += out[i] * out[i]; }
+    var sd = Math.sqrt(sq / 96); if (sd < 1e-3) return null;                // a flat frame (lens cap): nothing to compare
+    for (i = 0; i < 96; i++) out[i] /= sd;
+    ph.look = out;
+  } catch (e) {}
+  return ph.look;
+}
+function alikeScore(a, b) { if (!a.look || !b.look) return null; var s = 0; for (var i = 0; i < 96; i++) s += a.look[i] * b.look[i]; return s / 96; }
+// A burst = shots taken right after each other (Burst gap) that also look alike (Burst look-alike).
+// When the look can't be checked (no thumbnail in the file) the pair is NOT called a burst, because bursts trim themselves.
+async function buildBursts() {
+  var gap = S.cfg.burstGapSec * 1000, cutAt = MATCH_CUT[String(S.cfg.burstMatch).toLowerCase()], ph = ses.photos, cur = null;
+  if (cutAt === undefined) cutAt = MATCH_CUT.normal;
   ses.bursts = [];
   for (var i = 1; i < ph.length; i++) {
-    var a = ph[i - 1], b = ph[i];
-    if (gap > 0 && a.time != null && b.time != null && b.time - a.time <= gap) {
+    var a = ph[i - 1], b = ph[i], same = gap > 0 && a.time != null && b.time != null && b.time - a.time <= gap;
+    if (same && cutAt != null) {
+      await lookOf(a); await lookOf(b);
+      var sc = (a.orient || 1) === (b.orient || 1) ? alikeScore(a, b) : null;
+      same = sc != null && sc >= cutAt;
+    }
+    if (same) {
       if (!cur) { cur = { id: ses.bursts.length, start: i - 1, end: i }; ses.bursts.push(cur); a.burst = cur.id; }
       cur.end = i; b.burst = cur.id;
     } else cur = null;
@@ -931,11 +1010,12 @@ async function forgetSession(rec) {
 /* ---- saving the open cull so a restart or a walk-away loses nothing ---- */
 var saveTimer = 0;
 function sessionRecord() {
-  var toss = {}, scores = {}, n = 0;
-  ses.photos.forEach(function (p) { if (p.state === 'toss') { toss[p.key] = 1; n++; } if (p.sharp != null) scores[p.key] = p.sharp; });
+  var toss = {}, scores = {}, crops = {}, bd = {}, n = 0;
+  ses.photos.forEach(function (p) { if (p.state === 'toss') { toss[p.key] = 1; n++; } if (p.sharp != null) scores[p.key] = p.sharp; if (p.crop) crops[p.key] = [p.crop.x, p.crop.y, p.crop.w, p.crop.h, p.crop.t ? 1 : 0]; });
+  ses.bursts.forEach(function (b) { var f = (b.auto ? 1 : 0) | (b.seen ? 2 : 0) | (b.extra ? 4 : 0); if (f) bd[ses.photos[b.start].key] = f; });
   return {
     id: ses.id, event: ses.event, photographer: ses.photographer, target: ses.target, studio: ses.studio, createdAt: ses.createdAt, updatedAt: Date.now(),
-    activeMs: ses.activeMs, total: ses.photos.length, tossed: n, sig: ses.sig, cursorKey: ses.photos[ses.cursor].key, decisions: toss, scores: scores,
+    activeMs: ses.activeMs, total: ses.photos.length, tossed: n, sig: ses.sig, cursorKey: ses.photos[ses.cursor].key, decisions: toss, scores: scores, crops: crops, bursts: bd,
     sources: ses.sources.map(function (s) { return { kind: s.kind, label: s.label, saved: s.saved, handle: s.kind === 'card' ? s.handle : undefined }; }), destFolder: ses.destFolder
   };
 }
@@ -955,7 +1035,7 @@ function closeSession() {
   ses = null; var g = $('#grid'); if (g) g.remove();
 }
 async function exitCull() {
-  await saveNow(); closeSession(); renderHome(); loadSessions(); refreshCulled();
+  leaveFull(); await saveNow(); closeSession(); renderHome(); loadSessions(); refreshCulled();
 }
 
 /* ============================== 5. Preview workers + sharpness ============================== */
@@ -1018,6 +1098,11 @@ var Pool = {
       });
     }
     ses.scored++; ses.cutAt = -1;
+    if (p.burst >= 0 && autoPick(ses.bursts[p.burst]) && S.screen === 'cull') {      // a burst just trimmed itself: redraw the photo only when it is the burst on screen
+      if ($('#grid')) renderGrid();
+      else if (ses.cropping || ses.photos[ses.cursor].burst !== p.burst) { renderStrip(); renderBar(); }
+      else { ses.stageKey = ''; renderAll(); }
+    }
     onPhotoReady(p);
     this.pump();
   }
@@ -1053,15 +1138,15 @@ var Quick = {
     p.handle.getFile().then(function (f) { return f.slice(p.pvAt, p.pvAt + p.pvLen).arrayBuffer(); }).then(function (buf) {
       if (ses !== mine || p.previewUrl || new DataView(buf).getUint16(0) !== 0xFFD8) return;
       p.quickUrl = URL.createObjectURL(new Blob([buf], { type: 'image/jpeg' }));
-      if (S.screen === 'cull' && p.i === ses.cursor && !ses.zoom.on) { ses.stageKey = ''; renderStage(); }
+      if (S.screen === 'cull' && onStage(p) && !ses.zoom.on && !ses.cropping) { ses.stageKey = ''; renderStage(); }
     }).catch(function () {}).then(function () { self.busy--; if (ses === mine) self.near(); });
   }
 };
 var readyTimer = 0;
 function onPhotoReady(p) {
   if (S.screen !== 'cull') return;
-  var cur = ses.photos[ses.cursor], showing = p.i === ses.cursor, near = showing || (cur.burst >= 0 && p.burst === cur.burst);
-  if (showing && !ses.zoom.on) { ses.stageKey = ''; renderStage(); }
+  var cur = ses.photos[ses.cursor], showing = onStage(p), near = showing || (cur.burst >= 0 && p.burst === cur.burst);
+  if (showing && !ses.zoom.on && !ses.cropping) { ses.stageKey = ''; renderStage(); }
   if (near) { clearTimeout(readyTimer); readyTimer = 0; }
   if (!readyTimer) readyTimer = setTimeout(function () { readyTimer = 0; if (ses && S.screen === 'cull') { renderStrip(); renderBar(); } }, near ? 0 : 350);
 }
@@ -1071,7 +1156,7 @@ function howHtml() {
   return '<h3>How it works</h3><ul class="how">' +
     '<li><b>Every photo starts as a keeper.</b> You only pick the ones to toss.</li>' +
     '<li><kbd>&rarr;</kbd> goes to the next photo. <kbd>Delete</kbd> tosses the one you\'re on. There are buttons for both at the bottom of the screen.</li>' +
-    '<li><b>Bursts</b> (shots taken back to back) are grouped together. The <span class="star">&#9733;</span> marks the sharpest one, and one button keeps just that one.</li>' +
+    '<li><b>Bursts</b> (shots taken back to back that look alike) trim themselves: the sharpest one <span class="star">&#9733;</span> is kept and the rest are tossed for you. Like a different one better? Hit Keep on it.</li>' +
     '<li>Changed your mind? <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes it. Nothing is ever deleted off the SD card.</li></ul>';
 }
 function warmUp() {
@@ -1081,7 +1166,7 @@ function warmUp() {
   function ready() { return have() >= want || mine.cardLost || slow(); }
   return sheet({ sticky: true, bar: 'Getting your photos ready', title: plural(ses.photos.length, 'photo') + ' on this card',
     html: '<div class="progress"><div id="wuBar"></div></div><div class="note" id="wuTxt">Opening the first few...</div>' + howHtml(),
-    actions: [{ label: 'Start culling', primary: true, fn: function () { return ready(); } }],
+    actions: [{ label: 'Start culling', primary: true, fn: function () { if (!ready()) return false; goFull(); return true; } }],
     onOpen: function (el) {
       var btn = el.querySelector('.actions .primary'), bar = el.querySelector('#wuBar'), txt = el.querySelector('#wuTxt');
       function paint() {
@@ -1112,18 +1197,20 @@ function renderCull() {
     '<div class="stage" id="stage"></div><div class="strip" id="strip"></div>' +
     '<div class="abar"><div class="l"><span class="prog" id="prog"></span></div>' +
     '<div class="acts"><button class="ab" data-act="prev" tabindex="-1">&larr; Back</button>' +
-    '<button class="ab big toss" id="bToss" data-act="toss" tabindex="-1">&#10005; Toss <kbd>Delete</kbd></button><button class="ab big keep" id="bKeep" data-act="keep" tabindex="-1">&#10003; Keep <kbd>K</kbd></button>' +
+    '<button class="ab big toss" id="bToss" data-act="toss" tabindex="-1">&#10005; Toss <kbd>Delete</kbd></button><button class="ab big keep" id="bKeep" data-act="keep" tabindex="-1">&#10003; <span id="bKeepT">Keep</span> <kbd>K</kbd></button>' +
     '<button class="ab" data-act="next" tabindex="-1">Next &rarr;</button></div>' +
-    '<div class="r"><button class="ab small" data-act="zoom" tabindex="-1">Zoom <span class="k"><kbd>Z</kbd></span></button><button class="ab small" data-act="undo" tabindex="-1">Undo <span class="k"><kbd>Ctrl</kbd>+<kbd>Z</kbd></span></button></div></div></section>';
-  ses.stageKey = '';
+    '<div class="r">' + (S.cfg.cropOn ? '<button class="ab small" data-act="crop" tabindex="-1">Crop <span class="k"><kbd>C</kbd></span></button>' : '') + '<button class="ab small" data-act="zoom" tabindex="-1">Zoom <span class="k"><kbd>Z</kbd></span></button><button class="ab small" data-act="undo" tabindex="-1">Undo <span class="k"><kbd>Ctrl</kbd>+<kbd>Z</kbd></span></button><button class="ab small" data-act="full" tabindex="-1" title="Full screen on / off">Full screen <span class="k"><kbd>F</kbd></span></button></div></div></section>';
+  ses.stageKey = ''; seeBurst();
   renderAll();
 }
 function renderAll() { renderStage(); renderStrip(); renderBar(); }
 function counts() {
   var keep = 0, v = 0, hz = 0, soft = 0;
   ses.photos.forEach(function (p) { if (p.state !== 'keep') return; keep++; if (p.w && p.h) { if (p.h > p.w) v++; else hz++; } if (isSoft(p)) soft++; });
-  var over = ses.bursts.filter(function (b) { return burstKept(b).length > S.cfg.burstNudge; }).length;      // bursts still keeping more than the guide's 2-3
-  return { keep: keep, total: ses.photos.length, v: v, h: hz, soft: soft, burstsOver: over };
+  var over = 0, unseen = 0, trimmed = 0, crop = 0;
+  ses.bursts.forEach(function (b) { if (burstKept(b).length > S.cfg.burstNudge) over++; if (b.autoTossed) { trimmed++; if (!b.seen) unseen++; } });
+  ses.photos.forEach(function (p) { if (p.crop && p.state === 'keep') crop++; });
+  return { keep: keep, total: ses.photos.length, v: v, h: hz, soft: soft, burstsOver: over, burstsUnseen: unseen, burstsTrimmed: trimmed, cropped: crop };
 }
 function meterHtml(c) {
   var t = ses.target, max = Math.max(c.total, t.hi * 1.15), state = c.keep > t.hi ? 'over' : c.keep < t.lo ? 'under' : 'good';
@@ -1139,9 +1226,11 @@ function renderBar() {
   el.className = m.cls; el.innerHTML = m.html;
   $('#vh').textContent = 'Vertical ' + c.v + ' · Horizontal ' + c.h;
   var sc = $('#softChip'); sc.hidden = !c.soft; sc.textContent = 'Soft? ' + c.soft; sc.className = 'chip warn';
-  var bc = $('#burstChip'); bc.hidden = !c.burstsOver; bc.textContent = 'Bursts to trim ' + c.burstsOver;
-  var p = ses.photos[ses.cursor], kept = p.state === 'keep';
+  var bc = $('#burstChip'), bn = c.burstsUnseen + c.burstsOver; bc.hidden = !bn; bc.textContent = 'Bursts to check ' + bn;
+  var p = ses.photos[ses.cursor], kept = p.state === 'keep', b = burstOf(p);
   $('#bToss').classList.toggle('on', !kept); $('#bKeep').classList.toggle('on', kept);
+  $('#bKeepT').textContent = b && !b.extra ? 'Keep this one' : 'Keep';
+  $('#cull').classList.toggle('cropping', !!ses.cropping);
   var ready = ses.photos.filter(function (q) { return q.pv >= 2; }).length;
   setHtml($('#prog'), ses.cardLost ? '<span style="color:#ff8fa3;font-weight:700">Can\'t read the card. Is it still plugged in?</span> <button class="chip" data-act="retryCard">Try again</button>'
     : ready < ses.photos.length ? 'Loading the rest in the background: ' + ready + ' of ' + ses.photos.length : '');
@@ -1152,34 +1241,69 @@ function setHtml(el, h) { if (el && el._h !== h) { el._h = h; el.innerHTML = h; 
 function renderCtx() {
   var el = $('#ctx'); if (!el) return;
   var p = ses.photos[ses.cursor], b = burstOf(p), h = '<span class="where"><b>' + (ses.cursor + 1) + '</b> of ' + ses.photos.length + ' &middot; ' + esc(p.name) + '</span>';
-  if (b) {
-    var mem = burstMembers(b), kept = burstKept(b), star = starOf(b), others = kept.length - 1;
+  if (ses.cropping) {
+    var cr = ses.cropping;
+    h += '<span class="binfo"><span class="bl">Crop</span><span class="tseg dark"><button data-act="cropShape" data-v="0" class="' + (cropLand(p, cr.r.t) ? 'on' : '') + '" tabindex="-1">Landscape</button><button data-act="cropShape" data-v="1" class="' + (cropLand(p, cr.r.t) ? '' : 'on') + '" tabindex="-1">Portrait</button></span>' +
+      '<span class="where">Drag the box to move it, drag a corner to make it tighter.</span></span><span class="grow"></span>' +
+      (p.crop ? '<button class="ab small" data-act="cropOff" tabindex="-1">Remove crop</button>' : '') + '<button class="ab small" data-act="cropCancel" tabindex="-1">Cancel <span class="k"><kbd>Esc</kbd></span></button>' +
+      '<button class="btn primary" data-act="cropSave" tabindex="-1">Save crop &nbsp;<kbd>Enter</kbd></button>';
+  } else if (b) {
+    var mem = burstMembers(b), kept = burstKept(b), star = starOf(b), mine = p.state === 'keep';
+    var what = !b.auto && !burstScored(b) ? 'Finding the sharpest one...'
+      : kept.length === 0 ? 'None of these kept'
+        : kept.length === 1 ? (mine ? 'This is the one being kept' : 'Keeping shot ' + (kept[0].i - b.start + 1) + (kept[0] === star ? ' (the sharpest)' : ''))
+          : 'Keeping ' + kept.length + ' of ' + mem.length;
     h += '<span class="binfo"><span class="bl">Burst</span><b>Shot ' + (ses.cursor - b.start + 1) + ' of ' + mem.length + '</b>' +
-      (star === p ? '<span class="star">&#9733; Sharpest one</span>' : '') + '<span class="where">Keeping ' + kept.length + ' of ' + mem.length + '</span></span><span class="grow"></span>' +
-      (kept.length < 2 ? '' : star ? '<button class="btn primary" data-act="sharpest" tabindex="-1">Keep only the &#9733; sharpest, toss the other ' + (others === 1 ? 'one' : others) + ' &nbsp;<kbd>Enter</kbd></button>'
-        : '<button class="btn primary" tabindex="-1" disabled>Finding the sharpest one...</button>');
+      (star === p ? '<span class="star">&#9733; Sharpest</span>' : '') + '<span class="where">' + what + '</span></span><span class="grow"></span>' +
+      (!mine && kept.length >= 1 ? '<span class="where">Like this one better? Hit Keep.</span><button class="ab small" data-act="keepToo" tabindex="-1">Keep this one too...</button>' : '');
   }
   setHtml(el, h);
 }
 function badgesHtml(p, extra) {
   var t = p.time != null ? new Date(p.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }) : '';
-  return '<div class="badges">' + (p.state === 'toss' ? '<span class="badge toss">TOSSED</span>' : '') + (p.broken ? '<span class="badge toss">DAMAGED FILE</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '') +
+  return '<div class="badges">' + (p.state === 'toss' ? '<span class="badge toss">TOSSED</span>' : '') + (p.crop ? '<span class="badge best">CROPPED</span>' : '') + (p.broken ? '<span class="badge toss">DAMAGED FILE</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '') +
     (t ? '<span class="badge">' + esc(t) + '</span>' : '') + (extra || '') + '</div>';
 }
-function renderStage() {
-  var st = $('#stage'); if (!st) return;
-  var p = ses.photos[ses.cursor];
-  if (ses.zoom.on) { renderZoom(st, p); return; }
-  ses.stageKey = 'single';
+// One photo as an <img>, sized to fit a W x H space. Uses the best copy that is ready.
+function photoImg(p, W, H, id) {
   var kind = p.previewUrl ? 'pv' : p.quickUrl ? 'q' : p.smallUrl ? 'sm' : p.thumbUrl ? 'th' : '', src = p.previewUrl || p.quickUrl || p.smallUrl || p.thumbUrl || '';
   var rot = kind === 'q' ? (p.orient || 1) : kind === 'th' ? (p.thumbRot || 1) : 1, style = '';
   if (kind === 'sm' || kind === 'th') style = 'width:min(100%,900px);image-rendering:auto;filter:blur(1px)';
   else if (kind === 'q' && (rot === 6 || rot === 8)) {      // the camera's copy of a vertical lies on its side: size it by hand, then turn it
-    var W = st.clientWidth - 20, H = st.clientHeight - 20, a = p.w && p.h ? p.h / p.w : 1.5, bw = Math.max(50, Math.min(H, W * a));
+    var a = p.w && p.h ? p.h / p.w : 1.5, bw = Math.max(50, Math.min(H, W * a));
     style = 'width:' + Math.round(bw) + 'px;height:' + Math.round(bw / a) + 'px;max-width:none;max-height:none';
   }
-  st.innerHTML = '<div class="single' + (p.state === 'toss' ? ' tossed' : '') + '"><img id="mainImg" src="' + src + '" class="' + (rot !== 1 ? 'r' + rot : '') + '" style="' + style + '" alt="" draggable="false"></div>' + badgesHtml(p) +
-    (kind === 'pv' || kind === 'q' ? '' : '<div class="loading">' + (p.pv === 3 ? 'This photo could not be opened' : 'Loading the big version...') + '</div>');
+  return { html: '<img' + (id ? ' id="' + id + '"' : '') + ' src="' + src + '" class="' + (rot !== 1 ? 'r' + rot : '') + '" style="' + style + '" alt="" draggable="false">', ready: kind === 'pv' || kind === 'q' };
+}
+function isPair(b) { return !!b && b.end - b.start === 1; }
+function onStage(p) { var cur = ses.photos[ses.cursor]; return p.i === ses.cursor || (p.burst >= 0 && p.burst === cur.burst && isPair(ses.bursts[p.burst])); }
+function renderStage() {
+  var st = $('#stage'); if (!st) return;
+  var p = ses.photos[ses.cursor], b = burstOf(p);
+  if (ses.cropping) { renderCrop(st, p); return; }
+  if (ses.zoom.on) { renderZoom(st, p); return; }
+  if (isPair(b)) { renderPair(st, b); return; }
+  ses.stageKey = 'single';
+  var W = st.clientWidth - 20, H = st.clientHeight - 20, src = p.previewUrl || p.smallUrl, im;
+  if (p.crop && src && p.w && p.h) {            // show it the way it will come out
+    var c = p.crop, A = (c.w * p.w) / (c.h * p.h), cw = Math.min(W, H * A), ch = cw / A, fw = cw / c.w, fh = ch / c.h;
+    im = { ready: !!p.previewUrl, html: '<div class="cwrap" style="width:' + Math.round(cw) + 'px;height:' + Math.round(ch) + 'px"><img id="mainImg" src="' + src + '" style="width:' + fw.toFixed(1) + 'px;height:' + fh.toFixed(1) + 'px;left:' + (-c.x * fw).toFixed(1) + 'px;top:' + (-c.y * fh).toFixed(1) + 'px" alt="" draggable="false"></div>' };
+  } else im = photoImg(p, W, H, 'mainImg');
+  st.innerHTML = '<div class="single' + (p.state === 'toss' ? ' tossed' : '') + (b ? ' inb' : '') + '">' + im.html + '</div>' + badgesHtml(p) +
+    (im.ready ? '' : '<div class="loading">' + (p.pv === 3 ? 'This photo could not be opened' : 'Loading the big version...') + '</div>');
+  preload();
+}
+// A burst of two shows both shots next to each other: one of them is the keeper.
+function renderPair(st, b) {
+  ses.stageKey = 'pair';
+  var mem = burstMembers(b), kept = burstKept(b), star = starOf(b), W = (st.clientWidth - 44) / 2 - 12, H = st.clientHeight - 74;
+  st.innerHTML = '<div class="pair">' + mem.map(function (p, n) {
+    var k = p.state === 'keep', only = k && kept.length === 1;
+    var lbl = k ? (only ? '&#10003; Keeping this one' : '&#10003; Keeping') : (kept.length ? 'Tossed. Click to keep this one instead' : 'Tossed. Click to keep this one');
+    return '<button class="pp ' + (k ? 'keep' : 'toss') + (p.i === ses.cursor ? ' focus' : '') + '" data-act="pairPick" data-i="' + p.i + '" tabindex="-1"><span class="pim">' + photoImg(p, W, H).html + '</span>' +
+      '<span class="num">' + (n + 1) + '</span><span class="st">' + (star === p ? '<span class="badge best">&#9733; Sharpest</span>' : '') + (p.crop ? '<span class="badge best">CROPPED</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '') + '</span>' +
+      '<span class="lbl">' + lbl + '</span></button>';
+  }).join('') + '</div>';
   preload();
 }
 function preload() {
@@ -1193,24 +1317,34 @@ function renderStrip() {
   for (var i = a; i < b; i++) {
     var p = ses.photos[i], mine = cb && p.burst === cb.id;      // mine = part of the burst being looked at
     h += '<button class="th' + (i === ses.cursor ? ' cur' : '') + (p.state === 'toss' ? ' toss' : '') + (p.burst >= 0 ? ' inb' : '') + (mine ? ' grp' : '') + '" data-act="jump" data-i="' + i + '" tabindex="-1">' + thumbHtml(p) +
-      (mine ? '<span class="gn">' + (i - cb.start + 1) + '</span>' : '') + (mine && star === p ? '<span class="st">&#9733;</span>' : '') + (isSoft(p) ? '<span class="sd"></span>' : '') + '</button>';
+      (mine ? '<span class="gn">' + (i - cb.start + 1) + '</span>' : '') + (mine && star === p ? '<span class="st">&#9733;</span>' : '') + (p.crop ? '<span class="cb">CROP</span>' : '') + (isSoft(p) ? '<span class="sd"></span>' : '') + '</button>';
   }
   el.classList.toggle('inburst', !!cb);
   setHtml(el, h);
 }
 
 /* ============================== 7. Bursts, keep/toss, undo ============================== */
-// A burst is only a label on photos shot back to back. Every shot in it is kept or tossed the same way as any other photo.
+// A burst = shots taken back to back that look alike. It keeps ONE shot: the sharpest by itself, or the one the
+// photographer hits Keep on. Keeping a second one is a separate, deliberate step (keepToo).
 function burstMembers(b) { return ses.photos.slice(b.start, b.end + 1); }
 function burstOf(p) { return p.burst >= 0 ? ses.bursts[p.burst] : null; }
 function burstKept(b) { return burstMembers(b).filter(function (p) { return p.state === 'keep'; }); }
-// The star: the sharpest shot of the ones still kept. Nobody gets a star until every shot has been measured, or when only one is left.
-function starOf(b) {
-  var mem = burstMembers(b), kept = burstKept(b);
-  if (kept.length < 2 || !mem.every(function (p) { return p.pv >= 2 || p.sharp != null; })) return null;
-  var best = kept[0]; kept.forEach(function (p) { if ((p.sharp == null ? -1 : p.sharp) > (best.sharp == null ? -1 : best.sharp)) best = p; });
-  return best;
+function burstScored(b) { return burstMembers(b).every(function (p) { return p.pv >= 2 || p.sharp != null; }); }
+function sharpestOf(list) { var best = list[0]; list.forEach(function (p) { if ((p.sharp == null ? -1 : p.sharp) > (best.sharp == null ? -1 : best.sharp)) best = p; }); return best; }
+function starOf(b) { return burstScored(b) ? sharpestOf(burstMembers(b)) : null; }      // the sharpest shot of the burst, once every shot is measured
+// Once every shot in a burst is measured, keep the sharpest and toss the rest. Runs once per burst, and never after
+// the photographer has made their own pick. A shot they already tossed stays tossed.
+function autoPick(b) {
+  if (b.auto || !burstScored(b)) return false;
+  b.auto = true;
+  var kept = burstKept(b); if (kept.length < 2) return false;
+  var best = sharpestOf(kept);
+  kept.forEach(function (p) { if (p !== best) p.state = 'toss'; });
+  b.autoTossed = kept.length - 1;
+  saveSoon();
+  return true;
 }
+function seeBurst() { var b = burstOf(ses.photos[ses.cursor]); if (b && !b.seen) { b.seen = true; saveSoon(); } }
 // One keep/toss change (or several at once). Every change goes on the undo list.
 function commit(changes) {
   changes = changes.filter(function (c) { return ses.photos[c.i].state !== c.to; }).map(function (c) { return { i: c.i, from: ses.photos[c.i].state, to: c.to }; });
@@ -1223,42 +1357,64 @@ function commit(changes) {
 function undo() {
   var a = ses.undo.pop(); if (!a) { toast('Nothing to undo'); return; }
   a.changes.forEach(function (c) { ses.photos[c.i].state = c.from; });
-  ses.cursor = a.cursor; ses.stageKey = '';
+  if (a.crop) ses.photos[a.crop.i].crop = a.crop.from;
+  ses.cursor = a.cursor; ses.stageKey = ''; ses.cropping = null;
   saveSoon();
   if ($('#grid')) renderGrid(); else renderAll();
   toast('Undone');
 }
 function setCursor(i) {
   ses.cursor = Math.max(0, Math.min(ses.photos.length - 1, i));
+  ses.cropping = null; seeBurst();
   renderAll(); Quick.near(); Pool.pump(); saveSoon();
 }
 var LAST_MSG = 'That\'s the last one. Hit Review + finish to look over your keepers.';
 function go(d) {
-  var cur = ses.photos[ses.cursor], b = burstOf(cur), t = ses.cursor + d;
+  var t = ses.cursor + d;
   if (t < 0) { toast('That\'s the first photo'); return; }
   if (t >= ses.photos.length) { toast(LAST_MSG, 3600); return; }
-  // walking out of a burst that still keeps more than the guide says: say so once, never stop them
-  if (b && d > 0 && ses.cursor === b.end && !b.told && burstKept(b).length > S.cfg.burstNudge) { b.told = true; toast('Still keeping ' + burstKept(b).length + ' from that burst. The guide says the best 2-3.', 3600); }
   setCursor(t);
 }
-// Toss and Keep both mark the photo and move to the next one. Space flips it and stays put.
-function mark(to) {
-  commit([{ i: ses.cursor, to: to }]);
-  if (ses.cursor + 1 < ses.photos.length) go(1); else { renderAll(); toast(LAST_MSG, 3600); }
+function moveOn(to) { if (to < ses.photos.length) setCursor(to); else { renderAll(); toast(LAST_MSG, 3600); } }
+// "This is the one": keep this shot of the burst and toss the others.
+function pickOnly(p) {
+  var b = burstOf(p); b.auto = true;
+  commit(burstMembers(b).map(function (q) { return { i: q.i, to: q === p ? 'keep' : 'toss' }; }));
 }
-function tossCurrent() { mark('toss'); }
-function keepCurrent() { mark('keep'); }
-function flipCurrent() { var p = ses.photos[ses.cursor]; commit([{ i: p.i, to: p.state === 'keep' ? 'toss' : 'keep' }]); renderAll(); }
-// The one burst shortcut: keep the starred shot, toss the other keepers, move past the burst. A shot they already tossed stays tossed.
-function keepSharpest(quiet) {
-  var b = burstOf(ses.photos[ses.cursor]); if (!b) return;
-  var kept = burstKept(b), star = starOf(b);
-  if (kept.length < 2) return;
-  if (!star) { if (!quiet) toast('Still checking which one is sharpest, one sec'); return; }
-  commit(kept.filter(function (p) { return p !== star; }).map(function (p) { return { i: p.i, to: 'toss' }; }));
-  b.told = true;
-  toast('Kept the sharpest, tossed ' + (kept.length - 1) + '. Ctrl+Z brings ' + (kept.length === 2 ? 'it' : 'them') + ' back.', 3200);
-  if (b.end + 1 < ses.photos.length) setCursor(b.end + 1); else { setCursor(star.i); }
+// Keeping a second (or third) shot from one burst is allowed, but it has to be on purpose: its own button, and it asks.
+async function keepToo(p) {
+  var b = burstOf(p); if (!b || p.state === 'keep') return false;
+  var n = burstKept(b).length + 1;
+  if (n > 1) {
+    var ok = await sheet({ bar: 'You sure?', title: 'Keep ' + n + ' from this burst?', html: '<p>These shots look almost the same. Only keep more than one when they really are different moments.</p>',
+      actions: [{ label: 'Yes, keep ' + n, value: true }, { label: 'Just the one', primary: true, value: false }] });
+    if (!ok || !ses || p.state === 'keep') return false;
+    b.extra = true;
+  }
+  b.auto = true; commit([{ i: p.i, to: 'keep' }]);
+  return true;
+}
+// Keep on a burst shot. Returns false when it turned into a question (keepToo) that was answered no.
+async function keepInBurst(p) {
+  var b = burstOf(p);
+  if (b.extra) { if (p.state !== 'keep') return keepToo(p); return true; }      // they chose to keep several here: Keep adds, after asking
+  pickOnly(p); return true;
+}
+function tossCurrent() { commit([{ i: ses.cursor, to: 'toss' }]); moveOn(ses.cursor + 1); }
+async function keepCurrent() {
+  var p = ses.photos[ses.cursor], b = burstOf(p);
+  if (!b) { commit([{ i: p.i, to: 'keep' }]); moveOn(p.i + 1); return; }
+  if (await keepInBurst(p)) moveOn(b.end + 1); else renderAll();            // the burst is decided: on to what comes after it
+}
+async function flipCurrent() {
+  var p = ses.photos[ses.cursor];
+  if (p.state === 'keep') commit([{ i: p.i, to: 'toss' }]); else if (burstOf(p)) await keepInBurst(p); else commit([{ i: p.i, to: 'keep' }]);
+  renderAll();
+}
+async function pairPick(i) {
+  var p = ses.photos[i]; ses.cursor = i; seeBurst();
+  if (p.state !== 'keep' || burstKept(burstOf(p)).length > 1) await keepInBurst(p);
+  renderAll();
 }
 function nextSoft() {
   var n = ses.photos.length;
@@ -1266,12 +1422,105 @@ function nextSoft() {
   toast('No soft ones left');
 }
 function nextBurst() {
-  var list = ses.bursts.filter(function (b) { return burstKept(b).length > S.cfg.burstNudge; }); if (!list.length) { toast('No burst is keeping more than ' + S.cfg.burstNudge); return; }
+  var list = ses.bursts.filter(function (b) { return (b.autoTossed && !b.seen) || burstKept(b).length > S.cfg.burstNudge; }); if (!list.length) { toast('Every burst has been looked at'); return; }
   var b = list.find(function (x) { return x.start > ses.cursor; }) || list[0];
   if ($('#grid')) $('#grid').remove(); ses.zoom.on = false; setCursor(b.start);
 }
 
 /* ============================== 8. Zoom, keepers grid ============================== */
+/* ---- crop: a box in the photo's own shape (or turned on its side), never smaller than the sheet setting allows ---- */
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function cropLand(p, turn) { var land = p.w >= p.h; return turn ? !land : land; }
+function cropAspect(p, turn) { var r = Math.max(p.w, p.h) / Math.min(p.w, p.h); return cropLand(p, turn) ? r : 1 / r; }      // width / height, in real pixels
+function cropBounds(p, A) {            // widest and narrowest the box may be, as a share of the photo's width
+  var max = Math.min(1, A * p.h / p.w), minLong = clamp(S.cfg.cropMinPct, 10, 100) / 100 * Math.max(p.w, p.h);
+  return { max: max, min: Math.min(max, (A >= 1 ? minLong : minLong * A) / p.w) };
+}
+function cropFit(p, turn, cx, cy, w) {
+  var A = cropAspect(p, turn), lim = cropBounds(p, A); w = clamp(w, lim.min, lim.max);
+  var h = w * p.w / (A * p.h);
+  return { x: clamp(cx - w / 2, 0, 1 - w), y: clamp(cy - h / 2, 0, 1 - h), w: w, h: h, t: !!turn };
+}
+function startCrop() {
+  if (!S.cfg.cropOn || !ses || ses.cropping) return;
+  var p = ses.photos[ses.cursor];
+  if (!(p.previewUrl || p.smallUrl) || !p.w || !p.h) { toast('One sec, this photo is still loading'); return; }
+  var c = p.crop; ses.zoom.on = false;
+  ses.cropping = { i: p.i, r: c ? { x: c.x, y: c.y, w: c.w, h: c.h, t: !!c.t } : cropFit(p, false, 0.5, 0.5, 0.8) };
+  ses.stageKey = ''; renderAll();
+}
+function endCrop() { ses.cropping = null; ses.stageKey = ''; renderAll(); }
+function setCrop(p, to) {
+  ses.undo.push({ changes: [], cursor: ses.cursor, crop: { i: p.i, from: p.crop || null, to: to } });
+  if (ses.undo.length > 500) ses.undo.shift();
+  p.crop = to; saveSoon();
+}
+function saveCrop() {
+  var cr = ses.cropping; if (!cr) return;
+  var p = ses.photos[cr.i], r = cr.r, whole = !r.t && r.w > 0.985 && r.h > 0.985;
+  setCrop(p, whole ? null : { x: r.x, y: r.y, w: r.w, h: r.h, t: !!r.t });
+  endCrop(); toast(whole ? 'That\'s the whole photo, so no crop' : 'Cropped. This keeper will be saved this way.');
+}
+function cropShape(portrait) {
+  var cr = ses.cropping; if (!cr) return;
+  var p = ses.photos[cr.i], r = cr.r, t = (p.w >= p.h) === portrait, long = Math.max(r.w * p.w, r.h * p.h), A = cropAspect(p, t);
+  cr.r = cropFit(p, t, r.x + r.w / 2, r.y + r.h / 2, (A >= 1 ? long : long * A) / p.w);
+  renderCtx(); layoutCrop();
+}
+function layoutCrop() {
+  var el = $('#crect'), cr = ses && ses.cropping; if (!el || !cr) return;
+  var p = ses.photos[cr.i], r = cr.r, lim = cropBounds(p, cropAspect(p, r.t));
+  el.style.left = (r.x * 100) + '%'; el.style.top = (r.y * 100) + '%'; el.style.width = (r.w * 100) + '%'; el.style.height = (r.h * 100) + '%';
+  $('#csize').textContent = Math.round(r.w * p.w) + ' x ' + Math.round(r.h * p.h) + (r.w <= lim.min + 1e-4 ? '  (as tight as it goes)' : '');
+}
+function renderCrop(st, p) {
+  ses.stageKey = 'crop';
+  var W = st.clientWidth - 40, H = st.clientHeight - 40, a = p.w / p.h, bw = Math.min(W, H * a);
+  st.innerHTML = '<div class="cropv"><div class="cbox" id="cbox" style="width:' + Math.round(bw) + 'px;height:' + Math.round(bw / a) + 'px"><img src="' + (p.previewUrl || p.smallUrl) + '" alt="" draggable="false">' +
+    '<div class="crect" id="crect"><i data-h="nw"></i><i data-h="ne"></i><i data-h="sw"></i><i data-h="se"></i><span class="csize" id="csize"></span></div></div></div>';
+  layoutCrop();
+  var box = $('#cbox'), drag = null;
+  function at(e) { var rc = box.getBoundingClientRect(); return { x: clamp((e.clientX - rc.left) / rc.width, 0, 1), y: clamp((e.clientY - rc.top) / rc.height, 0, 1) }; }
+  box.addEventListener('pointerdown', function (e) {
+    var r = ses.cropping.r, f = at(e), hd = e.target.dataset ? e.target.dataset.h : '';
+    if (hd) drag = { size: true, ax: hd[1] === 'w' ? r.x + r.w : r.x, ay: hd[0] === 'n' ? r.y + r.h : r.y };      // the opposite corner stays put
+    else if (f.x >= r.x && f.x <= r.x + r.w && f.y >= r.y && f.y <= r.y + r.h) drag = { dx: f.x - r.x, dy: f.y - r.y };
+    else return;
+    box.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  box.addEventListener('pointermove', function (e) {
+    if (!drag || !ses || !ses.cropping) return;
+    var r = ses.cropping.r, f = at(e);
+    if (!drag.size) { r.x = clamp(f.x - drag.dx, 0, 1 - r.w); r.y = clamp(f.y - drag.dy, 0, 1 - r.h); }
+    else {
+      var A = cropAspect(p, r.t), k = p.w / (A * p.h), lim = cropBounds(p, A), left = f.x < drag.ax, up = f.y < drag.ay;      // height = width * k
+      var w = Math.max(Math.abs(f.x - drag.ax), Math.abs(f.y - drag.ay) / k);
+      w = Math.max(lim.min, Math.min(w, lim.max, left ? drag.ax : 1 - drag.ax, (up ? drag.ay : 1 - drag.ay) / k));
+      r.w = w; r.h = w * k; r.x = clamp(left ? drag.ax - w : drag.ax, 0, 1 - r.w); r.y = clamp(up ? drag.ay - r.h : drag.ay, 0, 1 - r.h);
+    }
+    layoutCrop();
+  });
+  box.addEventListener('pointerup', function () { drag = null; });
+  box.addEventListener('wheel', function (e) {
+    e.preventDefault(); var r = ses.cropping.r;
+    ses.cropping.r = cropFit(p, r.t, r.x + r.w / 2, r.y + r.h / 2, r.w * (e.deltaY > 0 ? 1.06 : 0.94)); layoutCrop();
+  }, { passive: false });
+}
+/* ---- full screen ---- */
+function isFull() { return !!document.fullscreenElement; }
+function goFull() {
+  if (isFull() || !S.cfg.fullScreen || lsGet('cull.full', true) === false) return;      // cull.full = false: a computer where full screen misbehaves
+  enterFull();
+}
+function enterFull() {
+  var el = document.documentElement; if (!el.requestFullscreen) return;
+  try { el.requestFullscreen().then(function () { try { if (navigator.keyboard && navigator.keyboard.lock) navigator.keyboard.lock(['Escape']); } catch (e) {} }).catch(function () {}); } catch (e) {}      // with Esc locked, Esc still backs out of zoom; holding it leaves full screen
+}
+function leaveFull() {
+  try { if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock(); } catch (e) {}
+  try { if (isFull()) document.exitFullscreen().catch(function () {}); } catch (e) {}
+}
+
 function renderZoom(st, p) {
   ses.stageKey = 'zoom';
   st.innerHTML = '<div class="zoomv' + (p.state === 'keep' ? '' : ' tossed') + '" id="zoomv"><img id="zimg" alt="" draggable="false"></div>' + badgesHtml(p, '<span class="badge">100%</span>') + '<div class="loading" id="zload">Loading full size...</div>';
@@ -1336,10 +1585,11 @@ function renderGrid() {
   g.innerHTML = '<div class="gbar"><h2>Look over your keepers</h2><div class="tseg">' + [['keep', 'Keepers'], ['toss', 'Tossed'], ['soft', 'Soft?'], ['all', 'All']].map(function (f) {
     return '<button data-act="gfilter" data-v="' + f[0] + '" class="' + (gridFilter === f[0] ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div><div class="grow"></div>' +
     '<button class="btn" data-act="gridClose">Back to culling</button><button class="btn primary" data-act="finish">Done: copy ' + plural(c.keep, 'keeper') + '</button></div>' +
-    '<div class="gnote"><span id="gCount"></span>' + (c.burstsOver ? '<span class="pink">' + plural(c.burstsOver, 'burst') + ' still keeping more than ' + S.cfg.burstNudge + ' <button class="linkish" data-act="nextBurst">Go to the next one</button></span>' : '') +
+    '<div class="gnote"><span id="gCount"></span>' + (c.burstsTrimmed ? '<span>' + plural(c.burstsTrimmed, 'burst') + ' trimmed to the sharpest shot' + (c.burstsUnseen ? ', ' + c.burstsUnseen + ' you haven\'t looked at <button class="linkish" data-act="nextBurst">Go to the next one</button>' : '') + '</span>' : '') +
+    (c.burstsOver ? '<span class="pink">' + plural(c.burstsOver, 'burst') + ' still keeping more than ' + S.cfg.burstNudge + ' <button class="linkish" data-act="nextBurst">Go to the next one</button></span>' : '') +
     '<span class="note">Click a photo to toss it or bring it back. Double-click to open it big.</span></div>' +
     '<div class="gwrap"><div class="gtiles">' + list.map(function (p) {
-      return '<button class="gt' + (p.state === 'toss' ? ' toss' : '') + '" data-act="gtile" data-i="' + p.i + '" tabindex="-1">' + thumbHtml(p).replace('<img ', '<img loading="lazy" ') + (isSoft(p) ? '<span class="sd">Soft?</span>' : '') + '</button>';
+      return '<button class="gt' + (p.state === 'toss' ? ' toss' : '') + '" data-act="gtile" data-i="' + p.i + '" tabindex="-1">' + thumbHtml(p).replace('<img ', '<img loading="lazy" ') + (p.crop ? '<span class="cb">CROP</span>' : '') + (isSoft(p) ? '<span class="sd">Soft?</span>' : '') + '</button>';
     }).join('') + (list.length ? '' : '<p class="note">Nothing here.</p>') + '</div></div>';
   $('.gwrap', g).scrollTop = scroll;
   gridCount();
@@ -1365,6 +1615,56 @@ async function copyFile(srcHandle, destDir, name) {
   if (check.size !== file.size) throw new Error(name + ' did not copy all the way');
   return file.size;
 }
+// A cropped keeper: open the real file, cut the box out, save it as a new high-quality JPEG with the camera's
+// information (time shot, camera, lens) carried over. The file on the card is never touched.
+async function writeCrop(p, destDir, name) {
+  var file = await p.handle.getFile(), bmp = await createImageBitmap(file), cv, sw, sh;
+  try {
+    var W = bmp.width, H = bmp.height, c = p.crop, sx = clamp(Math.round(c.x * W), 0, W - 2), sy = clamp(Math.round(c.y * H), 0, H - 2);
+    sw = clamp(Math.round(c.w * W), 2, W - sx); sh = clamp(Math.round(c.h * H), 2, H - sy);
+    cv = new OffscreenCanvas(sw, sh);
+    cv.getContext('2d', { willReadFrequently: true }).drawImage(bmp, sx, sy, sw, sh, 0, 0, sw, sh);
+  } finally { bmp.close(); }
+  var blob = await cv.convertToBlob({ type: 'image/jpeg', quality: 0.97 });
+  var jpg = new Uint8Array(await blob.arrayBuffer()), exif = null;
+  try { exif = exifForCrop(await file.slice(0, 131072).arrayBuffer(), sw, sh); } catch (e) {}
+  var out = exif ? joinExif(jpg, exif) : blob;
+  var fh = await destDir.getFileHandle(name, { create: true }), w = await fh.createWritable();
+  try { await w.write(out); await w.close(); } catch (e) { try { await w.abort(); } catch (x) {} throw e; }
+  if ((await fh.getFile()).size !== out.size) throw new Error(name + ' did not save all the way');
+  return p.size || 0;
+}
+// The camera's information block from the original, fixed up for the cropped picture: right way up, new size, and
+// without the old little thumbnail (it would show the uncropped photo).
+function exifForCrop(buf, w, h) {
+  var v = new DataView(buf); if (v.byteLength < 12 || v.getUint16(0) !== 0xFFD8) return null;
+  var p = 2;
+  while (p + 4 <= v.byteLength && v.getUint8(p) === 0xFF) {
+    var marker = v.getUint8(p + 1), len = v.getUint16(p + 2);
+    if (marker === 0xDA || len < 2) return null;
+    if (marker === 0xE1 && p + 10 <= v.byteLength && v.getUint32(p + 4) === 0x45786966 && v.getUint16(p + 8) === 0) {
+      if (p + 2 + len > v.byteLength) return null;
+      var seg = new Uint8Array(buf.slice(p, p + 2 + len)), d = new DataView(seg.buffer), base = 10, le = d.getUint16(base) === 0x4949;
+      var walk = function (off, cb) {
+        var at = base + off; if (!off || at + 2 > d.byteLength) return 0;
+        var n = d.getUint16(at, le);
+        for (var i = 0; i < n; i++) { var e = at + 2 + i * 12; if (e + 12 > d.byteLength) return 0; cb(d.getUint16(e, le), d.getUint16(e + 2, le), e + 8); }
+        return at + 2 + n * 12;
+      };
+      var put = function (type, vo, val) { if (type === 3) d.setUint16(vo, val, le); else if (type === 4) d.setUint32(vo, val, le); };
+      var exifOff = 0, next = walk(d.getUint32(base + 4, le), function (tag, type, vo) { if (tag === 0x0112) put(type, vo, 1); else if (tag === 0x8769) exifOff = d.getUint32(vo, le); });
+      if (next && next + 4 <= d.byteLength) d.setUint32(next, 0, le);
+      walk(exifOff, function (tag, type, vo) { if (tag === 0xA002) put(type, vo, w); else if (tag === 0xA003) put(type, vo, h); });
+      return seg;
+    }
+    p += 2 + len;
+  }
+  return null;
+}
+function joinExif(jpg, exif) {
+  var pos = 2; while (pos + 4 <= jpg.length && jpg[pos] === 0xFF && jpg[pos + 1] === 0xE0) pos += 2 + ((jpg[pos + 2] << 8) | jpg[pos + 3]);      // the information block goes right at the front
+  return new Blob([jpg.subarray(0, 2), exif, jpg.subarray(pos)], { type: 'image/jpeg' });
+}
 async function hasPerm(handle, mode, ask) {
   try {
     var o = { mode: mode };
@@ -1373,6 +1673,7 @@ async function hasPerm(handle, mode, ask) {
   } catch (e) { return false; }
 }
 var finishing = false;
+function saveKeeper(p, dest) { return p.crop ? writeCrop(p, dest, p.outName) : copyFile(p.handle, dest, p.outName); }
 async function finish() {          // one copy at a time, however many times Done / Enter gets hit
   if (finishing) return; finishing = true;
   try { await finishRun(); } finally { finishing = false; }
@@ -1416,8 +1717,8 @@ async function finishRun() {
     await Promise.all([0, 1].map(async function () {
       while (idx < keepers.length) {
         var p = keepers[idx++];
-        try { bytes += await copyFile(p.handle, dest, p.outName); }
-        catch (e1) { try { bytes += await copyFile(p.handle, dest, p.outName); } catch (e2) { failed.push(p); firstErr = firstErr || e2; } }
+        try { bytes += await saveKeeper(p, dest); }
+        catch (e1) { try { bytes += await saveKeeper(p, dest); } catch (e2) { failed.push(p); firstErr = firstErr || e2; } }
         doneN++; ps.set(total ? bytes / total : doneN / keepers.length, doneN + ' of ' + keepers.length + ' photos');
       }
     }));
@@ -1440,21 +1741,21 @@ async function finishRun() {
     for (var si = 0; si < stale.length; si++) { try { await dest.removeEntry(stale[si]); } catch (x) {} }
   } catch (e) {}
   tick();
-  var result = { folder: name, kept: keepers.length - failed.length, skipped: failed.length, loaded: ses.photos.length, activeMin: Math.round(ses.activeMs / 6000) / 10, totalMin: Math.round((Date.now() - ses.createdAt) / 6000) / 10, event: ses.event, photographer: ses.photographer };
+  var result = { folder: name, kept: keepers.length - failed.length, skipped: failed.length, cropped: keepers.filter(function (p) { return p.crop && failed.indexOf(p) < 0; }).length, loaded: ses.photos.length, activeMin: Math.round(ses.activeMs / 6000) / 10, totalMin: Math.round((Date.now() - ses.createdAt) / 6000) / 10, event: ses.event, photographer: ses.photographer };
   if (S.conn && S.cfg.logCullTimes) {
     api('log', { d: JSON.stringify({ studio: ses.studio, photographer: ses.photographer, school: ses.event.school, event: ses.event.event, control: ses.event.control || '', date: ses.event.date,
       loaded: result.loaded, kept: result.kept, bursts: ses.bursts.length, activeMin: result.activeMin, totalMin: result.totalMin, version: APP_VERSION }) }).catch(function () {});
   }
   if (ses.event.wasPushed) { var hold = lsGet('cull.hold', []); if (hold.indexOf(name) < 0) hold.push(name); lsSet('cull.hold', hold.slice(-200)); }
   await forgetSession(sessionRecord());
-  closeSession();
+  leaveFull(); closeSession();
   renderDone(result);
 }
 function renderDone(r) {
   S.screen = 'done';
   $('#app').innerHTML = '<section class="screen"><header class="topbar"><img class="mark" src="' + LOGO_WHITE + '" alt="CADY"><div><div class="t1">Candid Cull</div><div class="t2">' + esc(r.event.school) + ' &middot; ' + esc(r.photographer) + '</div></div></header>' +
     '<div class="done-wrap"><h1>🎉 ' + plural(r.kept, 'keeper') + ' ready for Capture</h1><div class="rule"></div>' +
-    '<p class="lede">You went from ' + plural(r.loaded, 'photo') + ' to ' + r.kept + ' in about ' + Math.max(1, Math.round(r.activeMin)) + (Math.round(r.activeMin) > 1 ? ' minutes' : ' minute') + '.</p>' +
+    '<p class="lede">You went from ' + plural(r.loaded, 'photo') + ' to ' + r.kept + ' in about ' + Math.max(1, Math.round(r.activeMin)) + (Math.round(r.activeMin) > 1 ? ' minutes' : ' minute') + '.' + (r.cropped ? ' ' + r.cropped + (r.cropped === 1 ? ' is' : ' are') + ' cropped.' : '') + '</p>' +
     (r.skipped ? '<p class="lede pink"><b>' + plural(r.skipped, 'photo') + ' could not be copied and ' + (r.skipped === 1 ? 'was' : 'were') + ' left out.</b> Tell your shift manager.</p>' : '') +
     '<div class="box"><div class="bar">What\'s next</div><div class="body"><ol class="steps">' +
     '<li>Open <b>Capture</b> and upload from the desktop folder <span class="path">Culled</span> &gt; <span class="path">' + esc(r.folder) + '</span></li>' +
@@ -1576,10 +1877,10 @@ function settingsSheet() {
 function helpSheet() {
   var k = function (rows) { return '<table class="keys"><tr><th>Key</th><th>What it does</th></tr>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table>'; };
   sheet({ wide: true, bar: 'Keys + culling guide', html: '<div class="two"><div>' +
-    k([['<kbd>&rarr;</kbd> <kbd>&larr;</kbd>', 'Next / previous photo. Just looking, nothing changes.'], ['<kbd>Delete</kbd>', 'Toss this photo and go to the next one. <kbd>Backspace</kbd> or <kbd>X</kbd> work too.'], ['<kbd>K</kbd>', 'Keep this photo and go to the next one. Also brings a tossed photo back.'],
-      ['<kbd>Space</kbd>', 'Flip this photo between keep and toss without moving'], ['<kbd>Enter</kbd>', 'In a burst: keep only the &#9733; sharpest shot and toss the rest'], ['<kbd>Z</kbd> or click', 'Zoom to 100% and back. Drag to move around.'],
-      ['<kbd>Ctrl</kbd>+<kbd>Z</kbd>', 'Undo'], ['<kbd>G</kbd>', 'Grid of your keepers, then Done'], ['<kbd>S</kbd>', 'Jump to the next soft-looking photo'], ['<kbd>B</kbd>', 'Jump to the next burst that is keeping more than ' + S.cfg.burstNudge], ['<kbd>Home</kbd> <kbd>End</kbd>', 'First / last photo'], ['<kbd>Esc</kbd>', 'Back out of zoom or the grid'], ['<kbd>L</kbd>', 'Light or dark background'], ['<kbd>?</kbd>', 'This page']]) +
-    '<h3>Bursts</h3><p class="note" style="color:#555a62">Shots taken back to back are grouped in the strip under the photo and numbered. Go through them like any other photo: keep the ones you want, toss the rest. The &#9733; is the sharpest one, and <kbd>Enter</kbd> keeps just that one.</p>' +
+    k([['<kbd>&rarr;</kbd> <kbd>&larr;</kbd>', 'Next / previous photo. Just looking, nothing changes.'], ['<kbd>Delete</kbd>', 'Toss this photo and go to the next one. <kbd>Backspace</kbd> or <kbd>X</kbd> work too.'], ['<kbd>K</kbd>', 'Keep this photo and go on. In a burst: keep THIS shot and toss the others.'],
+      ['<kbd>Space</kbd>', 'Same as Keep / Toss, without moving on'], ['<kbd>Z</kbd> or click', 'Zoom to 100% and back. Drag to move around.']].concat(S.cfg.cropOn ? [['<kbd>C</kbd>', 'Crop this photo. <kbd>Enter</kbd> saves the crop, <kbd>Esc</kbd> backs out.']] : []).concat([
+      ['<kbd>Ctrl</kbd>+<kbd>Z</kbd>', 'Undo'], ['<kbd>G</kbd>', 'Grid of your keepers, then Done'], ['<kbd>S</kbd>', 'Jump to the next soft-looking photo'], ['<kbd>B</kbd>', 'Jump to the next burst you haven\'t looked at'], ['<kbd>F</kbd>', 'Full screen on / off'], ['<kbd>Home</kbd> <kbd>End</kbd>', 'First / last photo'], ['<kbd>Esc</kbd>', 'Back out of zoom, crop or the grid'], ['<kbd>L</kbd>', 'Light or dark background'], ['<kbd>?</kbd>', 'This page']])) +
+    '<h3>Bursts</h3><p class="note" style="color:#555a62">Shots taken back to back that look alike are a burst. A burst keeps one shot: the sharpest (&#9733;) by itself, or the one you hit Keep on. To keep a second one, go to it and use <b>Keep this one too</b>. It asks first, on purpose.</p>' +
     '<p class="note">Nothing is ever deleted off the SD card. Tossed photos just don\'t get copied.</p></div><div>' +
     '<h3 style="margin-top:0">Required final image counts</h3><ul class="plain"><li>All candid events except Homecoming games: <b>' + S.cfg.normalTarget + '</b></li><li>Homecoming Football Game: <b>' + S.cfg.homecomingLow + '-' + S.cfg.homecomingHigh + '</b></li></ul>' +
     '<p class="note" style="color:#555a62">The total number isn\'t as critical as the quality of the images. Don\'t leave in lesser quality photos just to reach a magic number. Our goal is to tell the story of the event!</p>' +
@@ -1589,7 +1890,7 @@ function helpSheet() {
 }
 
 /* ============================== 11. Clicks + keyboard ============================== */
-var lastTileClick = { i: -1, t: 0 };
+var lastTileClick = { i: -1, t: 0 }, gridAsk = 0;
 document.addEventListener('click', function (e) {
   var b = e.target.closest('[data-act]');
   if (!b) {
@@ -1602,6 +1903,7 @@ document.addEventListener('click', function (e) {
   var gridEl = $('#grid'); if (gridEl && S.screen === 'cull' && !gridEl.contains(b)) return;
   var act = b.dataset.act; tick();
   if (S.screen === 'cull' && b.blur) b.blur();      // so Space and Enter go to the photo, not to the button that was just clicked
+  if (ses && ses.cropping && !/^crop|^full$/.test(act)) { ses.cropping = null; ses.stageKey = ''; if (S.screen === 'cull') renderAll(); }      // anything else backs out of crop first
   switch (act) {
     case 'studio': S.studio = b.dataset.v; lsSet('cull.studio', S.studio); S.draft.event = null; renderTopbar(); renderEvents(); renderOpen(); break;
     case 'settings': settingsSheet(); break;
@@ -1633,18 +1935,32 @@ document.addEventListener('click', function (e) {
     case 'keep': keepCurrent(); break;
     case 'zoom': toggleZoom(); break;
     case 'undo': undo(); break;
-    case 'sharpest': keepSharpest(); break;
+    case 'keepToo': keepToo(ses.photos[ses.cursor]).then(function () { if (ses && S.screen === 'cull') renderAll(); }); break;
+    case 'pairPick': pairPick(+b.dataset.i); break;
+    case 'crop': startCrop(); break;
+    case 'cropShape': cropShape(b.dataset.v === '1'); break;
+    case 'cropOff': setCrop(ses.photos[ses.cropping.i], null); endCrop(); toast('Crop removed'); break;
+    case 'cropCancel': endCrop(); break;
+    case 'cropSave': saveCrop(); break;
+    case 'full': if (isFull()) leaveFull(); else enterFull(); break;
     case 'nextSoft': nextSoft(); break;
     case 'nextBurst': nextBurst(); break;
     case 'grid': openGrid(); break;
     case 'gridClose': closeGrid(); break;
     case 'gfilter': gridFilter = b.dataset.v; renderGrid(); break;
     case 'gtile':
-      var gi = +b.dataset.i, gp = ses.photos[gi], now = Date.now();
-      if (lastTileClick.i === gi && now - lastTileClick.t < 350) {      // double-click: put it back how it was and open it big
-        commit([{ i: gi, to: gp.state === 'keep' ? 'toss' : 'keep' }]); ses.undo.pop(); ses.undo.pop(); ses.cursor = gi; ses.zoom.on = false; closeGrid(); Pool.pump(); lastTileClick.i = -1; break;
+      var gi = +b.dataset.i, gp = ses.photos[gi], now = Date.now(), gb = burstOf(gp), dbl = lastTileClick.i === gi && now - lastTileClick.t < 350;
+      if (dbl) {      // double-click: put it back how it was before the first click and open it big
+        clearTimeout(gridAsk);
+        if (lastTileClick.flip) { commit([{ i: gi, to: gp.state === 'keep' ? 'toss' : 'keep' }]); ses.undo.pop(); ses.undo.pop(); }
+        ses.cursor = gi; ses.zoom.on = false; closeGrid(); Pool.pump(); lastTileClick.i = -1; break;
       }
-      lastTileClick = { i: gi, t: now };
+      if (gp.state === 'toss' && gb && burstKept(gb).length >= 1) {      // bringing back a second shot of a burst asks first (after a beat, so a double-click still just opens it big)
+        clearTimeout(gridAsk); lastTileClick = { i: gi, t: now, flip: false };
+        gridAsk = setTimeout(function () { if (ses && $('#grid') && !openSheet) keepToo(gp).then(function () { if ($('#grid')) renderGrid(); }); }, 360);
+        break;
+      }
+      lastTileClick = { i: gi, t: now, flip: true };
       commit([{ i: gi, to: gp.state === 'keep' ? 'toss' : 'keep' }]); b.classList.toggle('toss', gp.state === 'toss'); gridCount(); break;
     case 'finish': if (Date.now() - gridOpenedAt > 600) finish(); break;      // a double-click on Review + finish lands here: ignore it
     case 'exit': exitCull(); break;
@@ -1670,13 +1986,19 @@ document.addEventListener('keydown', function (e) {
     else if (key === '?') helpSheet();
     return;
   }
+  if (ses.cropping) {            // crop mode: Enter saves, Esc (or C again) backs out, nothing else does anything
+    if (key === 'Enter') { e.preventDefault(); if (!e.repeat) saveCrop(); } else if (key === 'Escape' || key === 'c' || key === 'C') { e.preventDefault(); endCrop(); }
+    return;
+  }
   switch (key) {
     case 'ArrowRight': e.preventDefault(); go(1); break;
     case 'ArrowLeft': e.preventDefault(); go(-1); break;
     case 'Delete': case 'Backspace': case 'x': case 'X': e.preventDefault(); tossCurrent(); break;
     case 'k': case 'K': keepCurrent(); break;
     case ' ': e.preventDefault(); flipCurrent(); break;
-    case 'Enter': e.preventDefault(); if (!e.repeat) keepSharpest(true); break;      // only ever does the burst button's job, and a held-down Enter does it once
+    case 'Enter': e.preventDefault(); if (!e.repeat) go(1); break;
+    case 'c': case 'C': startCrop(); break;
+    case 'f': case 'F': if (isFull()) leaveFull(); else enterFull(); break;
     case 'z': case 'Z': toggleZoom(); break;
     case 'Escape': if (ses.zoom.on) toggleZoom(); break;
     case 'g': case 'G': openGrid(); break;
