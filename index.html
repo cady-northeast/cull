@@ -135,21 +135,18 @@ button.chip:hover { background: #3a3e45; }
 .zoomv img { position: absolute; max-width: none; image-rendering: auto; -webkit-user-drag: none; }
 .zoomv.tossed img { opacity: .45; }
 
-.burst { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 8px 12px 6px; }
-.burst .head { display: flex; align-items: center; gap: 12px; font-size: 13.5px; padding: 2px 4px 8px; flex: none; }
-.burst .head b { font-size: 15px; }
-.burst .head .hint { color: var(--canvas-muted); flex: 1; }
-.tiles { flex: 1; min-height: 0; display: grid; gap: 8px; }
-.tile { position: relative; background: var(--canvas2); border: 3px solid transparent; border-radius: 8px; overflow: hidden; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 0; min-width: 0; }
-.tile img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-.tile.keep { border-color: var(--pink); }
-.tile.toss img { opacity: .5; }
-.tile.focus { outline: 3px solid #fff; outline-offset: 1px; }
-#cull.light .tile.focus { outline-color: var(--ink); }
-.tile .num { position: absolute; left: 8px; top: 8px; background: rgba(20,21,24,.78); color: #fff; width: 26px; height: 26px; border-radius: 50%; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
-.tile .st { position: absolute; right: 8px; top: 8px; display: flex; gap: 6px; }
-.tile .lbl { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: rgba(20,21,24,.7); color: #fff; text-align: center; }
-.tile.keep .lbl { background: var(--pink); }
+/* the line above the photo: where you are + the burst you're in */
+.ctx { flex: none; min-height: 46px; display: flex; align-items: center; gap: 14px; padding: 6px 14px; background: var(--canvas2); border-bottom: 1px solid var(--canvas-line); font-size: 13.5px; white-space: nowrap; overflow: hidden; }
+.ctx .where { color: var(--canvas-muted); overflow: hidden; text-overflow: ellipsis; }
+.ctx .where b { color: var(--canvas-text); font-size: 15px; }
+.ctx .grow { flex: 1; }
+.ctx .binfo { display: flex; align-items: center; gap: 10px; padding-left: 14px; border-left: 1px solid var(--canvas-line); }
+.ctx .binfo b { font-size: 15px; }
+.ctx .bl { background: var(--pink); color: #fff; font-weight: 700; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; border-radius: 4px; padding: 3px 8px; }
+.ctx .btn.primary { padding: 8px 16px; font-size: 13.5px; flex: none; }
+.star { color: #ffd28a; font-weight: 700; }
+#cull.light .star, .sheet .star { color: var(--pink); }
+.single img.r6 { transform: rotate(90deg); } .single img.r8 { transform: rotate(-90deg); } .single img.r3 { transform: rotate(180deg); }
 
 .strip { flex: none; height: 86px; background: var(--canvas2); border-top: 1px solid var(--canvas-line); display: flex; align-items: center; justify-content: center; gap: 4px; padding: 0 10px; overflow: hidden; }
 .th { position: relative; width: 84px; height: 66px; border: 2px solid transparent; border-radius: 5px; background: #111; padding: 0; overflow: hidden; flex: none; display: flex; align-items: center; justify-content: center; }
@@ -159,11 +156,32 @@ button.chip:hover { background: #3a3e45; }
 #cull.light .th.cur { border-color: var(--ink); }
 .th.toss img { opacity: .25; }
 .th.toss::after { content: "\00d7"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #ff5b78; font-size: 44px; font-weight: 700; line-height: 1; }
-.th.inb { box-shadow: inset 0 4px 0 var(--pink); }
-.th.inb.done { box-shadow: inset 0 4px 0 #6b717a; }
+.th.inb::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #6b717a; z-index: 1; }      /* part of a burst */
+.th.grp::before { height: 4px; background: var(--pink); }                                                                       /* part of the burst being looked at */
+.strip.inburst .th:not(.grp) { opacity: .42; }
+.th .gn { position: absolute; left: 3px; top: 7px; min-width: 17px; height: 17px; line-height: 17px; border-radius: 9px; background: rgba(20, 21, 24, .82); color: #fff; font-size: 10.5px; font-weight: 700; text-align: center; }
+.th .st { position: absolute; right: 3px; top: 6px; color: #ffd28a; font-size: 16px; line-height: 1; text-shadow: 0 0 3px #000, 0 0 3px #000; }
 .th .sd { position: absolute; right: 3px; bottom: 3px; width: 9px; height: 9px; border-radius: 50%; background: #ffd28a; border: 1px solid #3b2b05; }
-.sbar { flex: none; display: flex; justify-content: space-between; gap: 16px; padding: 4px 14px 6px; font-size: 12px; color: var(--canvas-muted); background: var(--canvas2); }
-.sbar .prog { flex: 1; text-align: center; }
+/* the buttons under the photo */
+.abar { flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 9px 14px 11px; background: var(--canvas2); border-top: 1px solid var(--canvas-line); }
+.abar .l { font-size: 12px; color: var(--canvas-muted); min-width: 0; }
+.abar .r { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
+.acts { display: flex; gap: 10px; align-items: center; }
+.ab { border: 1.5px solid #5a5f68; background: transparent; color: var(--canvas-text); border-radius: 999px; padding: 9px 16px; font-weight: 700; font-size: 14px; white-space: nowrap; }
+.ab:hover { background: rgba(255, 255, 255, .09); }
+.ab.small { padding: 6px 12px; font-size: 12.5px; }
+.ab.big { padding: 11px 24px; font-size: 16px; min-width: 168px; }
+.ab kbd { font-size: 11.5px; opacity: .7; }
+.ab.big kbd, .ab .k { margin-left: 7px; }
+.ab.toss { border-color: #ff5b78; color: #ff8fa3; }
+.ab.toss.on { background: var(--red); border-color: var(--red); color: #fff; }
+.ab.keep { border-color: #5fd398; color: #7be0a8; }
+.ab.keep.on { background: var(--green); border-color: var(--green); color: #fff; }
+#cull.light .ab { border-color: #b9bdc5; }
+#cull.light .ab:hover { background: rgba(0, 0, 0, .05); }
+#cull.light .ab.toss { border-color: var(--red); color: var(--red); }
+#cull.light .ab.keep { border-color: var(--green); color: var(--green); }
+#cull.light .ab.toss.on, #cull.light .ab.keep.on { color: #fff; }
 kbd { display: inline-block; border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font: inherit; font-size: .92em; font-weight: 700; opacity: .9; }
 
 /* ---------- overlays ---------- */
@@ -183,6 +201,8 @@ table.keys tr:nth-child(even) td { background: var(--tint2); }
 table.keys td:first-child { white-space: nowrap; font-weight: 700; width: 1%; }
 ul.plain { margin: 6px 0 12px; padding-left: 20px; font-size: 13.5px; }
 ul.plain li { margin: 3px 0; }
+ul.how { margin: 6px 0 0; padding-left: 20px; font-size: 14px; }
+ul.how li { margin: 7px 0; }
 h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 4px; }
 .progress { height: 12px; border-radius: 6px; background: var(--tint); overflow: hidden; margin: 12px 0 6px; }
 .progress > div { height: 100%; width: 0; background: var(--grad); transition: width .2s; }
@@ -202,7 +222,7 @@ h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 
 .gt .sd { position: absolute; right: 6px; top: 6px; background: #ffd28a; color: #3b2b05; font-size: 10.5px; font-weight: 700; border-radius: 4px; padding: 2px 6px; }
 .gt:hover { border-color: var(--ink); }
 
-#toast { position: fixed; left: 50%; top: 66px; transform: translateX(-50%); background: rgba(20,21,24,.92); color: #fff; border-radius: 999px; padding: 9px 20px; font-size: 13.5px; font-weight: 700; z-index: 80; pointer-events: none; opacity: 0; transition: opacity .18s; max-width: 80vw; text-align: center; }
+#toast { position: fixed; left: 50%; top: 122px; transform: translateX(-50%); background: rgba(20,21,24,.92); color: #fff; border-radius: 999px; padding: 9px 20px; font-size: 13.5px; font-weight: 700; z-index: 80; pointer-events: none; opacity: 0; transition: opacity .18s; max-width: 80vw; text-align: center; }
 #toast.on { opacity: 1; }
 
 .done-wrap { max-width: 760px; margin: 0 auto; padding: 44px 28px; }
@@ -213,6 +233,8 @@ h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 
 
 /* ---------- smaller studio screens (1366 x 768 and the like) ---------- */
 @media (max-width: 1500px) {
+  .ab.big { min-width: 140px; padding: 10px 18px; }
+  .ab.small .k { display: none; }
   .cbar { gap: 9px; padding: 8px 10px; }
   .cbar .who { max-width: 17vw; }
   .chip { padding: 5px 9px; font-size: 12px; }
@@ -220,6 +242,11 @@ h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 
   .meter { min-width: 150px; }
 }
 @media (max-height: 800px) {
+  .ctx { min-height: 40px; padding: 4px 12px; }
+  .strip { height: 74px; }
+  .th { width: 72px; height: 56px; }
+  .abar { padding: 6px 12px 7px; }
+  .ab.big { padding: 8px 18px; font-size: 15px; }
   .topbar { padding: 7px 28px; }
   .home-main { padding-top: 14px; }
   .home-main h1 { font-size: 26px; margin-bottom: 6px; }
@@ -240,14 +267,23 @@ h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin: 
 /* Preview worker. Runs off the main page so the culling screen never freezes.
  * For each photo it: decodes the full JPEG once, makes a screen-size preview and a small thumbnail,
  * and measures how sharp the photo is. Nothing leaves the computer. */
+var WORK_EDGE = 3500;        // every step below works from a copy this size, never from the full 33 megapixel photo
 self.onmessage = async function (e) {
   var m = e.data;
   try {
-    var bmp = await createImageBitmap(m.file);          // turns the photo the right way up (EXIF orientation)
-    var W = bmp.width, H = bmp.height;
-    var preview = await scaled(bmp, W, H, m.maxEdge, 0.86);
-    var thumb = await scaled(bmp, W, H, m.thumbEdge, 0.78);
-    var sharp = sharpness(bmp, W, H);
+    // When the camera wrote the photo's size in its header, ask Chrome for a smaller copy straight away.
+    // The full-size picture is then only in memory for a moment, which keeps the computer from bogging down.
+    var bmp, W = m.w, H = m.h;
+    if (W && H && Math.max(W, H) > WORK_EDGE) {
+      bmp = await createImageBitmap(m.file, { resizeWidth: Math.round(W * WORK_EDGE / Math.max(W, H)), resizeQuality: 'low' });      // also turns it the right way up
+      var h2 = Math.round(W * bmp.height / bmp.width); if (Math.abs(h2 - H) > 2) H = h2;      // header and picture disagree: trust the picture's shape
+    } else {
+      bmp = await createImageBitmap(m.file);
+      W = bmp.width; H = bmp.height;
+    }
+    var preview = await scaled(bmp, m.maxEdge, 0.86);
+    var thumb = await scaled(bmp, m.thumbEdge, 0.78);
+    var sharp = sharpness(bmp, bmp.width, bmp.height);
     bmp.close();
     self.postMessage({ id: m.id, ok: true, preview: preview, thumb: thumb, w: W, h: H, sharp: sharp });
   } catch (err) {
@@ -255,10 +291,10 @@ self.onmessage = async function (e) {
   }
 };
 
-async function scaled(bmp, W, H, edge, quality) {
-  var s = Math.min(1, edge / Math.max(W, H));
+async function scaled(bmp, edge, quality) {
+  var W = bmp.width, H = bmp.height, s = Math.min(1, edge / Math.max(W, H));
   var w = Math.max(1, Math.round(W * s)), h = Math.max(1, Math.round(H * s));
-  var c = new OffscreenCanvas(w, h), ctx = c.getContext('2d');
+  var c = new OffscreenCanvas(w, h), ctx = c.getContext('2d', { willReadFrequently: true });      // plain memory canvas: nothing goes through the graphics card
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(bmp, 0, 0, w, h);
   return await c.convertToBlob({ type: 'image/jpeg', quality: quality });
@@ -270,7 +306,7 @@ async function scaled(bmp, W, H, edge, quality) {
  * how much of the energy is just sensor noise (night games at high ISO), and that part is taken back out.
  * Higher = sharper. The number only means something next to other photos from the same card. */
 function sharpness(bmp, W, H) {
-  var s = Math.min(1, 3500 / Math.max(W, H));
+  var s = Math.min(1, WORK_EDGE / Math.max(W, H));
   var w = Math.max(8, Math.round(W * s)), h = Math.max(8, Math.round(H * s));
   var c = new OffscreenCanvas(w, h), ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(bmp, 0, 0, w, h);
@@ -319,7 +355,7 @@ function sharpness(bmp, W, H) {
  */
 
 /* ============================== 1. Settings + small helpers ============================== */
-var APP_VERSION = '1.1.0';
+var APP_VERSION = '1.2.0';
 var LOGO_WHITE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAADJCAYAAACdU4jkAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjBmZjNjMzEwLTM5N2QtNDg5NC1iODVkLTgwMGZlMGVkNzVhNQAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNoGI5law7GZ4adn5nosS+jqAAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ZDBlODg3YjctZWYxMS00Yzc0LWJkNDItOGIzMjE2Yzk2NDIzbHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaPuDP7I/xm03OQsus/3iC88AAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIP6+I8xDnaAkqPjjWNmJlrffbAYvUX1ghsuSZWkcF7+RpGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2jxqDvaJeNVA/2UWWpNv99VAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFggvF5IiYv9i7QvqWEP0olU6Nko+9TYiuRWQZR6N8eLJm9kbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTowZmYzYzMxMC0zOTdkLTQ4OTQtYjg1ZC04MDBmZTBlZDc1YTUvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpkYWU0MjhkMy1iZTNmLTQ4MjUtODk4OS1hYTY5OGNlOWYzMTRyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg/r4jzEOdoCSo+ONY2YmWt99sBi9RfWCGy5JlaRwXv5GiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIITkwxG2wtvONsiPUi9jihM2UzusFbqDzCEKLYmbABF6omN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIBq9ZEsER0xZme/j6y97HIPbB1Ge4TZb57c7S1IcKEBDdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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';
 
 // Everything here can be changed for every computer at once on the "Culling App Settings" tab of the Event Leads sheet.
@@ -610,19 +646,34 @@ function listJpegs(dir, path, out) {
   })();
 }
 
-// Reads the small EXIF block at the front of a JPEG: when it was shot, which way up, and the tiny built-in thumbnail.
+// Reads the front of a JPEG: when it was shot, which way up, the tiny built-in thumbnail, and where the camera
+// tucked its screen-size copy of the photo (Sony and most others store one near the end of the file).
 function parseExif(buf) {
   var v = new DataView(buf), out = {};
   if (v.byteLength < 12 || v.getUint16(0) !== 0xFFD8) return out;
-  var p = 2;
+  var p = 2, gotExif = false;
   while (p + 4 <= v.byteLength) {
     if (v.getUint8(p) !== 0xFF) break;
     var marker = v.getUint8(p + 1), len = v.getUint16(p + 2);
-    if (marker === 0xE1 && p + 10 <= v.byteLength && v.getUint32(p + 4) === 0x45786966 && v.getUint16(p + 8) === 0) { try { readTiff(v, p + 10, out); } catch (e) {} break; }
     if (marker === 0xDA || len < 2) break;
+    if (marker === 0xE1 && !gotExif && p + 10 <= v.byteLength && v.getUint32(p + 4) === 0x45786966 && v.getUint16(p + 8) === 0) { gotExif = true; try { readTiff(v, p + 10, out); } catch (e) {} }
+    else if (marker === 0xE2 && p + 16 <= v.byteLength && v.getUint32(p + 4) === 0x4D504600) { try { readMpf(v, p + 8, Math.min(v.byteLength, p + 2 + len), out); } catch (e) {} break; }
     p += 2 + len;
   }
   return out;
+}
+function readMpf(v, base, end, out) {
+  var le = v.getUint16(base) === 0x4949, at = base + v.getUint32(base + 4, le), n = v.getUint16(at, le);
+  for (var i = 0; i < n; i++) {
+    var e = at + 2 + i * 12; if (e + 12 > end) return;
+    if (v.getUint16(e, le) !== 0xB002) continue;                 // the list of pictures inside this file
+    var count = v.getUint32(e + 4, le) / 16, list = base + v.getUint32(e + 8, le);
+    for (var q = 1; q < count; q++) {                            // 0 is the photo itself
+      var r = list + q * 16; if (r + 16 > end) return;
+      var size = v.getUint32(r + 4, le), off = v.getUint32(r + 8, le);
+      if (off && size >= 20000 && size <= 4000000 && size > (out.pvLen || 0)) { out.pvAt = base + off; out.pvLen = size; }
+    }
+  }
 }
 function readTiff(v, base, out) {
   var le = v.getUint16(base) === 0x4949;
@@ -663,6 +714,7 @@ async function readHead(ph) {
   ph.time = exifTime(x); ph.orient = x.orient || 1;
   var turned = ph.orient >= 5 && ph.orient <= 8;
   if (x.w && x.h) { ph.w = turned ? x.h : x.w; ph.h = turned ? x.w : x.h; }
+  if (x.pvLen && x.pvAt + x.pvLen <= f.size) { ph.pvAt = x.pvAt; ph.pvLen = x.pvLen; }
   if (x.thumbLen && x.thumbLen < 200000) {
     var tb = x.thumbAt + x.thumbLen <= buf.byteLength ? buf.slice(x.thumbAt, x.thumbAt + x.thumbLen) : await f.slice(x.thumbAt, x.thumbAt + x.thumbLen).arrayBuffer();
     if (new DataView(tb).getUint16(0) === 0xFFD8) { ph.thumbUrl = URL.createObjectURL(new Blob([tb], { type: 'image/jpeg' })); ph.thumbRot = ph.orient; }
@@ -744,22 +796,21 @@ async function beginSession(sources, rec) {
       target: rec ? rec.target : targetFor(d.homecoming), studio: rec ? rec.studio : S.studio,
       createdAt: rec ? rec.createdAt : Date.now(), activeMs: rec ? rec.activeMs || 0 : 0, lastTick: 0,
       photos: photos, bursts: [], cursor: 0, undo: [], sources: sources, sig: sig, destFolder: rec ? rec.destFolder : null,
-      scored: 0, pending: null, zoom: { on: false, cx: 0.5, cy: 0.5 }, stageKey: '', fullUrl: null, fullFor: -1, fails: 0, cardLost: false
+      scored: 0, zoom: { on: false, cx: 0.5, cy: 0.5 }, stageKey: '', fullUrl: null, fullFor: -1, fails: 0, cardLost: false
     };
     photos.forEach(function (p, i) { p.i = i; p.state = 'keep'; p.burst = -1; p.pv = 0; p.sharp = null; });
     buildBursts();
     if (rec) {
-      var toss = rec.decisions || {}, rv = {}; (rec.reviewed || []).forEach(function (k) { rv[k] = 1; });
+      var toss = rec.decisions || {};
       photos.forEach(function (p) { if (toss[p.key]) p.state = 'toss'; if (rec.scores && rec.scores[p.key] != null) p.sharp = rec.scores[p.key]; });
-      ses.bursts.forEach(function (b) { if (rv[photos[b.start].key]) b.reviewed = true; });
-      var fl = rec.flips || {}; photos.forEach(function (p) { if (p.burst >= 0 && Object.prototype.hasOwnProperty.call(fl, p.key)) { var b = ses.bursts[p.burst]; (b.user || (b.user = {}))[p.i] = !!fl[p.key]; } });
       var at = photos.findIndex(function (p) { return p.key === rec.cursorKey; }); if (at >= 0) ses.cursor = at;
     }
     ps.close();
     S.draft = { event: null, manual: false, name: '', homecoming: false };
     saveNow();
+    Quick.near(); Pool.start();
+    await warmUp();
     renderCull();
-    Pool.start();
     return true;
   } catch (e) {
     ps.close();
@@ -773,7 +824,7 @@ function buildBursts() {
   for (var i = 1; i < ph.length; i++) {
     var a = ph[i - 1], b = ph[i];
     if (gap > 0 && a.time != null && b.time != null && b.time - a.time <= gap) {
-      if (!cur) { cur = { id: ses.bursts.length, start: i - 1, end: i, reviewed: false }; ses.bursts.push(cur); a.burst = cur.id; }
+      if (!cur) { cur = { id: ses.bursts.length, start: i - 1, end: i }; ses.bursts.push(cur); a.burst = cur.id; }
       cur.end = i; b.burst = cur.id;
     } else cur = null;
   }
@@ -880,13 +931,11 @@ async function forgetSession(rec) {
 /* ---- saving the open cull so a restart or a walk-away loses nothing ---- */
 var saveTimer = 0;
 function sessionRecord() {
-  var toss = {}, scores = {}, flips = {}, n = 0;
+  var toss = {}, scores = {}, n = 0;
   ses.photos.forEach(function (p) { if (p.state === 'toss') { toss[p.key] = 1; n++; } if (p.sharp != null) scores[p.key] = p.sharp; });
-  ses.bursts.forEach(function (b) { if (!b.reviewed && b.user) Object.keys(b.user).forEach(function (i) { flips[ses.photos[i].key] = b.user[i]; }); });      // half-sorted bursts
   return {
     id: ses.id, event: ses.event, photographer: ses.photographer, target: ses.target, studio: ses.studio, createdAt: ses.createdAt, updatedAt: Date.now(),
     activeMs: ses.activeMs, total: ses.photos.length, tossed: n, sig: ses.sig, cursorKey: ses.photos[ses.cursor].key, decisions: toss, scores: scores,
-    reviewed: ses.bursts.filter(function (b) { return b.reviewed; }).map(function (b) { return ses.photos[b.start].key; }), flips: flips,
     sources: ses.sources.map(function (s) { return { kind: s.kind, label: s.label, saved: s.saved, handle: s.kind === 'card' ? s.handle : undefined }; }), destFolder: ses.destFolder
   };
 }
@@ -900,7 +949,7 @@ function tick() {            // counts time actually spent culling (gaps over a 
 function closeSession() {
   Pool.stop();
   if (ses) {
-    ses.photos.forEach(function (p) { if (p.thumbUrl) URL.revokeObjectURL(p.thumbUrl); if (p.previewUrl) URL.revokeObjectURL(p.previewUrl); if (p.smallUrl) URL.revokeObjectURL(p.smallUrl); });
+    ses.photos.forEach(function (p) { if (p.thumbUrl) URL.revokeObjectURL(p.thumbUrl); if (p.previewUrl) URL.revokeObjectURL(p.previewUrl); if (p.smallUrl) URL.revokeObjectURL(p.smallUrl); if (p.quickUrl) URL.revokeObjectURL(p.quickUrl); });
     if (ses.fullUrl) URL.revokeObjectURL(ses.fullUrl);
   }
   ses = null; var g = $('#grid'); if (g) g.remove();
@@ -915,8 +964,8 @@ var Pool = {
   start: function () {
     this.stop();
     this.url = URL.createObjectURL(new Blob([$('#worker-src').textContent], { type: 'text/javascript' }));
-    var n = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
-    if (navigator.deviceMemory && navigator.deviceMemory <= 4) n = Math.min(n, 2);      // each worker holds one full-size photo in memory
+    // Two at most. More than that reads several 18 MB files off the card at once and makes the whole computer stutter.
+    var n = (navigator.hardwareConcurrency || 4) >= 4 && !(navigator.deviceMemory && navigator.deviceMemory < 4) ? 2 : 1;
     for (var i = 0; i < n; i++) {
       var w = new Worker(this.url); w.onmessage = this.done.bind(this, w); w.onerror = this.done.bind(this, w, { data: { ok: false, id: -1, error: 'worker crashed' } });
       this.workers.push(w); this.idle.push(w);
@@ -940,7 +989,7 @@ var Pool = {
       var p = this.next(); if (!p) break;
       var w = this.idle.pop(); p.pv = 1; w.job = p.i;
       (function (w, p) {
-        p.handle.getFile().then(function (f) { w.postMessage({ id: p.i, file: f, maxEdge: PREVIEW_EDGE, thumbEdge: THUMB_EDGE }); })
+        p.handle.getFile().then(function (f) { w.postMessage({ id: p.i, file: f, w: p.w || 0, h: p.h || 0, maxEdge: PREVIEW_EDGE, thumbEdge: THUMB_EDGE }); })
           .catch(function (e) { self.done(w, { data: { id: p.i, ok: false, io: true, error: String(e) } }); });
       })(w, p);
     }
@@ -952,6 +1001,7 @@ var Pool = {
     var m = e.data, p = ses.photos[m.id >= 0 ? m.id : w.job]; if (!p || p.pv !== 1) { this.pump(); return; }
     if (m.ok) {
       p.pv = 2; p.previewUrl = URL.createObjectURL(m.preview); p.smallUrl = URL.createObjectURL(m.thumb);
+      if (p.quickUrl) { var old = p.quickUrl; p.quickUrl = null; setTimeout(function () { URL.revokeObjectURL(old); }, 4000); }      // the stand-in has done its job
       p.w = m.w; p.h = m.h; p.sharp = m.sharp; ses.fails = 0;
     } else {
       p.pv = 3;
@@ -986,14 +1036,66 @@ function thumbHtml(p) {
   if (p.thumbUrl) return '<img src="' + p.thumbUrl + '" class="r' + (p.thumbRot || 1) + '" alt="" draggable="false">';
   return '';
 }
+// Quick look: the camera's own screen-size copy, pulled straight out of the file (a 150 KB read, nothing to work out).
+// It goes on screen right away for the photos around where the photographer is, and the real preview replaces it later.
+var Quick = {
+  busy: 0,
+  near: function () {
+    if (!ses) return;
+    var ph = ses.photos, c = ses.cursor;
+    for (var d = 0; d <= 11 && this.busy < 3; d++) {
+      var list = d && d <= 2 ? [ph[c + d], ph[c - d]] : [ph[c + d]];
+      for (var k = 0; k < list.length; k++) { var p = list[k]; if (p && p.pvLen && !p.q && !p.previewUrl && this.busy < 3) this.load(p); }
+    }
+  },
+  load: function (p) {
+    var self = this, mine = ses; p.q = 1; this.busy++;
+    p.handle.getFile().then(function (f) { return f.slice(p.pvAt, p.pvAt + p.pvLen).arrayBuffer(); }).then(function (buf) {
+      if (ses !== mine || p.previewUrl || new DataView(buf).getUint16(0) !== 0xFFD8) return;
+      p.quickUrl = URL.createObjectURL(new Blob([buf], { type: 'image/jpeg' }));
+      if (S.screen === 'cull' && p.i === ses.cursor && !ses.zoom.on) { ses.stageKey = ''; renderStage(); }
+    }).catch(function () {}).then(function () { self.busy--; if (ses === mine) self.near(); });
+  }
+};
 var readyTimer = 0;
 function onPhotoReady(p) {
   if (S.screen !== 'cull') return;
-  proposeIfReady();
-  var showing = p.i === ses.cursor || (ses.photos[ses.cursor].burst >= 0 && p.burst === ses.photos[ses.cursor].burst);
+  var cur = ses.photos[ses.cursor], showing = p.i === ses.cursor, near = showing || (cur.burst >= 0 && p.burst === cur.burst);
   if (showing && !ses.zoom.on) { ses.stageKey = ''; renderStage(); }
-  if (showing) { clearTimeout(readyTimer); readyTimer = 0; }
-  if (!readyTimer) readyTimer = setTimeout(function () { readyTimer = 0; if (ses && S.screen === 'cull') { renderStrip(); renderBar(); } }, showing ? 0 : 350);
+  if (near) { clearTimeout(readyTimer); readyTimer = 0; }
+  if (!readyTimer) readyTimer = setTimeout(function () { readyTimer = 0; if (ses && S.screen === 'cull') { renderStrip(); renderBar(); } }, near ? 0 : 350);
+}
+// Loading screen between reading the card and the culling screen. The first photos get made ready here, so culling
+// opens on real pictures instead of blurry stand-ins while the computer is still working its hardest.
+function howHtml() {
+  return '<h3>How it works</h3><ul class="how">' +
+    '<li><b>Every photo starts as a keeper.</b> You only pick the ones to toss.</li>' +
+    '<li><kbd>&rarr;</kbd> goes to the next photo. <kbd>Delete</kbd> tosses the one you\'re on. There are buttons for both at the bottom of the screen.</li>' +
+    '<li><b>Bursts</b> (shots taken back to back) are grouped together. The <span class="star">&#9733;</span> marks the sharpest one, and one button keeps just that one.</li>' +
+    '<li>Changed your mind? <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes it. Nothing is ever deleted off the SD card.</li></ul>';
+}
+function warmUp() {
+  var mine = ses, want = Math.min(ses.photos.length, 10), t0 = Date.now(), timer = 0, was = false;
+  function have() { var c = mine.cursor; return mine.photos.filter(function (p) { return p.pv >= 2 || (p.quickUrl && p.i >= c && p.i < c + want); }).length; }
+  function slow() { return Date.now() - t0 > 30000; }
+  function ready() { return have() >= want || mine.cardLost || slow(); }
+  return sheet({ sticky: true, bar: 'Getting your photos ready', title: plural(ses.photos.length, 'photo') + ' on this card',
+    html: '<div class="progress"><div id="wuBar"></div></div><div class="note" id="wuTxt">Opening the first few...</div>' + howHtml(),
+    actions: [{ label: 'Start culling', primary: true, fn: function () { return ready(); } }],
+    onOpen: function (el) {
+      var btn = el.querySelector('.actions .primary'), bar = el.querySelector('#wuBar'), txt = el.querySelector('#wuTxt');
+      function paint() {
+        var n = have(), ok = ready();
+        bar.style.width = Math.round(Math.min(1, ok && n >= want ? 1 : n / want) * 100) + '%';
+        txt.textContent = n >= want ? 'Ready. The rest load in the background while you cull.'
+          : mine.cardLost ? 'Can\'t read the card. Is it still plugged in?'
+            : slow() ? 'This card is slow to read. You can start, the photos fill in as they load.' : 'Opening the first few: ' + n + ' of ' + want;
+        btn.disabled = !ok;
+        if (ok && !was) { was = true; btn.focus(); }
+      }
+      paint(); timer = setInterval(paint, 150);
+    }
+  }).then(function () { clearInterval(timer); });
 }
 
 /* ============================== 6. Culling screen ============================== */
@@ -1003,20 +1105,25 @@ function renderCull() {
     '<section id="cull" class="screen' + (lsGet('cull.light', false) ? ' light' : '') + '"><div class="cbar"><img class="mark" src="' + LOGO_WHITE + '" alt="CADY">' +
     '<div class="who"><div class="a">' + esc(ses.event.school) + ' &middot; ' + esc(ses.event.event) + '</div><div class="b">' + esc(ses.photographer) + '</div></div>' +
     '<div class="meter" id="meter"></div><span class="chip plain" id="vh"></span>' +
-    '<button class="chip" id="softChip" data-act="nextSoft" hidden></button><button class="chip" id="burstChip" data-act="nextBurst" hidden></button>' +
+    '<button class="chip" id="softChip" data-act="nextSoft" hidden></button><button class="chip" id="burstChip" data-act="nextBurst" title="Bursts still keeping more shots than the guide says. Click to go to the next one." hidden></button>' +
     '<button class="chip" data-act="help">? Keys</button><button class="chip" data-act="exit">Save + exit</button>' +
     '<button class="btn primary" data-act="grid">Review + finish</button></div>' +
+    '<div class="ctx" id="ctx"></div>' +
     '<div class="stage" id="stage"></div><div class="strip" id="strip"></div>' +
-    '<div class="sbar"><span id="pos"></span><span class="prog" id="prog"></span><span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> move &nbsp; <kbd>Delete</kbd> toss &nbsp; <kbd>K</kbd> keep &nbsp; <kbd>Z</kbd> zoom &nbsp; <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo &nbsp; <kbd>?</kbd> all keys</span></div></section>';
+    '<div class="abar"><div class="l"><span class="prog" id="prog"></span></div>' +
+    '<div class="acts"><button class="ab" data-act="prev" tabindex="-1">&larr; Back</button>' +
+    '<button class="ab big toss" id="bToss" data-act="toss" tabindex="-1">&#10005; Toss <kbd>Delete</kbd></button><button class="ab big keep" id="bKeep" data-act="keep" tabindex="-1">&#10003; Keep <kbd>K</kbd></button>' +
+    '<button class="ab" data-act="next" tabindex="-1">Next &rarr;</button></div>' +
+    '<div class="r"><button class="ab small" data-act="zoom" tabindex="-1">Zoom <span class="k"><kbd>Z</kbd></span></button><button class="ab small" data-act="undo" tabindex="-1">Undo <span class="k"><kbd>Ctrl</kbd>+<kbd>Z</kbd></span></button></div></div></section>';
   ses.stageKey = '';
-  ensurePending(); renderAll();
+  renderAll();
 }
 function renderAll() { renderStage(); renderStrip(); renderBar(); }
 function counts() {
   var keep = 0, v = 0, hz = 0, soft = 0;
   ses.photos.forEach(function (p) { if (p.state !== 'keep') return; keep++; if (p.w && p.h) { if (p.h > p.w) v++; else hz++; } if (isSoft(p)) soft++; });
-  var left = ses.bursts.filter(function (b) { return !b.reviewed; }).length;
-  return { keep: keep, total: ses.photos.length, v: v, h: hz, soft: soft, burstsLeft: left };
+  var over = ses.bursts.filter(function (b) { return burstKept(b).length > S.cfg.burstNudge; }).length;      // bursts still keeping more than the guide's 2-3
+  return { keep: keep, total: ses.photos.length, v: v, h: hz, soft: soft, burstsOver: over };
 }
 function meterHtml(c) {
   var t = ses.target, max = Math.max(c.total, t.hi * 1.15), state = c.keep > t.hi ? 'over' : c.keep < t.lo ? 'under' : 'good';
@@ -1032,12 +1139,27 @@ function renderBar() {
   el.className = m.cls; el.innerHTML = m.html;
   $('#vh').textContent = 'Vertical ' + c.v + ' · Horizontal ' + c.h;
   var sc = $('#softChip'); sc.hidden = !c.soft; sc.textContent = 'Soft? ' + c.soft; sc.className = 'chip warn';
-  var bc = $('#burstChip'); bc.hidden = !c.burstsLeft; bc.textContent = 'Bursts left ' + c.burstsLeft;
-  var p = ses.photos[ses.cursor];
-  $('#pos').textContent = (ses.cursor + 1) + ' of ' + ses.photos.length + ' · ' + p.name;
+  var bc = $('#burstChip'); bc.hidden = !c.burstsOver; bc.textContent = 'Bursts to trim ' + c.burstsOver;
+  var p = ses.photos[ses.cursor], kept = p.state === 'keep';
+  $('#bToss').classList.toggle('on', !kept); $('#bKeep').classList.toggle('on', kept);
   var ready = ses.photos.filter(function (q) { return q.pv >= 2; }).length;
-  $('#prog').innerHTML = ses.cardLost ? '<span style="color:#ff8fa3;font-weight:700">Can\'t read the card. Is it still plugged in?</span> <button class="chip" data-act="retryCard">Try again</button>'
-    : ready < ses.photos.length ? 'Getting photos ready: ' + ready + ' of ' + ses.photos.length + ' (you can start now)' : '';
+  setHtml($('#prog'), ses.cardLost ? '<span style="color:#ff8fa3;font-weight:700">Can\'t read the card. Is it still plugged in?</span> <button class="chip" data-act="retryCard">Try again</button>'
+    : ready < ses.photos.length ? 'Loading the rest in the background: ' + ready + ' of ' + ses.photos.length : '');
+  renderCtx();
+}
+function setHtml(el, h) { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } }      // only touch the page when something really changed
+// The line above the photo: where you are, and when the photo is part of a burst, what that burst looks like right now.
+function renderCtx() {
+  var el = $('#ctx'); if (!el) return;
+  var p = ses.photos[ses.cursor], b = burstOf(p), h = '<span class="where"><b>' + (ses.cursor + 1) + '</b> of ' + ses.photos.length + ' &middot; ' + esc(p.name) + '</span>';
+  if (b) {
+    var mem = burstMembers(b), kept = burstKept(b), star = starOf(b), others = kept.length - 1;
+    h += '<span class="binfo"><span class="bl">Burst</span><b>Shot ' + (ses.cursor - b.start + 1) + ' of ' + mem.length + '</b>' +
+      (star === p ? '<span class="star">&#9733; Sharpest one</span>' : '') + '<span class="where">Keeping ' + kept.length + ' of ' + mem.length + '</span></span><span class="grow"></span>' +
+      (kept.length < 2 ? '' : star ? '<button class="btn primary" data-act="sharpest" tabindex="-1">Keep only the &#9733; sharpest, toss the other ' + (others === 1 ? 'one' : others) + ' &nbsp;<kbd>Enter</kbd></button>'
+        : '<button class="btn primary" tabindex="-1" disabled>Finding the sharpest one...</button>');
+  }
+  setHtml(el, h);
 }
 function badgesHtml(p, extra) {
   var t = p.time != null ? new Date(p.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }) : '';
@@ -1048,11 +1170,16 @@ function renderStage() {
   var st = $('#stage'); if (!st) return;
   var p = ses.photos[ses.cursor];
   if (ses.zoom.on) { renderZoom(st, p); return; }
-  if (p.burst >= 0) { renderBurst(st, ses.bursts[p.burst]); return; }
   ses.stageKey = 'single';
-  st.innerHTML = '<div class="single' + (p.state === 'toss' ? ' tossed' : '') + '"><img id="mainImg" src="' + (p.previewUrl || p.smallUrl || p.thumbUrl || '') + '" class="' + (!p.previewUrl && !p.smallUrl && p.thumbUrl ? 'r' + (p.thumbRot || 1) : '') +
-    '" style="' + (p.previewUrl ? '' : 'width:min(100%,900px);image-rendering:auto;filter:blur(1px)') + '" alt="" draggable="false"></div>' + badgesHtml(p) +
-    (p.previewUrl ? '' : '<div class="loading">' + (p.pv === 3 ? 'This photo could not be opened' : 'Loading the big version...') + '</div>');
+  var kind = p.previewUrl ? 'pv' : p.quickUrl ? 'q' : p.smallUrl ? 'sm' : p.thumbUrl ? 'th' : '', src = p.previewUrl || p.quickUrl || p.smallUrl || p.thumbUrl || '';
+  var rot = kind === 'q' ? (p.orient || 1) : kind === 'th' ? (p.thumbRot || 1) : 1, style = '';
+  if (kind === 'sm' || kind === 'th') style = 'width:min(100%,900px);image-rendering:auto;filter:blur(1px)';
+  else if (kind === 'q' && (rot === 6 || rot === 8)) {      // the camera's copy of a vertical lies on its side: size it by hand, then turn it
+    var W = st.clientWidth - 20, H = st.clientHeight - 20, a = p.w && p.h ? p.h / p.w : 1.5, bw = Math.max(50, Math.min(H, W * a));
+    style = 'width:' + Math.round(bw) + 'px;height:' + Math.round(bw / a) + 'px;max-width:none;max-height:none';
+  }
+  st.innerHTML = '<div class="single' + (p.state === 'toss' ? ' tossed' : '') + '"><img id="mainImg" src="' + src + '" class="' + (rot !== 1 ? 'r' + rot : '') + '" style="' + style + '" alt="" draggable="false"></div>' + badgesHtml(p) +
+    (kind === 'pv' || kind === 'q' ? '' : '<div class="loading">' + (p.pv === 3 ? 'This photo could not be opened' : 'Loading the big version...') + '</div>');
   preload();
 }
 function preload() {
@@ -1060,146 +1187,86 @@ function preload() {
 }
 function renderStrip() {
   var el = $('#strip'); if (!el) return;
-  var n = ses.photos.length, room = Math.max(5, Math.floor((el.clientWidth - 20) / 88)), half = Math.floor(room / 2);
+  var n = ses.photos.length, room = Math.max(5, Math.floor((el.clientWidth - 20) / (window.innerHeight <= 800 ? 76 : 88))), half = Math.floor(room / 2);
   var a = Math.max(0, Math.min(ses.cursor - half, n - room)), b = Math.min(n, a + room), h = '';
+  var cb = burstOf(ses.photos[ses.cursor]), star = cb ? starOf(cb) : null;
   for (var i = a; i < b; i++) {
-    var p = ses.photos[i], bu = p.burst >= 0 ? ses.bursts[p.burst] : null;
-    h += '<button class="th' + (i === ses.cursor ? ' cur' : '') + (p.state === 'toss' ? ' toss' : '') + (bu ? ' inb' + (bu.reviewed ? ' done' : '') : '') + '" data-act="jump" data-i="' + i + '" tabindex="-1">' + thumbHtml(p) + (isSoft(p) ? '<span class="sd"></span>' : '') + '</button>';
+    var p = ses.photos[i], mine = cb && p.burst === cb.id;      // mine = part of the burst being looked at
+    h += '<button class="th' + (i === ses.cursor ? ' cur' : '') + (p.state === 'toss' ? ' toss' : '') + (p.burst >= 0 ? ' inb' : '') + (mine ? ' grp' : '') + '" data-act="jump" data-i="' + i + '" tabindex="-1">' + thumbHtml(p) +
+      (mine ? '<span class="gn">' + (i - cb.start + 1) + '</span>' : '') + (mine && star === p ? '<span class="st">&#9733;</span>' : '') + (isSoft(p) ? '<span class="sd"></span>' : '') + '</button>';
   }
-  el.innerHTML = h;
+  el.classList.toggle('inburst', !!cb);
+  setHtml(el, h);
 }
 
 /* ============================== 7. Bursts, keep/toss, undo ============================== */
+// A burst is only a label on photos shot back to back. Every shot in it is kept or tossed the same way as any other photo.
 function burstMembers(b) { return ses.photos.slice(b.start, b.end + 1); }
-function ensurePending() {
-  var p = ses.photos[ses.cursor];
-  if (p.burst < 0 || ses.bursts[p.burst].reviewed) { ses.pending = null; return; }
-  if (ses.pending && ses.pending.id === p.burst) return;
-  var b = ses.bursts[p.burst]; b.user = b.user || {};      // user = shots they flipped by hand in this burst; it lives on the burst, so it survives leaving and coming back
-  ses.pending = { id: p.burst, keep: {}, user: b.user, touched: Object.keys(b.user).length > 0, ready: false };
-  proposeIfReady();
+function burstOf(p) { return p.burst >= 0 ? ses.bursts[p.burst] : null; }
+function burstKept(b) { return burstMembers(b).filter(function (p) { return p.state === 'keep'; }); }
+// The star: the sharpest shot of the ones still kept. Nobody gets a star until every shot has been measured, or when only one is left.
+function starOf(b) {
+  var mem = burstMembers(b), kept = burstKept(b);
+  if (kept.length < 2 || !mem.every(function (p) { return p.pv >= 2 || p.sharp != null; })) return null;
+  var best = kept[0]; kept.forEach(function (p) { if ((p.sharp == null ? -1 : p.sharp) > (best.sharp == null ? -1 : best.sharp)) best = p; });
+  return best;
 }
-// Once every shot in the burst has a sharpness score, pre-pick the sharpest one.
-// What the photographer already decided always stands: a shot they tossed (here, in the grid, or zoomed in) is never
-// brought back by the pre-pick, and if they already picked one by hand, that is the pick.
-function proposeIfReady() {
-  var pd = ses && ses.pending; if (!pd || pd.ready) return;
-  var mem = burstMembers(ses.bursts[pd.id]);
-  if (!mem.every(function (p) { return p.pv >= 2 || p.sharp != null; })) return;
-  var picked = mem.filter(function (p) { return pd.user[p.i] === true; });
-  var open = mem.filter(function (p) { return p.i in pd.user ? pd.user[p.i] : p.state === 'keep'; });
-  pd.keep = {};
-  if (picked.length) picked.forEach(function (p) { pd.keep[p.i] = true; });
-  else if (open.length) { var best = open[0]; open.forEach(function (p) { if ((p.sharp == null ? -1 : p.sharp) > (best.sharp == null ? -1 : best.sharp)) best = p; }); pd.keep[best.i] = true; }
-  pd.ready = true;
-}
-// Is this shot a keeper in the burst that's being sorted? Before the sharpest one is known, it is whatever it was (plus their own flips).
-function pendKeep(pd, p) { return pd.ready ? !!pd.keep[p.i] : (p.i in pd.user ? pd.user[p.i] : p.state === 'keep'); }
-function bestOf(b) { var mem = burstMembers(b), best = null; mem.forEach(function (p) { if (p.sharp != null && (!best || p.sharp > best.sharp)) best = p; }); return mem.every(function (p) { return p.sharp != null || p.pv === 3; }) ? best : null; }
-function isKept(p) { var pd = ses.pending; return pd && pd.id === p.burst ? pendKeep(pd, p) : p.state === 'keep'; }
-function renderBurst(st, b) {
-  var mem = burstMembers(b), pd = ses.pending && ses.pending.id === b.id ? ses.pending : null, key = 'burst:' + b.id + ':' + mem.map(function (p) { return p.pv; }).join('');
-  var nk = mem.filter(isKept).length, nt = mem.length - nk, best = bestOf(b);
-  if (ses.stageKey !== key) {
-    ses.stageKey = key;
-    var W = st.clientWidth - 24, H = st.clientHeight - 54, cols = 1, bestSize = 0, ar = mem[0].w && mem[0].h ? mem[0].w / mem[0].h : 1.5;
-    for (var c = 1; c <= mem.length; c++) { var r = Math.ceil(mem.length / c), size = Math.min(W / c, (H / r) * ar); if (size > bestSize) { bestSize = size; cols = c; } }
-    st.innerHTML = '<div class="burst"><div class="head"><b>Burst &middot; ' + mem.length + ' shots</b><span class="hint" id="bHint"></span><button class="btn primary" id="bGo" data-act="burstApply"></button></div>' +
-      '<div class="tiles" style="grid-template-columns:repeat(' + cols + ',1fr);grid-template-rows:repeat(' + Math.ceil(mem.length / cols) + ',1fr)">' + mem.map(function (p, n) {
-        return '<button class="tile" data-act="tile" data-i="' + p.i + '" tabindex="-1"><img src="' + (p.previewUrl || p.smallUrl || p.thumbUrl || '') + '" class="' + (!p.previewUrl && !p.smallUrl && p.thumbUrl ? 'r' + (p.thumbRot || 1) : '') + '" alt="" draggable="false">' +
-          (n < 9 ? '<span class="num">' + (n + 1) + '</span>' : '') + '<span class="st"></span><span class="lbl"></span></button>';
-      }).join('') + '</div></div>';
-  }
-  $$('.tile', st).forEach(function (el) {
-    var p = ses.photos[+el.dataset.i], k = isKept(p);
-    el.className = 'tile ' + (k ? 'keep' : 'toss') + (p.i === ses.cursor ? ' focus' : '');
-    el.querySelector('.lbl').textContent = k ? 'Keep' : 'Toss';
-    el.querySelector('.st').innerHTML = (best && best.i === p.i ? '<span class="badge best">Sharpest</span>' : '') + (isSoft(p) ? '<span class="badge soft">Soft?</span>' : '');
-  });
-  var hint = $('#bHint'), go = $('#bGo');
-  if (pd) {
-    hint.innerHTML = pd.ready || pd.touched ? 'Pink ones stay. Click a shot or press its number to flip it. <kbd>Z</kbd> zooms in.' : 'Finding the sharpest one...';
-    go.hidden = false; go.innerHTML = 'Keep ' + nk + ', toss ' + nt + ' &nbsp;<kbd>Enter</kbd>';
-  } else { hint.textContent = 'Already sorted. Click a shot to flip it.'; go.hidden = true; }
-}
-// One keep/toss change (or a whole burst at once). Every change goes on the undo list.
-function commit(changes, burstId) {
+// One keep/toss change (or several at once). Every change goes on the undo list.
+function commit(changes) {
   changes = changes.filter(function (c) { return ses.photos[c.i].state !== c.to; }).map(function (c) { return { i: c.i, from: ses.photos[c.i].state, to: c.to }; });
-  if (!changes.length && burstId == null) return;
+  if (!changes.length) return;
   changes.forEach(function (c) { ses.photos[c.i].state = c.to; });
-  ses.undo.push({ changes: changes, cursor: ses.cursor, burst: burstId == null ? -1 : burstId });
+  ses.undo.push({ changes: changes, cursor: ses.cursor });
   if (ses.undo.length > 500) ses.undo.shift();
   saveSoon();
 }
 function undo() {
   var a = ses.undo.pop(); if (!a) { toast('Nothing to undo'); return; }
   a.changes.forEach(function (c) { ses.photos[c.i].state = c.from; });
-  if (a.burst >= 0) ses.bursts[a.burst].reviewed = false;
-  ses.cursor = a.cursor; ses.pending = null; ses.stageKey = '';
-  ensurePending(); saveSoon();
+  ses.cursor = a.cursor; ses.stageKey = '';
+  saveSoon();
   if ($('#grid')) renderGrid(); else renderAll();
   toast('Undone');
 }
-function setKeep(p, keep) {
-  var pd = ses.pending, inPending = pd && pd.id === p.burst;
-  if (inPending) {
-    // first flip after the pre-pick is showing: what's on screen becomes their pick for every shot, so it comes back the same later
-    if (pd.ready && !pd.touched) burstMembers(ses.bursts[pd.id]).forEach(function (q) { pd.user[q.i] = !!pd.keep[q.i]; });
-    pd.user[p.i] = keep; if (keep) pd.keep[p.i] = true; else delete pd.keep[p.i]; pd.touched = true;
-  }
-  // zoomed in, a toss is a real toss right away (they might arrow out of the burst without sorting it)
-  if (!inPending || ses.zoom.on) commit([{ i: p.i, to: keep ? 'keep' : 'toss' }]);
-}
 function setCursor(i) {
   ses.cursor = Math.max(0, Math.min(ses.photos.length - 1, i));
-  ensurePending(); renderAll(); Pool.pump(); saveSoon();
+  renderAll(); Quick.near(); Pool.pump(); saveSoon();
 }
+var LAST_MSG = 'That\'s the last one. Hit Review + finish to look over your keepers.';
 function go(d) {
-  var cur = ses.photos[ses.cursor], pd = ses.pending, n = ses.photos.length;
-  if (!ses.zoom.on && pd && pd.id === cur.burst) {
-    var b = ses.bursts[cur.burst];
-    // Arrowing past the end of a burst they changed applies their picks. One they only looked at is left alone
-    // (still every shot a keeper, still counted in "Bursts left"), so holding the arrow key to browse never tosses anything.
-    if (d > 0 && ses.cursor === b.end) {
-      if (pd.touched) { applyPending(); return; }
-      if (!ses.toldSkip && ses.cursor + 1 < n) { ses.toldSkip = true; toast('Burst left as is. Enter keeps the pink one and tosses the rest.', 3600); }
-    }
-  }
-  var t = ses.cursor + d;
-  if (t < 0) { toast('That\'s the first photo'); ensurePending(); return; }
-  if (t >= n) { toast('That\'s the last one. Hit Review + finish to look over your keepers.', 3600); return; }
+  var cur = ses.photos[ses.cursor], b = burstOf(cur), t = ses.cursor + d;
+  if (t < 0) { toast('That\'s the first photo'); return; }
+  if (t >= ses.photos.length) { toast(LAST_MSG, 3600); return; }
+  // walking out of a burst that still keeps more than the guide says: say so once, never stop them
+  if (b && d > 0 && ses.cursor === b.end && !b.told && burstKept(b).length > S.cfg.burstNudge) { b.told = true; toast('Still keeping ' + burstKept(b).length + ' from that burst. The guide says the best 2-3.', 3600); }
   setCursor(t);
 }
-async function applyPending() {
-  var pd = ses.pending; if (!pd) return;
-  if (!pd.ready && !pd.touched) { toast('Still checking which one is sharpest, one sec'); return; }
-  var b = ses.bursts[pd.id], mem = burstMembers(b), nk = mem.filter(function (p) { return pendKeep(pd, p); }).length;
-  if (nk > S.cfg.burstNudge) {
-    var ok = await sheet({ bar: 'You sure?', title: 'Keeping ' + nk + ' from one burst', html: '<p>The guide says pick the best 2-3 from a burst. Keep all ' + nk + ' anyway?</p>',
-      actions: [{ label: 'Go back', value: false }, { label: 'Keep all ' + nk, primary: true, value: true }] });
-    if (!ok || ses.pending !== pd) return;
-  }
-  commit(mem.map(function (p) { return { i: p.i, to: pendKeep(pd, p) ? 'keep' : 'toss' }; }), b.id);
-  b.reviewed = true; ses.pending = null; ses.stageKey = '';
-  toast('Burst: kept ' + nk + ', tossed ' + (mem.length - nk) + '. Ctrl+Z to undo.');
-  if (b.end + 1 < ses.photos.length) setCursor(b.end + 1);
-  else { renderAll(); toast('That was the last one. Hit Review + finish to look over your keepers.', 3600); }
+// Toss and Keep both mark the photo and move to the next one. Space flips it and stays put.
+function mark(to) {
+  commit([{ i: ses.cursor, to: to }]);
+  if (ses.cursor + 1 < ses.photos.length) go(1); else { renderAll(); toast(LAST_MSG, 3600); }
 }
-function tossCurrent() {
-  var p = ses.photos[ses.cursor], inBurstView = !ses.zoom.on && p.burst >= 0;
-  setKeep(p, false);
-  if (inBurstView) { var b = ses.bursts[p.burst]; if (ses.cursor < b.end) ses.cursor++; else if (ses.pending) toast('Press Enter when this burst looks right.'); renderAll(); return; }
-  if (ses.cursor + 1 < ses.photos.length) setCursor(ses.cursor + 1); else { renderAll(); toast('That\'s the last one. Hit Review + finish to look over your keepers.', 3600); }
+function tossCurrent() { mark('toss'); }
+function keepCurrent() { mark('keep'); }
+function flipCurrent() { var p = ses.photos[ses.cursor]; commit([{ i: p.i, to: p.state === 'keep' ? 'toss' : 'keep' }]); renderAll(); }
+// The one burst shortcut: keep the starred shot, toss the other keepers, move past the burst. A shot they already tossed stays tossed.
+function keepSharpest(quiet) {
+  var b = burstOf(ses.photos[ses.cursor]); if (!b) return;
+  var kept = burstKept(b), star = starOf(b);
+  if (kept.length < 2) return;
+  if (!star) { if (!quiet) toast('Still checking which one is sharpest, one sec'); return; }
+  commit(kept.filter(function (p) { return p !== star; }).map(function (p) { return { i: p.i, to: 'toss' }; }));
+  b.told = true;
+  toast('Kept the sharpest, tossed ' + (kept.length - 1) + '. Ctrl+Z brings ' + (kept.length === 2 ? 'it' : 'them') + ' back.', 3200);
+  if (b.end + 1 < ses.photos.length) setCursor(b.end + 1); else { setCursor(star.i); }
 }
-function keepCurrent() { setKeep(ses.photos[ses.cursor], true); renderAll(); }
-function toggleTile(i) { var p = ses.photos[i]; ses.cursor = i; setKeep(p, !isKept(p)); renderAll(); }
 function nextSoft() {
   var n = ses.photos.length;
   for (var d = 1; d <= n; d++) { var p = ses.photos[(ses.cursor + d) % n]; if (p.state === 'keep' && isSoft(p)) { if ($('#grid')) $('#grid').remove(); ses.zoom.on = false; setCursor(p.i); return; } }
   toast('No soft ones left');
 }
 function nextBurst() {
-  var list = ses.bursts.filter(function (b) { return !b.reviewed; }); if (!list.length) { toast('Every burst is sorted'); return; }
+  var list = ses.bursts.filter(function (b) { return burstKept(b).length > S.cfg.burstNudge; }); if (!list.length) { toast('No burst is keeping more than ' + S.cfg.burstNudge); return; }
   var b = list.find(function (x) { return x.start > ses.cursor; }) || list[0];
   if ($('#grid')) $('#grid').remove(); ses.zoom.on = false; setCursor(b.start);
 }
@@ -1209,7 +1276,7 @@ function renderZoom(st, p) {
   ses.stageKey = 'zoom';
   st.innerHTML = '<div class="zoomv' + (p.state === 'keep' ? '' : ' tossed') + '" id="zoomv"><img id="zimg" alt="" draggable="false"></div>' + badgesHtml(p, '<span class="badge">100%</span>') + '<div class="loading" id="zload">Loading full size...</div>';
   var img = $('#zimg'), same = ses.fullFor === p.i && ses.fullUrl;
-  img.src = same ? ses.fullUrl : (p.previewUrl || p.smallUrl || p.thumbUrl || '');
+  img.src = same ? ses.fullUrl : (p.previewUrl || ((p.orient || 1) === 1 && p.quickUrl) || p.smallUrl || p.thumbUrl || '');
   if (same) $('#zload').remove();
   layoutZoom();
   if (!same) loadFull(p);
@@ -1250,7 +1317,6 @@ function loadFullNow(p) {
 function toggleZoom(at) {
   ses.zoom.on = !ses.zoom.on;
   if (ses.zoom.on && at) { ses.zoom.cx = at.x; ses.zoom.cy = at.y; }
-  if (!ses.zoom.on) ensurePending();
   ses.stageKey = ''; renderAll();
 }
 
@@ -1261,7 +1327,7 @@ function openGrid() {
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   gridOpenedAt = Date.now(); gridFilter = 'keep'; ses.zoom.on = false; var g = document.createElement('div'); g.id = 'grid'; document.body.appendChild(g); renderGrid();
 }
-function closeGrid() { var g = $('#grid'); if (g) g.remove(); ses.stageKey = ''; ensurePending(); renderAll(); }
+function closeGrid() { var g = $('#grid'); if (g) g.remove(); ses.stageKey = ''; renderAll(); }
 function renderGrid() {
   var g = $('#grid'); if (!g) return;
   var c = counts(), m = meterHtml(c);
@@ -1270,7 +1336,7 @@ function renderGrid() {
   g.innerHTML = '<div class="gbar"><h2>Look over your keepers</h2><div class="tseg">' + [['keep', 'Keepers'], ['toss', 'Tossed'], ['soft', 'Soft?'], ['all', 'All']].map(function (f) {
     return '<button data-act="gfilter" data-v="' + f[0] + '" class="' + (gridFilter === f[0] ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div><div class="grow"></div>' +
     '<button class="btn" data-act="gridClose">Back to culling</button><button class="btn primary" data-act="finish">Done: copy ' + plural(c.keep, 'keeper') + '</button></div>' +
-    '<div class="gnote"><span id="gCount"></span>' + (c.burstsLeft ? '<span class="pink">' + plural(c.burstsLeft, 'burst') + ' not sorted yet <button class="linkish" data-act="nextBurst">Go to the next one</button></span>' : '') +
+    '<div class="gnote"><span id="gCount"></span>' + (c.burstsOver ? '<span class="pink">' + plural(c.burstsOver, 'burst') + ' still keeping more than ' + S.cfg.burstNudge + ' <button class="linkish" data-act="nextBurst">Go to the next one</button></span>' : '') +
     '<span class="note">Click a photo to toss it or bring it back. Double-click to open it big.</span></div>' +
     '<div class="gwrap"><div class="gtiles">' + list.map(function (p) {
       return '<button class="gt' + (p.state === 'toss' ? ' toss' : '') + '" data-act="gtile" data-i="' + p.i + '" tabindex="-1">' + thumbHtml(p).replace('<img ', '<img loading="lazy" ') + (isSoft(p) ? '<span class="sd">Soft?</span>' : '') + '</button>';
@@ -1314,9 +1380,9 @@ async function finish() {          // one copy at a time, however many times Don
 async function finishRun() {
   var c = counts();
   if (!c.keep) { await sheet({ bar: 'No keepers', title: 'Everything is tossed', html: '<p>There\'s nothing to copy. Bring some photos back first.</p>' }); return; }
-  if (c.burstsLeft) {
-    var a = await sheet({ bar: 'Double check', red: true, title: plural(c.burstsLeft, 'burst') + ' not sorted yet', html: '<p>Every shot in ' + (c.burstsLeft === 1 ? 'that burst' : 'those bursts') + ' is still a keeper. The guide says pick the best 2-3.</p>',
-      actions: [{ label: 'Copy anyway', value: 'go' }, { label: 'Go sort them', primary: true, value: 'sort' }] });
+  if (c.burstsOver) {
+    var a = await sheet({ bar: 'Double check', red: true, title: plural(c.burstsOver, 'burst') + ' still ' + (c.burstsOver === 1 ? 'has' : 'have') + ' more than ' + S.cfg.burstNudge + ' keepers', html: '<p>The guide says pick the best 2-3 from a burst.</p>',
+      actions: [{ label: 'Copy anyway', value: 'go' }, { label: 'Go trim them', primary: true, value: 'sort' }] });
     if (a === 'sort') { nextBurst(); return; }
     if (a !== 'go') return;
   }
@@ -1510,9 +1576,10 @@ function settingsSheet() {
 function helpSheet() {
   var k = function (rows) { return '<table class="keys"><tr><th>Key</th><th>What it does</th></tr>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table>'; };
   sheet({ wide: true, bar: 'Keys + culling guide', html: '<div class="two"><div>' +
-    k([['<kbd>&rarr;</kbd> <kbd>&larr;</kbd>', 'Next / previous photo'], ['<kbd>Delete</kbd>', 'Toss this photo and go to the next one. <kbd>Backspace</kbd> or <kbd>X</kbd> work too.'], ['<kbd>K</kbd>', 'Keep it (bring a tossed photo back)'], ['<kbd>Z</kbd> or click', 'Zoom to 100% and back. Drag to move around.'],
-      ['<kbd>Ctrl</kbd>+<kbd>Z</kbd>', 'Undo'], ['<kbd>G</kbd>', 'Grid of your keepers, then Done'], ['<kbd>S</kbd>', 'Jump to the next soft-looking photo'], ['<kbd>B</kbd>', 'Jump to the next burst'], ['<kbd>Home</kbd> <kbd>End</kbd>', 'First / last photo'], ['<kbd>Esc</kbd>', 'Back out of zoom or the grid'], ['<kbd>L</kbd>', 'Light or dark background'], ['<kbd>?</kbd>', 'This page']]) +
-    '<h3>In a burst</h3>' + k([['<kbd>1</kbd>-<kbd>9</kbd> or click', 'Flip that shot between keep and toss'], ['<kbd>Space</kbd>', 'Flip the outlined shot'], ['<kbd>Enter</kbd>', 'Keep the pink ones, toss the rest, move on'], ['<kbd>Z</kbd>', 'Zoom the outlined shot. Arrows flip through the burst at the same spot.']]) +
+    k([['<kbd>&rarr;</kbd> <kbd>&larr;</kbd>', 'Next / previous photo. Just looking, nothing changes.'], ['<kbd>Delete</kbd>', 'Toss this photo and go to the next one. <kbd>Backspace</kbd> or <kbd>X</kbd> work too.'], ['<kbd>K</kbd>', 'Keep this photo and go to the next one. Also brings a tossed photo back.'],
+      ['<kbd>Space</kbd>', 'Flip this photo between keep and toss without moving'], ['<kbd>Enter</kbd>', 'In a burst: keep only the &#9733; sharpest shot and toss the rest'], ['<kbd>Z</kbd> or click', 'Zoom to 100% and back. Drag to move around.'],
+      ['<kbd>Ctrl</kbd>+<kbd>Z</kbd>', 'Undo'], ['<kbd>G</kbd>', 'Grid of your keepers, then Done'], ['<kbd>S</kbd>', 'Jump to the next soft-looking photo'], ['<kbd>B</kbd>', 'Jump to the next burst that is keeping more than ' + S.cfg.burstNudge], ['<kbd>Home</kbd> <kbd>End</kbd>', 'First / last photo'], ['<kbd>Esc</kbd>', 'Back out of zoom or the grid'], ['<kbd>L</kbd>', 'Light or dark background'], ['<kbd>?</kbd>', 'This page']]) +
+    '<h3>Bursts</h3><p class="note" style="color:#555a62">Shots taken back to back are grouped in the strip under the photo and numbered. Go through them like any other photo: keep the ones you want, toss the rest. The &#9733; is the sharpest one, and <kbd>Enter</kbd> keeps just that one.</p>' +
     '<p class="note">Nothing is ever deleted off the SD card. Tossed photos just don\'t get copied.</p></div><div>' +
     '<h3 style="margin-top:0">Required final image counts</h3><ul class="plain"><li>All candid events except Homecoming games: <b>' + S.cfg.normalTarget + '</b></li><li>Homecoming Football Game: <b>' + S.cfg.homecomingLow + '-' + S.cfg.homecomingHigh + '</b></li></ul>' +
     '<p class="note" style="color:#555a62">The total number isn\'t as critical as the quality of the images. Don\'t leave in lesser quality photos just to reach a magic number. Our goal is to tell the story of the event!</p>' +
@@ -1534,6 +1601,7 @@ document.addEventListener('click', function (e) {
   if (openSheet && !openSheet.el.contains(b)) return;
   var gridEl = $('#grid'); if (gridEl && S.screen === 'cull' && !gridEl.contains(b)) return;
   var act = b.dataset.act; tick();
+  if (S.screen === 'cull' && b.blur) b.blur();      // so Space and Enter go to the photo, not to the button that was just clicked
   switch (act) {
     case 'studio': S.studio = b.dataset.v; lsSet('cull.studio', S.studio); S.draft.event = null; renderTopbar(); renderEvents(); renderOpen(); break;
     case 'settings': settingsSheet(); break;
@@ -1559,8 +1627,13 @@ document.addEventListener('click', function (e) {
     case 'home': S.homeAt = Date.now(); renderHome(); loadSessions(); loadEvents(); refreshCulled(); break;
     // culling screen
     case 'jump': ses.zoom.on = false; setCursor(+b.dataset.i); break;
-    case 'tile': toggleTile(+b.dataset.i); break;
-    case 'burstApply': applyPending(); break;
+    case 'prev': go(-1); break;
+    case 'next': go(1); break;
+    case 'toss': tossCurrent(); break;
+    case 'keep': keepCurrent(); break;
+    case 'zoom': toggleZoom(); break;
+    case 'undo': undo(); break;
+    case 'sharpest': keepSharpest(); break;
     case 'nextSoft': nextSoft(); break;
     case 'nextBurst': nextBurst(); break;
     case 'grid': openGrid(); break;
@@ -1597,17 +1670,13 @@ document.addEventListener('keydown', function (e) {
     else if (key === '?') helpSheet();
     return;
   }
-  var p = ses.photos[ses.cursor], inBurst = !ses.zoom.on && p.burst >= 0;
   switch (key) {
     case 'ArrowRight': e.preventDefault(); go(1); break;
     case 'ArrowLeft': e.preventDefault(); go(-1); break;
-    case 'ArrowDown': case 'ArrowUp':
-      if (inBurst) { e.preventDefault(); var cols = getComputedStyle($('.tiles')).gridTemplateColumns.split(' ').length, b = ses.bursts[p.burst], t = ses.cursor + (key === 'ArrowDown' ? cols : -cols); if (t >= b.start && t <= b.end) { ses.cursor = t; renderAll(); } }
-      break;
     case 'Delete': case 'Backspace': case 'x': case 'X': e.preventDefault(); tossCurrent(); break;
     case 'k': case 'K': keepCurrent(); break;
-    case ' ': e.preventDefault(); if (inBurst) toggleTile(ses.cursor); else if (p.state === 'toss') keepCurrent(); break;
-    case 'Enter': e.preventDefault(); if (e.repeat) break; if (inBurst && ses.pending) applyPending(); else go(1); break;      // a held-down Enter never runs through bursts
+    case ' ': e.preventDefault(); flipCurrent(); break;
+    case 'Enter': e.preventDefault(); if (!e.repeat) keepSharpest(true); break;      // only ever does the burst button's job, and a held-down Enter does it once
     case 'z': case 'Z': toggleZoom(); break;
     case 'Escape': if (ses.zoom.on) toggleZoom(); break;
     case 'g': case 'G': openGrid(); break;
@@ -1617,8 +1686,6 @@ document.addEventListener('keydown', function (e) {
     case 'Home': e.preventDefault(); ses.zoom.on = false; setCursor(0); break;
     case 'End': e.preventDefault(); ses.zoom.on = false; setCursor(ses.photos.length - 1); break;
     case '?': helpSheet(); break;
-    default:
-      if (inBurst && /^[1-9]$/.test(key)) { var bb = ses.bursts[p.burst], ti = bb.start + (+key - 1); if (ti <= bb.end) toggleTile(ti); }
   }
 });
 window.addEventListener('resize', function () { if (ses && S.screen === 'cull') { ses.stageKey = ''; renderAll(); } });
