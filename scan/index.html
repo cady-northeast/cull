@@ -171,6 +171,12 @@ label.lab { display: block; font-weight: 700; font-size: 13px; margin: 12px 0 5p
 #toast.on { opacity: 1; }
 code { background: var(--tint); border-radius: 4px; padding: 1px 6px; font-size: 13px; overflow-wrap: anywhere; }
 
+.rowacts { display: block; margin-top: 3px; }
+.rowacts .linkish { font-size: 12px; font-weight: 600; margin-right: 14px; color: var(--muted); }
+.rowacts .linkish:hover { color: var(--purple); }
+.saveinto { margin-top: 4px; }
+.saveinto b { color: var(--ink); }
+
 </style>
 </head>
 <body>
@@ -362,7 +368,7 @@ if (typeof module !== 'undefined') module.exports = { lookAtPage: lookAtPage, SU
  * Sections: 1 helpers  2 storage  3 Event Leads link  4 folders on this computer  5 what is already scanned
  *           6 home  7 the scan screen  8 reading scans  9 saving  10 today board  11 clicks + start-up
  */
-var APP_VERSION = '1.0.1';
+var APP_VERSION = '1.1.0';
 var LOGO_WHITE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAADJCAYAAACdU4jkAAAWfmNhQlgAABZ+anVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAFlhqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjBmZjNjMzEwLTM5N2QtNDg5NC1iODVkLTgwMGZlMGVkNzVhNQAAAAOTanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAAuGp1bWIAAABEanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5pbmdyZWRpZW50LnYzAAAAABhjMnNoGI5law7GZ4adn5nosS+jqAAAAGxjYm9yo2lkYzpmb3JtYXRpaW1hZ2UvcG5namluc3RhbmNlSUR4LHhtcDppaWQ6ZDBlODg3YjctZWYxMS00Yzc0LWJkNDItOGIzMjE2Yzk2NDIzbHJlbGF0aW9uc2hpcGhwYXJlbnRPZgAAAeJqdW1iAAAAQWp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuYWN0aW9ucy52MgAAAAAYYzJzaPuDP7I/xm03OQsus/3iC88AAAGZY2JvcqJnYWN0aW9uc4KiZmFjdGlvbmtjMnBhLm9wZW5lZGpwYXJhbWV0ZXJzoWtpbmdyZWRpZW50c4GiY3VybHgtc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5pbmdyZWRpZW50LnYzZGhhc2hYIP6+I8xDnaAkqPjjWNmJlrffbAYvUX1ghsuSZWkcF7+RpGZhY3Rpb254HWNvbS5hbnRocm9waWMuY2xhdWRlLnByb3ZpZGVkanBhcmFtZXRlcnOheB9jb20uYW50aHJvcGljLm9yaWdpbi1jb25maWRlbmNlZ3Vua25vd25rZGVzY3JpcHRpb254ZkNsYXVkZSBwcm92aWRlZCB0aGlzIGZpbGUgYXQgdGhlIHJlcXVlc3Qgb2YgYSB1c2VyIGFuZCBtYXkgaGF2ZSBjcmVhdGVkIG9yIG1vZGlmaWVkIHRoZSBmaWxlIGNvbnRlbnRzLm1zb2Z0d2FyZUFnZW50oWRuYW1lZkNsYXVkZXJhbGxBY3Rpb25zSW5jbHVkZWT1AAAAyGp1bWIAAABAanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5oYXNoLmRhdGEAAAAAGGMyc2jxqDvaJeNVA/2UWWpNv99VAAAAgGNib3KlY2FsZ2ZzaGEyNTZjcGFkTQAAAAAAAAAAAAAAAABkaGFzaFggvF5IiYv9i7QvqWEP0olU6Nko+9TYiuRWQZR6N8eLJm9kbmFtZW5qdW1iZiBtYW5pZmVzdGpleGNsdXNpb25zgaJlc3RhcnQYIWZsZW5ndGgZFooAAAI+anVtYgAAACdqdW1kYzJjbAARABCAAACqADibcQNjMnBhLmNsYWltLnYyAAAAAg9jYm9ypWNhbGdmc2hhMjU2aXNpZ25hdHVyZXhNc2VsZiNqdW1iZj0vYzJwYS91cm46YzJwYTowZmYzYzMxMC0zOTdkLTQ4OTQtYjg1ZC04MDBmZTBlZDc1YTUvYzJwYS5zaWduYXR1cmVqaW5zdGFuY2VJRHgseG1wOmlpZDpkYWU0MjhkMy1iZTNmLTQ4MjUtODk4OS1hYTY5OGNlOWYzMTRyY3JlYXRlZF9hc3NlcnRpb25zg6JjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg/r4jzEOdoCSo+ONY2YmWt99sBi9RfWCGy5JlaRwXv5GiY3VybHgqc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5hY3Rpb25zLnYyZGhhc2hYIITkwxG2wtvONsiPUi9jihM2UzusFbqDzCEKLYmbABF6omN1cmx4KXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaGFzaC5kYXRhZGhhc2hYIBq9ZEsER0xZme/j6y97HIPbB1Ge4TZb57c7S1IcKEBDdGNsYWltX2dlbmVyYXRvcl9pbmZvo2RuYW1lb0FudGhyb3BpYyBGaWxlc2d2ZXJzaW9uZTEuMC4wa3NwZWNWZXJzaW9uZTIuNC4wAAAQOGp1bWIAAAAoanVtZGMyY3MAEQAQgAAAqgA4m3EDYzJwYS5zaWduYXR1cmUAAAAQCGNib3LShFkCEqIBJhghWQIKMIICBjCCAY2gAwIBAgIUQOWgCu7COdC+uIP6BkIFPWdVEwAwCgYIKoZIzj0EAwMwSTEXMBUGA1UEChMOQW50aHJvcGljLCBQQkMxLjAsBgNVBAMTJUFudGhyb3BpYyBDb250ZW50IENyZWRlbnRpYWxzIFJvb3QgQ0EwHhcNMjYwODA3MTg0MzU2WhcNMjgwODA2MTk0MzU2WjBEMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEpMCcGA1UEAxMgQW50aHJvcGljIENsYXVkZSBDb250ZW50IFNpZ25pbmcwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYegpry1AYBRTVNL1CpTlbROnY3dey+UrsF9C3phYrATN3ZHf93Mo8RQN0KOUuOn19P4oWNFWe5n2/She9N7eTo1gwVjAOBgNVHQ8BAf8EBAMCB4AwFQYDVR0lBA4wDAYKKwYBBAGD6F4CATAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFM5R4gSBTmRbI/jjxM+aPpzB11zCMAoGCCqGSM49BAMDA2cAMGQCMDFzHRSeAXrSy1WOzkbhPZ6Km2wGTmZ/2gK18k8BQGXyqz88Rdrz6CTX9flAnYNVxgIwcF9c3fVhqmJKpi+UhasNUMko69cyX6STPfta3Q8EjyzDjzoyrol46FP6VFHhvUcJoWNwYWRZDZ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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';
 var POLL_MS = 1200;                 // how often the Scan Inbox is checked while a step is open
 var RECENT_MIN = 10;                // scans this fresh can be picked up with "I already scanned it"
@@ -458,7 +464,8 @@ var db = (function () {
 /* ============================== 3. Event Leads link ============================== */
 var S = {
   conn: null,                 // { u: web app link, k: connect code }
-  studio: 'Horsham', pc: '', noScanner: false, allStudios: false,
+  studio: 'Horsham', pc: '', noScanner: false, allStudios: false, showSkipped: false,
+  moved: {}, skips: {},      // changes made on this computer ('control|date' -> { v, t }), shown right away while the Scan Log catches up
   events: [], eventsState: 'idle', eventsErr: '', today: '', days: null, eventsAt: 0,
   inbox: null, inboxOk: false, evDir: null, evDirOk: false,
   status: {},                 // 'control|date' -> what is already scanned, read off the drive
@@ -488,6 +495,43 @@ function api(action, params) {
     .finally(function () { clearTimeout(timer); });
 }
 function evKey(ev) { return ev.control + '|' + ev.date; }
+// An event can be done out of the other studio, or skipped (a contractor's event has no paperwork to scan).
+// The Scan Log is the record; a change made here also counts on this computer right away for 20 minutes, or until its log row has gone up.
+function mine(map, ev) { var o = map[evKey(ev)]; return o && (Date.now() - o.t < 20 * 60000 || lsGet('scan.logq', []).length) ? o : null; }
+function studioOf(ev) { var o = mine(S.moved, ev); return o ? o.v : (ev.at || ev.studio); }
+function skipOf(ev) { var o = mine(S.skips, ev); return o ? o.v : (ev.skip || ''); }
+function otherStudio() { return S.studio === 'Horsham' ? 'Exton' : 'Horsham'; }
+function noteRow(ev, studio, paper, note) {
+  return logRow({ studio: studio, date: ev.date, control: ev.control, school: ev.school, event: ev.event, paper: paper, file: '', pages: '', blanks: '', turned: '', by: S.draft.by || '', computer: S.pc, note: note, version: APP_VERSION });
+}
+function moveEvent(ev, studio) {
+  S.moved[evKey(ev)] = { v: studio, t: Date.now() }; lsSet('scan.moved', S.moved);
+  noteRow(ev, studio, 'Studio change', studio === ev.studio ? 'Back to ' + studio : 'Done out of ' + studio + ' (sheet says ' + ev.studio + ')');
+}
+function setSkip(ev, why) {
+  S.skips[evKey(ev)] = { v: why, t: Date.now() }; lsSet('scan.skips', S.skips);
+  noteRow(ev, studioOf(ev), why ? 'Event skipped' : 'Event brought back', why);
+}
+async function pickEvent(ev) {
+  if (!ev) return;
+  if (studioOf(ev) !== S.studio) {
+    var from = studioOf(ev);
+    var ok = await sheet({ bar: 'Different studio', title: ev.school + ' is on the sheet under ' + from,
+      html: '<p>Was it done out of <b>' + esc(S.studio) + '</b> instead? Saying yes files the paperwork on this studio\'s drive and moves the event onto the ' + esc(S.studio) + ' Today board.</p>',
+      actions: [{ label: 'Go back', value: null }, { label: 'Yes, done out of ' + S.studio, primary: true, value: true }] });
+    if (!ok) return;
+    moveEvent(ev, S.studio);
+  }
+  if (skipOf(ev)) {
+    var go = await sheet({ bar: 'Skipped event', title: 'This one was marked as skipped', html: '<p>Reason: <b>' + esc(skipOf(ev)) + '</b></p><p>Scanning it puts it back on the list and the Today board.</p>',
+      actions: [{ label: 'Go back', value: null }, { label: 'Scan it anyway', primary: true, value: true }] });
+    if (!go) return;
+    setSkip(ev, '');
+  }
+  // who's scanning: the event's lead is filled in already (first name on the sheet), or whoever scanned last on this computer. One tap changes it.
+  S.draft.ev = ev; S.draft.by = (ev.people && ev.people[0]) || lsGet('scan.names', [])[0] || ''; renderHome();
+  if (S.evDirOk) readStatus(ev).then(function (st) { S.status[evKey(ev)] = st; if (S.screen === 'home' && S.draft.ev === ev) renderHome(); }).catch(function () {});
+}
 // Test mode (open the page with #test on the end): adds make-believe events for today so anyone can try a scan
 // without touching a real event. Stays on for this computer until someone turns it off in the top bar.
 function addTestEvents() {
@@ -664,7 +708,7 @@ async function refreshStatus() {
   statusBusy = true;
   try {
     await eventsIndex(true);
-    var list = S.events.filter(function (e) { return S.allStudios || e.studio === S.studio; });
+    var list = S.events.filter(function (e) { return S.allStudios || studioOf(e) === S.studio || e.studio === S.studio; });
     for (var i = 0; i < list.length; i++) {
       try { S.status[evKey(list[i])] = await readStatus(list[i]); } catch (e) {}
     }
@@ -700,7 +744,7 @@ function setupHtml() {
       '<button class="btn small" data-act="' + act + '">' + (have ? 'Change' : label) + '</button></div>';
   };
   return row('Scan Inbox', S.inboxOk, !!S.inbox, S.inbox ? 'Folder: <b>' + esc(S.inbox.name) + '</b>. The Epson saves every scan here.' : 'The one folder the Epson scanner saves into on this computer.', 'pickInbox', 'Connect') +
-    row('Events folder', S.evDirOk, !!S.evDir, S.evDir ? 'Folder: <b>' + esc(S.evDir.name) + '</b> on the backup drive.' : 'The <b>Events</b> folder on the shared backup drive.', 'pickEvents', 'Connect') +
+    row('Events folder', S.evDirOk, !!S.evDir, S.evDir ? 'Folder: <b>' + esc(S.evDir.name) + '</b> on the backup drive. Connected once. The page finds each event\'s own folder inside it by Control #.' : 'The <b>Events</b> folder on the shared backup drive.', 'pickEvents', 'Connect') +
     '<div class="item"><div class="grow"><div class="n">This computer\'s name</div><div class="d">Shows on the Scan Log, so you can tell which station a scan came from.</div></div>' +
     '<input class="field" id="pcIn" style="width:170px;font-size:14px;padding:7px 10px" maxlength="30" placeholder="Backroom 1" value="' + esc(S.pc) + '"></div>' +
     '<div class="item"><label class="grow" style="cursor:pointer"><input type="checkbox" id="noScan"' + (S.noScanner ? ' checked' : '') + '> <b>This computer has no scanner</b><div class="d">The page will send people to the station next to it.</div></label></div>';
@@ -736,32 +780,41 @@ function updateStart() {
   var b = $('[data-act="start"]'); if (b) b.disabled = !(S.draft.ev && S.draft.by.trim().length > 1 && S.inboxOk && S.evDirOk);
   var n = $('#startNote'); if (n) n.textContent = startNote();
 }
+// Which folder on the backup drive this event's paperwork goes into. The page finds it by the Control #, nobody picks it.
+function saveIntoHtml(ev) {
+  if (!S.evDirOk) return '';
+  var st = S.status[evKey(ev)];
+  if (!st) return '<div class="note saveinto">Finding this event\'s folder on the drive...</div>';
+  return '<div class="note saveinto">' + (st.folder ? '&#10003; Saves into <b>' + esc(st.folder) + '</b> (found by its Control #)' : 'No folder with this Control # on the drive yet, so the page makes <b>' + esc(ev.folder) + '</b>') + '</div>';
+}
 function eventsHtml() {
   var d = S.draft;
   if (d.ev) {
     var pr = progressOf(d.ev);
     return '<div class="chosen"><div class="grow"><b>' + esc(d.ev.school) + '</b> &middot; ' + esc(d.ev.event) + '<div class="note">' + esc(dayLabel(d.ev.date)) + ' &middot; ' + esc(CODES[d.ev.code] || d.ev.code) + ' &middot; Control # ' + esc(d.ev.control) +
-      ' &middot; ' + esc(stepsFor(d.ev).map(function (k) { return k.label; }).join(', ')) + (pr.done ? ' &middot; ' + pr.done + ' of ' + pr.total + ' already scanned' : '') + '</div></div><button class="btn small" data-act="evChange">Change</button></div>';
+      ' &middot; ' + esc(stepsFor(d.ev).map(function (k) { return k.label; }).join(', ')) + (pr.done ? ' &middot; ' + pr.done + ' of ' + pr.total + ' already scanned' : '') + '</div>' + saveIntoHtml(d.ev) + '</div><button class="btn small" data-act="evChange">Change</button></div>';
   }
   if (!S.conn && !S.test) return '<p class="note" style="margin-top:0">This computer isn\'t linked to the Event Leads sheet yet. <button class="linkish" data-act="link">Link it</button></p>';
   if (S.eventsState === 'loading') return '<p class="note" style="margin:0">Getting today\'s events from the Event Leads sheet...</p>';
   if (S.eventsState === 'error') return '<p class="pink" style="margin-top:0">Couldn\'t reach the Event Leads sheet (' + esc(S.eventsErr) + ').</p><button class="btn" data-act="evReload">Try again</button>';
-  var list = S.events.filter(function (e) { return S.allStudios || e.studio === S.studio; }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : (a.school < b.school ? -1 : 1); });
+  var scope = S.events.filter(function (e) { return S.allStudios || studioOf(e) === S.studio; }), hidden = scope.filter(function (e) { return skipOf(e); }).length;
+  var list = scope.filter(function (e) { return S.showSkipped || !skipOf(e); }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : (a.school < b.school ? -1 : 1); });
   var h = '', last = '';
   if (!list.length) h = '<p class="note" style="margin-top:0">No ' + esc(S.allStudios ? '' : S.studio + ' ') + 'events with a Control # for these days.</p>';
   else {
     h = '<div class="evlist">';
     list.forEach(function (e) {
       if (e.date !== last) { last = e.date; h += '<div class="daylab" style="padding:8px 12px 0">' + esc(dayLabel(e.date)) + '</div>'; }
-      var pr = progressOf(e), tag = pr.done >= pr.total ? '<span class="tag ok">All scanned</span>' : pr.done ? '<span class="tag wait">' + pr.done + ' of ' + pr.total + '</span>' : '';
+      var pr = progressOf(e), sk = skipOf(e), tag = sk ? '<span class="tag">Skipped: ' + esc(sk) + '</span>' : pr.done >= pr.total ? '<span class="tag ok">All scanned</span>' : pr.done ? '<span class="tag wait">' + pr.done + ' of ' + pr.total + '</span>' : '';
       h += '<button class="ev" data-act="evPick" data-id="' + esc(evKey(e)) + '"><span class="s">' + esc(e.school) + '</span><span class="e">' + esc(e.event) + '</span>' + tag +
-        '<span class="m">' + esc(CODES[e.code] || e.code) + (S.allStudios ? ' &middot; ' + esc(e.studio) : '') + '</span></button>';
+        '<span class="m">' + esc(CODES[e.code] || e.code) + (S.allStudios || studioOf(e) !== e.studio ? ' &middot; ' + esc(studioOf(e) !== e.studio ? e.studio + ' event, done out of ' + studioOf(e) : e.studio) : '') + '</span></button>';
     });
     h += '</div>';
   }
   return h + '<div class="row" style="margin-top:10px"><button class="linkish" data-act="evReload">Refresh</button>' +
     '<button class="linkish" data-act="evEarlier">' + (S.days ? 'Back to today and yesterday' : 'Show earlier days') + '</button>' +
-    '<button class="linkish" data-act="evAll">' + (S.allStudios ? 'Only ' + esc(S.studio) + ' events' : 'Show the other studio too') + '</button>' +
+    '<button class="linkish" data-act="evAll">' + (S.allStudios ? 'Only ' + esc(S.studio) + ' events' : 'Did a ' + otherStudio() + ' event out of ' + esc(S.studio) + '? Show those') + '</button>' +
+    (hidden || S.showSkipped ? '<button class="linkish" data-act="evSkipped">' + (S.showSkipped ? 'Hide skipped events' : 'Show skipped / contracted events (' + hidden + ')') + '</button>' : '') +
     '<span class="note">Not on the list? Ask a manager. Don\'t make your own folder.</span></div>';
 }
 function whoHtml() {
@@ -788,6 +841,8 @@ function helpSheet() {
       '<li>The pages show up on the screen. Blank backs are left out and upside down pages are turned for you. Fix anything that looks off with <b>Turn</b>, or scan again.</li>' +
       '<li>Hit <b>Looks good, save it</b>. The page names the file and puts it in the event folder. Then it moves to the next paper.</li>' +
       '<li>Checklists go through as ONE stack. Camera cards and roster sheets are one PDF per SD card.</li></ol>' +
+      '<p><b>Event done out of the other studio?</b> Under the event list, click the "Did a ... event out of ..." link, pick it and say yes. It moves to this studio\'s board. Managers can do the same from the Today board.</p>' +
+      '<p><b>Contracted events</b> are left off by themselves when the sheet says Contractor. Any other event with no paperwork coming can be skipped from the Today board, and brought back the same way.</p>' +
       '<p><b>Setting up a computer (one time)</b></p><ol>' +
       '<li>Make a folder called <b>Scan Inbox</b> in Documents. In the Epson scan app, set it to save there, as PDF, double sided.</li>' +
       '<li>On this page, connect the <b>Scan Inbox</b> and the <b>Events</b> folder on the backup drive (right side of the home screen).</li>' +
@@ -1109,7 +1164,7 @@ async function saveStep() {
     prog.set(0.85, 'Tidying the Scan Inbox');
     await fileAway(ses.files);
     var where = k.perCard && dir !== ses.dir ? dir.name + '/' : '';
-    logRow({ studio: ev.studio, date: ev.date, control: ev.control, school: ev.school, event: ev.event, paper: k.label + (ses.sd ? ' (' + ses.sd + ')' : ''), file: where + name,
+    logRow({ studio: studioOf(ev), date: ev.date, control: ev.control, school: ev.school, event: ev.event, paper: k.label + (ses.sd ? ' (' + ses.sd + ')' : ''), file: where + name,
       pages: kept.length, blanks: ses.pages.filter(function (x) { return x.blank && !x.keep; }).length, turned: kept.filter(function (x) { return x.rot; }).length,
       by: ses.by, computer: S.pc, note: old.length ? 'Scanned again, the old one is in ' + REPLACED : '', version: APP_VERSION });
     ses.pages.forEach(freePage); ses.pages = []; ses.files = [];
@@ -1152,7 +1207,7 @@ async function cantScan() {
     } }] });
   if (!why) { if (ses.mode === 'wait') startWatch(); return; }
   var ev = ses.ev;
-  logRow({ studio: ev.studio, date: ev.date, control: ev.control, school: ev.school, event: ev.event, paper: k.label, file: '', pages: 0, blanks: 0, turned: 0, by: ses.by, computer: S.pc, note: 'NOT SCANNED: ' + why, version: APP_VERSION });
+  logRow({ studio: studioOf(ev), date: ev.date, control: ev.control, school: ev.school, event: ev.event, paper: k.label, file: '', pages: 0, blanks: 0, turned: 0, by: ses.by, computer: S.pc, note: 'NOT SCANNED: ' + why, version: APP_VERSION });
   ev.done = ev.done || {}; ev.done[k.label.toLowerCase()] = 'N/A';
   ses.st.papers[k.key].state = 'na'; if (k.perCard) ses.cardsDone[k.key] = true;
   await openStep(nextTodo());
@@ -1162,7 +1217,9 @@ async function cantScan() {
 var boardTimer = 0;
 function renderBoard() {
   S.screen = 'board';
-  var today = S.today || ymd(new Date()), mine = S.events.filter(function (e) { return e.studio === S.studio; });
+  var today = S.today || ymd(new Date()), mine = S.events.filter(function (e) { return studioOf(e) === S.studio && !skipOf(e); });
+  // left off this board on purpose: skipped here, or one of this studio's events that was done out of the other studio
+  var off = S.events.filter(function (e) { return e.date === today && ((studioOf(e) === S.studio && skipOf(e)) || (e.studio === S.studio && studioOf(e) !== S.studio)); }).sort(function (a, b) { return a.school < b.school ? -1 : 1; });
   var todays = mine.filter(function (e) { return e.date === today; }).sort(function (a, b) { return a.school < b.school ? -1 : 1; });
   var late = mine.filter(function (e) { var pr = progressOf(e); return e.date < today && (e.code === 'SR' || e.code === 'UC') && pr.done < pr.total; });
   var full = todays.filter(function (e) { var pr = progressOf(e); return pr.done >= pr.total; }).length;
@@ -1175,6 +1232,7 @@ function renderBoard() {
       '<div class="counts"><div><b>' + todays.length + '</b>events today</div><div><b>' + full + '</b>fully scanned</div><div><b>' + (todays.length - full) + '</b>still missing something</div></div>';
     if (late.length) h += '<div class="box"><div class="bar red">From earlier: Roadshow / Underclass paperwork still missing</div><div>' + late.map(function (e) { return boardRow(e, true); }).join('') + '</div></div>';
     h += '<div class="box"><div class="bar">' + esc(dayLabel(today)) + '</div><div>' + (todays.length ? todays.map(function (e) { return boardRow(e, false); }).join('') : '<div class="body note">No ' + esc(S.studio) + ' events with a Control # today.</div>') + '</div></div>' +
+      (off.length ? '<div class="box"><div class="bar">Left off today\'s board</div><div>' + off.map(offRow).join('') + '</div></div>' : '') +
       '<div class="row"><button class="btn" data-act="boardRefresh">Refresh</button><span class="note">Checks the drive by itself every minute.' + (S.eventsState === 'error' ? ' The Event Leads sheet isn\'t answering right now (' + esc(S.eventsErr) + ').' : '') + '</span></div>';
   }
   $('#app').innerHTML = h + '</main></section>';
@@ -1183,6 +1241,30 @@ function renderBoard() {
     if (S.screen !== 'board' || document.hidden) return;
     if (Date.now() - S.eventsAt > 15 * 60000) loadEvents(); else refreshStatus();
   }, 60000);
+}
+function offRow(e) {
+  var away = studioOf(e) !== S.studio, id = esc(evKey(e));
+  return '<div class="brow off"><div class="who"><div class="s">' + esc(e.school) + ' <span class="tag">' + esc(CODES[e.code] || e.code) + '</span></div><div class="d">' + esc(e.event) + ' &middot; ' + esc(e.control) + '</div></div>' +
+    '<div class="note">' + (away ? 'Done out of ' + esc(studioOf(e)) + '. It is on their board.' : 'Skipped: ' + esc(skipOf(e))) + '</div>' +
+    '<button class="btn small" data-act="' + (away ? 'bBack' : 'bUnskip') + '" data-id="' + id + '">' + (away ? 'Move it back to ' + esc(S.studio) : 'Bring it back') + '</button></div>';
+}
+async function boardChange(a, e) {
+  if (!e) return;
+  if (a === 'bMove') {
+    var to = otherStudio();
+    var ok = await sheet({ bar: 'Different studio', title: 'Was ' + e.school + ' done out of ' + to + '?', html: '<p>It comes off this board and shows on the ' + esc(to) + ' Today board, since the paperwork gets scanned there.</p>',
+      actions: [{ label: 'Go back', value: null }, { label: 'Yes, done out of ' + to, primary: true, value: true }] });
+    if (!ok) return;
+    moveEvent(e, to); toast('Moved to ' + to);
+  } else if (a === 'bBack') { moveEvent(e, S.studio); toast('Back on the ' + S.studio + ' board'); }
+  else if (a === 'bHome') { moveEvent(e, e.studio); toast('Back on the ' + e.studio + ' board'); }
+  else if (a === 'bSkip') {
+    var why = await sheet({ bar: 'Skip this event', title: 'No paperwork coming for ' + e.school + '?', html: '<p>It comes off the board and the morning email. The reason goes on the Scan Log.</p><input class="field" id="whyIn" maxlength="80" value="Contracted event">',
+      actions: [{ label: 'Go back', value: null }, { label: 'Skip it', primary: true, fn: function (el) { var v = el.querySelector('#whyIn').value.trim(); return v.length > 1 ? v : false; } }] });
+    if (!why) return;
+    setSkip(e, why); toast('Skipped');
+  } else if (a === 'bUnskip') { setSkip(e, ''); toast('Back on the board'); }
+  renderBoard(); refreshStatus();
 }
 function boardRow(e, late) {
   var st = S.status[evKey(e)], big = e.code === 'SR' || e.code === 'UC', all = true;
@@ -1197,7 +1279,8 @@ function boardRow(e, late) {
     all = false; return '<span class="paper no">&#10007; ' + esc(k.label) + '</span>';
   }).join(' ');
   return '<div class="brow' + (late ? ' late' : '') + '"><div class="who"><div class="s">' + esc(e.school) + ' <span class="tag' + (big ? ' wait' : '') + '">' + esc(CODES[e.code] || e.code) + '</span></div>' +
-    '<div class="d">' + esc(e.event) + ' &middot; ' + esc(e.control) + (late ? ' &middot; ' + esc(dayLabel(e.date)) : '') + (st && !st.folder ? ' &middot; no folder on the drive yet' : '') + '</div></div>' +
+    '<div class="d">' + esc(e.event) + ' &middot; ' + esc(e.control) + (late ? ' &middot; ' + esc(dayLabel(e.date)) : '') + (st && !st.folder ? ' &middot; no folder on the drive yet' : '') + (e.studio !== S.studio ? ' &middot; ' + esc(e.studio) + ' event, done out of ' + esc(S.studio) : '') +
+    '<span class="rowacts"><button class="linkish" data-id="' + esc(evKey(e)) + '" data-act="' + (e.studio !== S.studio ? 'bHome">Not done out of ' + esc(S.studio) : 'bMove">Done out of ' + otherStudio() + '?') + '</button><button class="linkish" data-id="' + esc(evKey(e)) + '" data-act="bSkip">Skip (no paperwork)</button></span></div></div>' +
     '<div class="chips">' + chips + '</div>' +
     (big ? '<button class="btn small" disabled title="Turns on once the Summit upload is set up">Add to Summit (coming soon)</button>' : '') + '</div>';
 }
@@ -1217,7 +1300,9 @@ async function act(a, el) {
   else if (a === 'evReload') loadEvents();
   else if (a === 'evEarlier') { S.days = S.days ? null : 7; S.events = []; loadEvents(); }
   else if (a === 'evAll') { S.allStudios = !S.allStudios; renderHome(); }
-  else if (a === 'evPick') { S.draft.ev = S.events.filter(function (e) { return evKey(e) === el.dataset.id; })[0] || null; S.draft.by = ''; renderHome(); }
+  else if (a === 'evPick') await pickEvent(S.events.filter(function (e) { return evKey(e) === el.dataset.id; })[0]);
+  else if (a === 'evSkipped') { S.showSkipped = !S.showSkipped; renderHome(); }
+  else if (a === 'bMove' || a === 'bBack' || a === 'bHome' || a === 'bSkip' || a === 'bUnskip') await boardChange(a, S.events.filter(function (e) { return evKey(e) === el.dataset.id; })[0]);
   else if (a === 'evChange') { S.draft.ev = null; renderHome(); }
   else if (a === 'who') { S.draft.by = v; renderHome(); }
   else if (a === 'start') startSession();
@@ -1272,6 +1357,7 @@ window.addEventListener('hashchange', function () {
 });
 (async function boot() {
   S.studio = lsGet('scan.studio', 'Horsham'); S.pc = lsGet('scan.pc', ''); S.noScanner = lsGet('scan.noScanner', false); S.conn = lsGet('scan.conn', null); S.test = lsGet('scan.test', false);
+  ['moved', 'skips'].forEach(function (k) { var m = lsGet('scan.' + k, {}), keep = {}; Object.keys(m).forEach(function (x) { if (Date.now() - m[x].t < 3 * 86400000) keep[x] = m[x]; }); S[k] = keep; lsSet('scan.' + k, keep); });
   var r = readHash();
   var cache = lsGet('scan.cache', null);
   if (cache && Date.now() - cache.at < 6 * 3600000 && cache.today === ymd(new Date())) { S.events = cache.events || []; S.today = cache.today; }
